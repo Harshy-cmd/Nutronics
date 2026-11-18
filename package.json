@@ -1,0 +1,23 @@
+{
+  "name": "nutronics-smart-health-companion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nutronics - Smart Health Companion (UN SDG 3). Personalized Wellness Powered by AI and Medical Expertise.",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"teal,blue\" \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "seed": "npm run seed --workspace=server",
+    "build": "npm run build --workspace=server && npm run build --workspace=client",
+    "lint": "npm run lint --workspace=server && npm run lint --workspace=client",
+    "start": "npm run start --workspace=server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}

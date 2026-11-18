@@ -1,0 +1,67 @@
+[
+  {
+    "condition": "DIABETES",
+    "maxSugarGPerMeal": 10,
+    "maxSodiumMgPerDay": 2000,
+    "maxCaloriesPerDay": 2000,
+    "minFiberGPerDay": 25,
+    "allowedFoodsNote": "Prefer high-fiber vegetables, pulses, and minimally processed whole grains.",
+    "avoidFoodsNote": "Limit sugar-sweetened drinks and highly refined sweets.",
+    "rulesList": [
+      "Pair carbohydrate foods with protein and fiber.",
+      "Personalize carbohydrate targets with your care team."
+    ]
+  },
+  {
+    "condition": "HYPERTENSION",
+    "maxSugarGPerMeal": 10,
+    "maxSodiumMgPerDay": 1500,
+    "maxCaloriesPerDay": 2000,
+    "minFiberGPerDay": 25,
+    "allowedFoodsNote": "Choose fresh foods and a variety of fruits and vegetables.",
+    "avoidFoodsNote": "Limit salty packaged foods, pickles, and instant meals.",
+    "rulesList": [
+      "Read sodium labels and compare serving sizes.",
+      "Do not change blood pressure medicines without clinical advice."
+    ]
+  },
+  {
+    "condition": "CKD",
+    "maxSugarGPerMeal": 10,
+    "maxSodiumMgPerDay": 2000,
+    "maxCaloriesPerDay": 2000,
+    "minFiberGPerDay": 25,
+    "allowedFoodsNote": "Kidney diets vary by lab results and stage; confirm portions with a renal dietitian.",
+    "avoidFoodsNote": "Potassium, phosphorus, fluid, and protein limits are individualized.",
+    "rulesList": [
+      "Check potassium and phosphorus guidance with your renal team.",
+      "Do not use salt substitutes unless approved."
+    ]
+  },
+  {
+    "condition": "HEART_DISEASE",
+    "maxSugarGPerMeal": 10,
+    "maxSodiumMgPerDay": 2000,
+    "maxCaloriesPerDay": 2000,
+    "minFiberGPerDay": 25,
+    "allowedFoodsNote": "Favor vegetables, legumes, whole grains, and unsaturated fats.",
+    "avoidFoodsNote": "Limit excess sodium and highly processed foods.",
+    "rulesList": [
+      "Follow your prescribed fluid and sodium targets.",
+      "Report new chest pain or breathlessness urgently."
+    ]
+  },
+  {
+    "condition": "OBESITY",
+    "maxSugarGPerMeal": 10,
+    "maxSodiumMgPerDay": 2300,
+    "maxCaloriesPerDay": 1800,
+    "minFiberGPerDay": 25,
+    "allowedFoodsNote": "Build balanced meals around vegetables, fiber, and adequate protein.",
+    "avoidFoodsNote": "Limit sugary drinks and energy-dense ultra-processed foods.",
+    "rulesList": [
+      "Use sustainable goals agreed with your care team.",
+      "Avoid crash diets and unprescribed supplements."
+    ]
+  }
+]

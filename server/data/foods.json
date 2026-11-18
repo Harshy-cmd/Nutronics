@@ -1,0 +1,3170 @@
+[
+  {
+    "id": "food-001",
+    "name": "Moong Dal Tadka",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 55,
+    "proteinG": 2,
+    "carbsG": 6,
+    "fatG": 1,
+    "fiberG": 1,
+    "sodiumMg": 20,
+    "sugarG": 0,
+    "potassiumMg": 80,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-002",
+    "name": "Whole Wheat Roti",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 92,
+    "proteinG": 9,
+    "carbsG": 17,
+    "fatG": 4,
+    "fiberG": 6,
+    "sodiumMg": 93,
+    "sugarG": 3,
+    "potassiumMg": 177,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-003",
+    "name": "Steamed Idli",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 129,
+    "proteinG": 16,
+    "carbsG": 28,
+    "fatG": 7,
+    "fiberG": 11,
+    "sodiumMg": 166,
+    "sugarG": 6,
+    "potassiumMg": 274,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-004",
+    "name": "Ragi Dosa",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 166,
+    "proteinG": 23,
+    "carbsG": 39,
+    "fatG": 10,
+    "fiberG": 2,
+    "sodiumMg": 239,
+    "sugarG": 9,
+    "potassiumMg": 371,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-005",
+    "name": "Vegetable Sambar",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 203,
+    "proteinG": 2,
+    "carbsG": 50,
+    "fatG": 13,
+    "fiberG": 7,
+    "sodiumMg": 312,
+    "sugarG": 12,
+    "potassiumMg": 468,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-006",
+    "name": "Paneer Tikka",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 240,
+    "proteinG": 9,
+    "carbsG": 61,
+    "fatG": 16,
+    "fiberG": 12,
+    "sodiumMg": 385,
+    "sugarG": 15,
+    "potassiumMg": 565,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-007",
+    "name": "Brown Rice",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 277,
+    "proteinG": 16,
+    "carbsG": 7,
+    "fatG": 19,
+    "fiberG": 3,
+    "sodiumMg": 458,
+    "sugarG": 18,
+    "potassiumMg": 662,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-008",
+    "name": "Upma",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 314,
+    "proteinG": 23,
+    "carbsG": 18,
+    "fatG": 22,
+    "fiberG": 8,
+    "sodiumMg": 531,
+    "sugarG": 21,
+    "potassiumMg": 759,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-009",
+    "name": "Khichdi",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 351,
+    "proteinG": 2,
+    "carbsG": 29,
+    "fatG": 3,
+    "fiberG": 13,
+    "sodiumMg": 604,
+    "sugarG": 0,
+    "potassiumMg": 856,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-010",
+    "name": "Poha",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 388,
+    "proteinG": 9,
+    "carbsG": 40,
+    "fatG": 6,
+    "fiberG": 4,
+    "sodiumMg": 677,
+    "sugarG": 3,
+    "potassiumMg": 103,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-011",
+    "name": "Curd",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 425,
+    "proteinG": 16,
+    "carbsG": 51,
+    "fatG": 9,
+    "fiberG": 9,
+    "sodiumMg": 750,
+    "sugarG": 6,
+    "potassiumMg": 200,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-012",
+    "name": "Sprouts",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 462,
+    "proteinG": 23,
+    "carbsG": 62,
+    "fatG": 12,
+    "fiberG": 14,
+    "sodiumMg": 823,
+    "sugarG": 9,
+    "potassiumMg": 297,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-013",
+    "name": "Oats",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 79,
+    "proteinG": 2,
+    "carbsG": 8,
+    "fatG": 15,
+    "fiberG": 5,
+    "sodiumMg": 896,
+    "sugarG": 12,
+    "potassiumMg": 394,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-014",
+    "name": "Palak Paneer",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 116,
+    "proteinG": 9,
+    "carbsG": 19,
+    "fatG": 18,
+    "fiberG": 10,
+    "sodiumMg": 69,
+    "sugarG": 15,
+    "potassiumMg": 491,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-015",
+    "name": "Rajma",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 153,
+    "proteinG": 16,
+    "carbsG": 30,
+    "fatG": 21,
+    "fiberG": 1,
+    "sodiumMg": 142,
+    "sugarG": 18,
+    "potassiumMg": 588,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-016",
+    "name": "Chole",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 190,
+    "proteinG": 23,
+    "carbsG": 41,
+    "fatG": 2,
+    "fiberG": 6,
+    "sodiumMg": 215,
+    "sugarG": 21,
+    "potassiumMg": 685,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-017",
+    "name": "Apple",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 227,
+    "proteinG": 2,
+    "carbsG": 52,
+    "fatG": 5,
+    "fiberG": 11,
+    "sodiumMg": 288,
+    "sugarG": 0,
+    "potassiumMg": 782,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-018",
+    "name": "Banana",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 264,
+    "proteinG": 9,
+    "carbsG": 63,
+    "fatG": 8,
+    "fiberG": 2,
+    "sodiumMg": 361,
+    "sugarG": 3,
+    "potassiumMg": 879,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-019",
+    "name": "Mango",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 301,
+    "proteinG": 16,
+    "carbsG": 9,
+    "fatG": 11,
+    "fiberG": 7,
+    "sodiumMg": 434,
+    "sugarG": 6,
+    "potassiumMg": 126,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-020",
+    "name": "Orange",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 338,
+    "proteinG": 23,
+    "carbsG": 20,
+    "fatG": 14,
+    "fiberG": 12,
+    "sodiumMg": 507,
+    "sugarG": 9,
+    "potassiumMg": 223,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-021",
+    "name": "Papaya",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 375,
+    "proteinG": 2,
+    "carbsG": 31,
+    "fatG": 17,
+    "fiberG": 3,
+    "sodiumMg": 580,
+    "sugarG": 12,
+    "potassiumMg": 320,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-022",
+    "name": "Guava",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 412,
+    "proteinG": 9,
+    "carbsG": 42,
+    "fatG": 20,
+    "fiberG": 8,
+    "sodiumMg": 653,
+    "sugarG": 15,
+    "potassiumMg": 417,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-023",
+    "name": "Almonds",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 449,
+    "proteinG": 16,
+    "carbsG": 53,
+    "fatG": 1,
+    "fiberG": 13,
+    "sodiumMg": 726,
+    "sugarG": 18,
+    "potassiumMg": 514,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-024",
+    "name": "Walnuts",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 66,
+    "proteinG": 23,
+    "carbsG": 64,
+    "fatG": 4,
+    "fiberG": 4,
+    "sodiumMg": 799,
+    "sugarG": 21,
+    "potassiumMg": 611,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-025",
+    "name": "Boiled Egg",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 103,
+    "proteinG": 2,
+    "carbsG": 10,
+    "fatG": 7,
+    "fiberG": 9,
+    "sodiumMg": 872,
+    "sugarG": 0,
+    "potassiumMg": 708,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-026",
+    "name": "Grilled Chicken",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 140,
+    "proteinG": 9,
+    "carbsG": 21,
+    "fatG": 10,
+    "fiberG": 14,
+    "sodiumMg": 45,
+    "sugarG": 3,
+    "potassiumMg": 805,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-027",
+    "name": "Salmon",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 177,
+    "proteinG": 16,
+    "carbsG": 32,
+    "fatG": 13,
+    "fiberG": 5,
+    "sodiumMg": 118,
+    "sugarG": 6,
+    "potassiumMg": 902,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-028",
+    "name": "Broccoli",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 214,
+    "proteinG": 23,
+    "carbsG": 43,
+    "fatG": 16,
+    "fiberG": 10,
+    "sodiumMg": 191,
+    "sugarG": 9,
+    "potassiumMg": 149,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-029",
+    "name": "Spinach",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 251,
+    "proteinG": 2,
+    "carbsG": 54,
+    "fatG": 19,
+    "fiberG": 1,
+    "sodiumMg": 264,
+    "sugarG": 12,
+    "potassiumMg": 246,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-030",
+    "name": "Tomato",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 288,
+    "proteinG": 9,
+    "carbsG": 65,
+    "fatG": 22,
+    "fiberG": 6,
+    "sodiumMg": 337,
+    "sugarG": 15,
+    "potassiumMg": 343,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-031",
+    "name": "Cucumber",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 325,
+    "proteinG": 16,
+    "carbsG": 11,
+    "fatG": 3,
+    "fiberG": 11,
+    "sodiumMg": 410,
+    "sugarG": 18,
+    "potassiumMg": 440,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-032",
+    "name": "Carrot",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 362,
+    "proteinG": 23,
+    "carbsG": 22,
+    "fatG": 6,
+    "fiberG": 2,
+    "sodiumMg": 483,
+    "sugarG": 21,
+    "potassiumMg": 537,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-033",
+    "name": "Sweet Potato",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 399,
+    "proteinG": 2,
+    "carbsG": 33,
+    "fatG": 9,
+    "fiberG": 7,
+    "sodiumMg": 556,
+    "sugarG": 0,
+    "potassiumMg": 634,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-034",
+    "name": "Quinoa",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 436,
+    "proteinG": 9,
+    "carbsG": 44,
+    "fatG": 12,
+    "fiberG": 12,
+    "sodiumMg": 629,
+    "sugarG": 3,
+    "potassiumMg": 731,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-035",
+    "name": "Greek Yogurt",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 473,
+    "proteinG": 16,
+    "carbsG": 55,
+    "fatG": 15,
+    "fiberG": 3,
+    "sodiumMg": 702,
+    "sugarG": 6,
+    "potassiumMg": 828,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-036",
+    "name": "Lentil Soup",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 90,
+    "proteinG": 23,
+    "carbsG": 66,
+    "fatG": 18,
+    "fiberG": 8,
+    "sodiumMg": 775,
+    "sugarG": 9,
+    "potassiumMg": 925,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-037",
+    "name": "Tofu",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 127,
+    "proteinG": 2,
+    "carbsG": 12,
+    "fatG": 21,
+    "fiberG": 13,
+    "sodiumMg": 848,
+    "sugarG": 12,
+    "potassiumMg": 172,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-038",
+    "name": "Avocado",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 164,
+    "proteinG": 9,
+    "carbsG": 23,
+    "fatG": 2,
+    "fiberG": 4,
+    "sodiumMg": 21,
+    "sugarG": 15,
+    "potassiumMg": 269,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-039",
+    "name": "Whole Grain Bread",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 201,
+    "proteinG": 16,
+    "carbsG": 34,
+    "fatG": 5,
+    "fiberG": 9,
+    "sodiumMg": 94,
+    "sugarG": 18,
+    "potassiumMg": 366,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-040",
+    "name": "Corn",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 238,
+    "proteinG": 23,
+    "carbsG": 45,
+    "fatG": 8,
+    "fiberG": 14,
+    "sodiumMg": 167,
+    "sugarG": 21,
+    "potassiumMg": 463,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-041",
+    "name": "Moong Dal Tadka (2)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 275,
+    "proteinG": 2,
+    "carbsG": 56,
+    "fatG": 11,
+    "fiberG": 5,
+    "sodiumMg": 240,
+    "sugarG": 0,
+    "potassiumMg": 560,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-042",
+    "name": "Whole Wheat Roti (2)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 312,
+    "proteinG": 9,
+    "carbsG": 67,
+    "fatG": 14,
+    "fiberG": 10,
+    "sodiumMg": 313,
+    "sugarG": 3,
+    "potassiumMg": 657,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-043",
+    "name": "Steamed Idli (2)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 349,
+    "proteinG": 16,
+    "carbsG": 13,
+    "fatG": 17,
+    "fiberG": 1,
+    "sodiumMg": 386,
+    "sugarG": 6,
+    "potassiumMg": 754,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-044",
+    "name": "Ragi Dosa (2)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 386,
+    "proteinG": 23,
+    "carbsG": 24,
+    "fatG": 20,
+    "fiberG": 6,
+    "sodiumMg": 459,
+    "sugarG": 9,
+    "potassiumMg": 851,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-045",
+    "name": "Vegetable Sambar (2)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 423,
+    "proteinG": 2,
+    "carbsG": 35,
+    "fatG": 1,
+    "fiberG": 11,
+    "sodiumMg": 532,
+    "sugarG": 12,
+    "potassiumMg": 98,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-046",
+    "name": "Paneer Tikka (2)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 460,
+    "proteinG": 9,
+    "carbsG": 46,
+    "fatG": 4,
+    "fiberG": 2,
+    "sodiumMg": 605,
+    "sugarG": 15,
+    "potassiumMg": 195,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-047",
+    "name": "Brown Rice (2)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 77,
+    "proteinG": 16,
+    "carbsG": 57,
+    "fatG": 7,
+    "fiberG": 7,
+    "sodiumMg": 678,
+    "sugarG": 18,
+    "potassiumMg": 292,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-048",
+    "name": "Upma (2)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 114,
+    "proteinG": 23,
+    "carbsG": 68,
+    "fatG": 10,
+    "fiberG": 12,
+    "sodiumMg": 751,
+    "sugarG": 21,
+    "potassiumMg": 389,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-049",
+    "name": "Khichdi (2)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 151,
+    "proteinG": 2,
+    "carbsG": 14,
+    "fatG": 13,
+    "fiberG": 3,
+    "sodiumMg": 824,
+    "sugarG": 0,
+    "potassiumMg": 486,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-050",
+    "name": "Poha (2)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 188,
+    "proteinG": 9,
+    "carbsG": 25,
+    "fatG": 16,
+    "fiberG": 8,
+    "sodiumMg": 897,
+    "sugarG": 3,
+    "potassiumMg": 583,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-051",
+    "name": "Curd (2)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 225,
+    "proteinG": 16,
+    "carbsG": 36,
+    "fatG": 19,
+    "fiberG": 13,
+    "sodiumMg": 70,
+    "sugarG": 6,
+    "potassiumMg": 680,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-052",
+    "name": "Sprouts (2)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 262,
+    "proteinG": 23,
+    "carbsG": 47,
+    "fatG": 22,
+    "fiberG": 4,
+    "sodiumMg": 143,
+    "sugarG": 9,
+    "potassiumMg": 777,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-053",
+    "name": "Oats (2)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 299,
+    "proteinG": 2,
+    "carbsG": 58,
+    "fatG": 3,
+    "fiberG": 9,
+    "sodiumMg": 216,
+    "sugarG": 12,
+    "potassiumMg": 874,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-054",
+    "name": "Palak Paneer (2)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 336,
+    "proteinG": 9,
+    "carbsG": 69,
+    "fatG": 6,
+    "fiberG": 14,
+    "sodiumMg": 289,
+    "sugarG": 15,
+    "potassiumMg": 121,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-055",
+    "name": "Rajma (2)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 373,
+    "proteinG": 16,
+    "carbsG": 15,
+    "fatG": 9,
+    "fiberG": 5,
+    "sodiumMg": 362,
+    "sugarG": 18,
+    "potassiumMg": 218,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-056",
+    "name": "Chole (2)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 410,
+    "proteinG": 23,
+    "carbsG": 26,
+    "fatG": 12,
+    "fiberG": 10,
+    "sodiumMg": 435,
+    "sugarG": 21,
+    "potassiumMg": 315,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-057",
+    "name": "Apple (2)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 447,
+    "proteinG": 2,
+    "carbsG": 37,
+    "fatG": 15,
+    "fiberG": 1,
+    "sodiumMg": 508,
+    "sugarG": 0,
+    "potassiumMg": 412,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-058",
+    "name": "Banana (2)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 64,
+    "proteinG": 9,
+    "carbsG": 48,
+    "fatG": 18,
+    "fiberG": 6,
+    "sodiumMg": 581,
+    "sugarG": 3,
+    "potassiumMg": 509,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-059",
+    "name": "Mango (2)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 101,
+    "proteinG": 16,
+    "carbsG": 59,
+    "fatG": 21,
+    "fiberG": 11,
+    "sodiumMg": 654,
+    "sugarG": 6,
+    "potassiumMg": 606,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-060",
+    "name": "Orange (2)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 138,
+    "proteinG": 23,
+    "carbsG": 70,
+    "fatG": 2,
+    "fiberG": 2,
+    "sodiumMg": 727,
+    "sugarG": 9,
+    "potassiumMg": 703,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-061",
+    "name": "Papaya (2)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 175,
+    "proteinG": 2,
+    "carbsG": 16,
+    "fatG": 5,
+    "fiberG": 7,
+    "sodiumMg": 800,
+    "sugarG": 12,
+    "potassiumMg": 800,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-062",
+    "name": "Guava (2)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 212,
+    "proteinG": 9,
+    "carbsG": 27,
+    "fatG": 8,
+    "fiberG": 12,
+    "sodiumMg": 873,
+    "sugarG": 15,
+    "potassiumMg": 897,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-063",
+    "name": "Almonds (2)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 249,
+    "proteinG": 16,
+    "carbsG": 38,
+    "fatG": 11,
+    "fiberG": 3,
+    "sodiumMg": 46,
+    "sugarG": 18,
+    "potassiumMg": 144,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-064",
+    "name": "Walnuts (2)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 286,
+    "proteinG": 23,
+    "carbsG": 49,
+    "fatG": 14,
+    "fiberG": 8,
+    "sodiumMg": 119,
+    "sugarG": 21,
+    "potassiumMg": 241,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-065",
+    "name": "Boiled Egg (2)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 323,
+    "proteinG": 2,
+    "carbsG": 60,
+    "fatG": 17,
+    "fiberG": 13,
+    "sodiumMg": 192,
+    "sugarG": 0,
+    "potassiumMg": 338,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-066",
+    "name": "Grilled Chicken (2)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 360,
+    "proteinG": 9,
+    "carbsG": 6,
+    "fatG": 20,
+    "fiberG": 4,
+    "sodiumMg": 265,
+    "sugarG": 3,
+    "potassiumMg": 435,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-067",
+    "name": "Salmon (2)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 397,
+    "proteinG": 16,
+    "carbsG": 17,
+    "fatG": 1,
+    "fiberG": 9,
+    "sodiumMg": 338,
+    "sugarG": 6,
+    "potassiumMg": 532,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-068",
+    "name": "Broccoli (2)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 434,
+    "proteinG": 23,
+    "carbsG": 28,
+    "fatG": 4,
+    "fiberG": 14,
+    "sodiumMg": 411,
+    "sugarG": 9,
+    "potassiumMg": 629,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-069",
+    "name": "Spinach (2)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 471,
+    "proteinG": 2,
+    "carbsG": 39,
+    "fatG": 7,
+    "fiberG": 5,
+    "sodiumMg": 484,
+    "sugarG": 12,
+    "potassiumMg": 726,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-070",
+    "name": "Tomato (2)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 88,
+    "proteinG": 9,
+    "carbsG": 50,
+    "fatG": 10,
+    "fiberG": 10,
+    "sodiumMg": 557,
+    "sugarG": 15,
+    "potassiumMg": 823,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-071",
+    "name": "Cucumber (2)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 125,
+    "proteinG": 16,
+    "carbsG": 61,
+    "fatG": 13,
+    "fiberG": 1,
+    "sodiumMg": 630,
+    "sugarG": 18,
+    "potassiumMg": 920,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-072",
+    "name": "Carrot (2)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 162,
+    "proteinG": 23,
+    "carbsG": 7,
+    "fatG": 16,
+    "fiberG": 6,
+    "sodiumMg": 703,
+    "sugarG": 21,
+    "potassiumMg": 167,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-073",
+    "name": "Sweet Potato (2)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 199,
+    "proteinG": 2,
+    "carbsG": 18,
+    "fatG": 19,
+    "fiberG": 11,
+    "sodiumMg": 776,
+    "sugarG": 0,
+    "potassiumMg": 264,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-074",
+    "name": "Quinoa (2)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 236,
+    "proteinG": 9,
+    "carbsG": 29,
+    "fatG": 22,
+    "fiberG": 2,
+    "sodiumMg": 849,
+    "sugarG": 3,
+    "potassiumMg": 361,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-075",
+    "name": "Greek Yogurt (2)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 273,
+    "proteinG": 16,
+    "carbsG": 40,
+    "fatG": 3,
+    "fiberG": 7,
+    "sodiumMg": 22,
+    "sugarG": 6,
+    "potassiumMg": 458,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-076",
+    "name": "Lentil Soup (2)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 310,
+    "proteinG": 23,
+    "carbsG": 51,
+    "fatG": 6,
+    "fiberG": 12,
+    "sodiumMg": 95,
+    "sugarG": 9,
+    "potassiumMg": 555,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-077",
+    "name": "Tofu (2)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 347,
+    "proteinG": 2,
+    "carbsG": 62,
+    "fatG": 9,
+    "fiberG": 3,
+    "sodiumMg": 168,
+    "sugarG": 12,
+    "potassiumMg": 652,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-078",
+    "name": "Avocado (2)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 384,
+    "proteinG": 9,
+    "carbsG": 8,
+    "fatG": 12,
+    "fiberG": 8,
+    "sodiumMg": 241,
+    "sugarG": 15,
+    "potassiumMg": 749,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-079",
+    "name": "Whole Grain Bread (2)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 421,
+    "proteinG": 16,
+    "carbsG": 19,
+    "fatG": 15,
+    "fiberG": 13,
+    "sodiumMg": 314,
+    "sugarG": 18,
+    "potassiumMg": 846,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-080",
+    "name": "Corn (2)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 458,
+    "proteinG": 23,
+    "carbsG": 30,
+    "fatG": 18,
+    "fiberG": 4,
+    "sodiumMg": 387,
+    "sugarG": 21,
+    "potassiumMg": 93,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-081",
+    "name": "Moong Dal Tadka (3)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 75,
+    "proteinG": 2,
+    "carbsG": 41,
+    "fatG": 21,
+    "fiberG": 9,
+    "sodiumMg": 460,
+    "sugarG": 0,
+    "potassiumMg": 190,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-082",
+    "name": "Whole Wheat Roti (3)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 112,
+    "proteinG": 9,
+    "carbsG": 52,
+    "fatG": 2,
+    "fiberG": 14,
+    "sodiumMg": 533,
+    "sugarG": 3,
+    "potassiumMg": 287,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-083",
+    "name": "Steamed Idli (3)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 149,
+    "proteinG": 16,
+    "carbsG": 63,
+    "fatG": 5,
+    "fiberG": 5,
+    "sodiumMg": 606,
+    "sugarG": 6,
+    "potassiumMg": 384,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-084",
+    "name": "Ragi Dosa (3)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 186,
+    "proteinG": 23,
+    "carbsG": 9,
+    "fatG": 8,
+    "fiberG": 10,
+    "sodiumMg": 679,
+    "sugarG": 9,
+    "potassiumMg": 481,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-085",
+    "name": "Vegetable Sambar (3)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 223,
+    "proteinG": 2,
+    "carbsG": 20,
+    "fatG": 11,
+    "fiberG": 1,
+    "sodiumMg": 752,
+    "sugarG": 12,
+    "potassiumMg": 578,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-086",
+    "name": "Paneer Tikka (3)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 260,
+    "proteinG": 9,
+    "carbsG": 31,
+    "fatG": 14,
+    "fiberG": 6,
+    "sodiumMg": 825,
+    "sugarG": 15,
+    "potassiumMg": 675,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-087",
+    "name": "Brown Rice (3)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 297,
+    "proteinG": 16,
+    "carbsG": 42,
+    "fatG": 17,
+    "fiberG": 11,
+    "sodiumMg": 898,
+    "sugarG": 18,
+    "potassiumMg": 772,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-088",
+    "name": "Upma (3)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 334,
+    "proteinG": 23,
+    "carbsG": 53,
+    "fatG": 20,
+    "fiberG": 2,
+    "sodiumMg": 71,
+    "sugarG": 21,
+    "potassiumMg": 869,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-089",
+    "name": "Khichdi (3)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 371,
+    "proteinG": 2,
+    "carbsG": 64,
+    "fatG": 1,
+    "fiberG": 7,
+    "sodiumMg": 144,
+    "sugarG": 0,
+    "potassiumMg": 116,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-090",
+    "name": "Poha (3)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 408,
+    "proteinG": 9,
+    "carbsG": 10,
+    "fatG": 4,
+    "fiberG": 12,
+    "sodiumMg": 217,
+    "sugarG": 3,
+    "potassiumMg": 213,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-091",
+    "name": "Curd (3)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 445,
+    "proteinG": 16,
+    "carbsG": 21,
+    "fatG": 7,
+    "fiberG": 3,
+    "sodiumMg": 290,
+    "sugarG": 6,
+    "potassiumMg": 310,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-092",
+    "name": "Sprouts (3)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 62,
+    "proteinG": 23,
+    "carbsG": 32,
+    "fatG": 10,
+    "fiberG": 8,
+    "sodiumMg": 363,
+    "sugarG": 9,
+    "potassiumMg": 407,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-093",
+    "name": "Oats (3)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 99,
+    "proteinG": 2,
+    "carbsG": 43,
+    "fatG": 13,
+    "fiberG": 13,
+    "sodiumMg": 436,
+    "sugarG": 12,
+    "potassiumMg": 504,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-094",
+    "name": "Palak Paneer (3)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 136,
+    "proteinG": 9,
+    "carbsG": 54,
+    "fatG": 16,
+    "fiberG": 4,
+    "sodiumMg": 509,
+    "sugarG": 15,
+    "potassiumMg": 601,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-095",
+    "name": "Rajma (3)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 173,
+    "proteinG": 16,
+    "carbsG": 65,
+    "fatG": 19,
+    "fiberG": 9,
+    "sodiumMg": 582,
+    "sugarG": 18,
+    "potassiumMg": 698,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-096",
+    "name": "Chole (3)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 210,
+    "proteinG": 23,
+    "carbsG": 11,
+    "fatG": 22,
+    "fiberG": 14,
+    "sodiumMg": 655,
+    "sugarG": 21,
+    "potassiumMg": 795,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-097",
+    "name": "Apple (3)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 247,
+    "proteinG": 2,
+    "carbsG": 22,
+    "fatG": 3,
+    "fiberG": 5,
+    "sodiumMg": 728,
+    "sugarG": 0,
+    "potassiumMg": 892,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-098",
+    "name": "Banana (3)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 284,
+    "proteinG": 9,
+    "carbsG": 33,
+    "fatG": 6,
+    "fiberG": 10,
+    "sodiumMg": 801,
+    "sugarG": 3,
+    "potassiumMg": 139,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-099",
+    "name": "Mango (3)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 321,
+    "proteinG": 16,
+    "carbsG": 44,
+    "fatG": 9,
+    "fiberG": 1,
+    "sodiumMg": 874,
+    "sugarG": 6,
+    "potassiumMg": 236,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-100",
+    "name": "Orange (3)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 358,
+    "proteinG": 23,
+    "carbsG": 55,
+    "fatG": 12,
+    "fiberG": 6,
+    "sodiumMg": 47,
+    "sugarG": 9,
+    "potassiumMg": 333,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-101",
+    "name": "Papaya (3)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 395,
+    "proteinG": 2,
+    "carbsG": 66,
+    "fatG": 15,
+    "fiberG": 11,
+    "sodiumMg": 120,
+    "sugarG": 12,
+    "potassiumMg": 430,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-102",
+    "name": "Guava (3)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 432,
+    "proteinG": 9,
+    "carbsG": 12,
+    "fatG": 18,
+    "fiberG": 2,
+    "sodiumMg": 193,
+    "sugarG": 15,
+    "potassiumMg": 527,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-103",
+    "name": "Almonds (3)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 469,
+    "proteinG": 16,
+    "carbsG": 23,
+    "fatG": 21,
+    "fiberG": 7,
+    "sodiumMg": 266,
+    "sugarG": 18,
+    "potassiumMg": 624,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-104",
+    "name": "Walnuts (3)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 86,
+    "proteinG": 23,
+    "carbsG": 34,
+    "fatG": 2,
+    "fiberG": 12,
+    "sodiumMg": 339,
+    "sugarG": 21,
+    "potassiumMg": 721,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-105",
+    "name": "Boiled Egg (3)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 123,
+    "proteinG": 2,
+    "carbsG": 45,
+    "fatG": 5,
+    "fiberG": 3,
+    "sodiumMg": 412,
+    "sugarG": 0,
+    "potassiumMg": 818,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-106",
+    "name": "Grilled Chicken (3)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 160,
+    "proteinG": 9,
+    "carbsG": 56,
+    "fatG": 8,
+    "fiberG": 8,
+    "sodiumMg": 485,
+    "sugarG": 3,
+    "potassiumMg": 915,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-107",
+    "name": "Salmon (3)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 197,
+    "proteinG": 16,
+    "carbsG": 67,
+    "fatG": 11,
+    "fiberG": 13,
+    "sodiumMg": 558,
+    "sugarG": 6,
+    "potassiumMg": 162,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-108",
+    "name": "Broccoli (3)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 234,
+    "proteinG": 23,
+    "carbsG": 13,
+    "fatG": 14,
+    "fiberG": 4,
+    "sodiumMg": 631,
+    "sugarG": 9,
+    "potassiumMg": 259,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-109",
+    "name": "Spinach (3)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 271,
+    "proteinG": 2,
+    "carbsG": 24,
+    "fatG": 17,
+    "fiberG": 9,
+    "sodiumMg": 704,
+    "sugarG": 12,
+    "potassiumMg": 356,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-110",
+    "name": "Tomato (3)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 308,
+    "proteinG": 9,
+    "carbsG": 35,
+    "fatG": 20,
+    "fiberG": 14,
+    "sodiumMg": 777,
+    "sugarG": 15,
+    "potassiumMg": 453,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-111",
+    "name": "Cucumber (3)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 345,
+    "proteinG": 16,
+    "carbsG": 46,
+    "fatG": 1,
+    "fiberG": 5,
+    "sodiumMg": 850,
+    "sugarG": 18,
+    "potassiumMg": 550,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-112",
+    "name": "Carrot (3)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 382,
+    "proteinG": 23,
+    "carbsG": 57,
+    "fatG": 4,
+    "fiberG": 10,
+    "sodiumMg": 23,
+    "sugarG": 21,
+    "potassiumMg": 647,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-113",
+    "name": "Sweet Potato (3)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 419,
+    "proteinG": 2,
+    "carbsG": 68,
+    "fatG": 7,
+    "fiberG": 1,
+    "sodiumMg": 96,
+    "sugarG": 0,
+    "potassiumMg": 744,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-114",
+    "name": "Quinoa (3)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 456,
+    "proteinG": 9,
+    "carbsG": 14,
+    "fatG": 10,
+    "fiberG": 6,
+    "sodiumMg": 169,
+    "sugarG": 3,
+    "potassiumMg": 841,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-115",
+    "name": "Greek Yogurt (3)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 73,
+    "proteinG": 16,
+    "carbsG": 25,
+    "fatG": 13,
+    "fiberG": 11,
+    "sodiumMg": 242,
+    "sugarG": 6,
+    "potassiumMg": 88,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-116",
+    "name": "Lentil Soup (3)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 110,
+    "proteinG": 23,
+    "carbsG": 36,
+    "fatG": 16,
+    "fiberG": 2,
+    "sodiumMg": 315,
+    "sugarG": 9,
+    "potassiumMg": 185,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-117",
+    "name": "Tofu (3)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 147,
+    "proteinG": 2,
+    "carbsG": 47,
+    "fatG": 19,
+    "fiberG": 7,
+    "sodiumMg": 388,
+    "sugarG": 12,
+    "potassiumMg": 282,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-118",
+    "name": "Avocado (3)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 184,
+    "proteinG": 9,
+    "carbsG": 58,
+    "fatG": 22,
+    "fiberG": 12,
+    "sodiumMg": 461,
+    "sugarG": 15,
+    "potassiumMg": 379,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-119",
+    "name": "Whole Grain Bread (3)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 221,
+    "proteinG": 16,
+    "carbsG": 69,
+    "fatG": 3,
+    "fiberG": 3,
+    "sodiumMg": 534,
+    "sugarG": 18,
+    "potassiumMg": 476,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-120",
+    "name": "Corn (3)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 258,
+    "proteinG": 23,
+    "carbsG": 15,
+    "fatG": 6,
+    "fiberG": 8,
+    "sodiumMg": 607,
+    "sugarG": 21,
+    "potassiumMg": 573,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-121",
+    "name": "Moong Dal Tadka (4)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 295,
+    "proteinG": 2,
+    "carbsG": 26,
+    "fatG": 9,
+    "fiberG": 13,
+    "sodiumMg": 680,
+    "sugarG": 0,
+    "potassiumMg": 670,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-122",
+    "name": "Whole Wheat Roti (4)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 332,
+    "proteinG": 9,
+    "carbsG": 37,
+    "fatG": 12,
+    "fiberG": 4,
+    "sodiumMg": 753,
+    "sugarG": 3,
+    "potassiumMg": 767,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-123",
+    "name": "Steamed Idli (4)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 369,
+    "proteinG": 16,
+    "carbsG": 48,
+    "fatG": 15,
+    "fiberG": 9,
+    "sodiumMg": 826,
+    "sugarG": 6,
+    "potassiumMg": 864,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-124",
+    "name": "Ragi Dosa (4)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 406,
+    "proteinG": 23,
+    "carbsG": 59,
+    "fatG": 18,
+    "fiberG": 14,
+    "sodiumMg": 899,
+    "sugarG": 9,
+    "potassiumMg": 111,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-125",
+    "name": "Vegetable Sambar (4)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 443,
+    "proteinG": 2,
+    "carbsG": 70,
+    "fatG": 21,
+    "fiberG": 5,
+    "sodiumMg": 72,
+    "sugarG": 12,
+    "potassiumMg": 208,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-126",
+    "name": "Paneer Tikka (4)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 60,
+    "proteinG": 9,
+    "carbsG": 16,
+    "fatG": 2,
+    "fiberG": 10,
+    "sodiumMg": 145,
+    "sugarG": 15,
+    "potassiumMg": 305,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-127",
+    "name": "Brown Rice (4)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 97,
+    "proteinG": 16,
+    "carbsG": 27,
+    "fatG": 5,
+    "fiberG": 1,
+    "sodiumMg": 218,
+    "sugarG": 18,
+    "potassiumMg": 402,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-128",
+    "name": "Upma (4)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 134,
+    "proteinG": 23,
+    "carbsG": 38,
+    "fatG": 8,
+    "fiberG": 6,
+    "sodiumMg": 291,
+    "sugarG": 21,
+    "potassiumMg": 499,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-129",
+    "name": "Khichdi (4)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 171,
+    "proteinG": 2,
+    "carbsG": 49,
+    "fatG": 11,
+    "fiberG": 11,
+    "sodiumMg": 364,
+    "sugarG": 0,
+    "potassiumMg": 596,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-130",
+    "name": "Poha (4)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 208,
+    "proteinG": 9,
+    "carbsG": 60,
+    "fatG": 14,
+    "fiberG": 2,
+    "sodiumMg": 437,
+    "sugarG": 3,
+    "potassiumMg": 693,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-131",
+    "name": "Curd (4)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 245,
+    "proteinG": 16,
+    "carbsG": 6,
+    "fatG": 17,
+    "fiberG": 7,
+    "sodiumMg": 510,
+    "sugarG": 6,
+    "potassiumMg": 790,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-132",
+    "name": "Sprouts (4)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 282,
+    "proteinG": 23,
+    "carbsG": 17,
+    "fatG": 20,
+    "fiberG": 12,
+    "sodiumMg": 583,
+    "sugarG": 9,
+    "potassiumMg": 887,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-133",
+    "name": "Oats (4)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 319,
+    "proteinG": 2,
+    "carbsG": 28,
+    "fatG": 1,
+    "fiberG": 3,
+    "sodiumMg": 656,
+    "sugarG": 12,
+    "potassiumMg": 134,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-134",
+    "name": "Palak Paneer (4)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 356,
+    "proteinG": 9,
+    "carbsG": 39,
+    "fatG": 4,
+    "fiberG": 8,
+    "sodiumMg": 729,
+    "sugarG": 15,
+    "potassiumMg": 231,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-135",
+    "name": "Rajma (4)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 393,
+    "proteinG": 16,
+    "carbsG": 50,
+    "fatG": 7,
+    "fiberG": 13,
+    "sodiumMg": 802,
+    "sugarG": 18,
+    "potassiumMg": 328,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-136",
+    "name": "Chole (4)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 430,
+    "proteinG": 23,
+    "carbsG": 61,
+    "fatG": 10,
+    "fiberG": 4,
+    "sodiumMg": 875,
+    "sugarG": 21,
+    "potassiumMg": 425,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-137",
+    "name": "Apple (4)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 467,
+    "proteinG": 2,
+    "carbsG": 7,
+    "fatG": 13,
+    "fiberG": 9,
+    "sodiumMg": 48,
+    "sugarG": 0,
+    "potassiumMg": 522,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-138",
+    "name": "Banana (4)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 84,
+    "proteinG": 9,
+    "carbsG": 18,
+    "fatG": 16,
+    "fiberG": 14,
+    "sodiumMg": 121,
+    "sugarG": 3,
+    "potassiumMg": 619,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-139",
+    "name": "Mango (4)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 121,
+    "proteinG": 16,
+    "carbsG": 29,
+    "fatG": 19,
+    "fiberG": 5,
+    "sodiumMg": 194,
+    "sugarG": 6,
+    "potassiumMg": 716,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-140",
+    "name": "Orange (4)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 158,
+    "proteinG": 23,
+    "carbsG": 40,
+    "fatG": 22,
+    "fiberG": 10,
+    "sodiumMg": 267,
+    "sugarG": 9,
+    "potassiumMg": 813,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-141",
+    "name": "Papaya (4)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 195,
+    "proteinG": 2,
+    "carbsG": 51,
+    "fatG": 3,
+    "fiberG": 1,
+    "sodiumMg": 340,
+    "sugarG": 12,
+    "potassiumMg": 910,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-142",
+    "name": "Guava (4)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 232,
+    "proteinG": 9,
+    "carbsG": 62,
+    "fatG": 6,
+    "fiberG": 6,
+    "sodiumMg": 413,
+    "sugarG": 15,
+    "potassiumMg": 157,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-143",
+    "name": "Almonds (4)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 269,
+    "proteinG": 16,
+    "carbsG": 8,
+    "fatG": 9,
+    "fiberG": 11,
+    "sodiumMg": 486,
+    "sugarG": 18,
+    "potassiumMg": 254,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-144",
+    "name": "Walnuts (4)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 306,
+    "proteinG": 23,
+    "carbsG": 19,
+    "fatG": 12,
+    "fiberG": 2,
+    "sodiumMg": 559,
+    "sugarG": 21,
+    "potassiumMg": 351,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-145",
+    "name": "Boiled Egg (4)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 343,
+    "proteinG": 2,
+    "carbsG": 30,
+    "fatG": 15,
+    "fiberG": 7,
+    "sodiumMg": 632,
+    "sugarG": 0,
+    "potassiumMg": 448,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-146",
+    "name": "Grilled Chicken (4)",
+    "category": "Grains",
+    "servingSize": "1 medium serving",
+    "calories": 380,
+    "proteinG": 9,
+    "carbsG": 41,
+    "fatG": 18,
+    "fiberG": 12,
+    "sodiumMg": 705,
+    "sugarG": 3,
+    "potassiumMg": 545,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-147",
+    "name": "Salmon (4)",
+    "category": "Vegetables",
+    "servingSize": "100 g",
+    "calories": 417,
+    "proteinG": 16,
+    "carbsG": 52,
+    "fatG": 21,
+    "fiberG": 3,
+    "sodiumMg": 778,
+    "sugarG": 6,
+    "potassiumMg": 642,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-148",
+    "name": "Broccoli (4)",
+    "category": "Fruit",
+    "servingSize": "1 cup",
+    "calories": 454,
+    "proteinG": 23,
+    "carbsG": 63,
+    "fatG": 2,
+    "fiberG": 8,
+    "sodiumMg": 851,
+    "sugarG": 9,
+    "potassiumMg": 739,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-149",
+    "name": "Spinach (4)",
+    "category": "Protein",
+    "servingSize": "1 medium serving",
+    "calories": 71,
+    "proteinG": 2,
+    "carbsG": 9,
+    "fatG": 5,
+    "fiberG": 13,
+    "sodiumMg": 24,
+    "sugarG": 12,
+    "potassiumMg": 836,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-150",
+    "name": "Tomato (4)",
+    "category": "Dairy",
+    "servingSize": "100 g",
+    "calories": 108,
+    "proteinG": 9,
+    "carbsG": 20,
+    "fatG": 8,
+    "fiberG": 4,
+    "sodiumMg": 97,
+    "sugarG": 15,
+    "potassiumMg": 83,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-151",
+    "name": "Cucumber (4)",
+    "category": "Grains",
+    "servingSize": "1 cup",
+    "calories": 145,
+    "proteinG": 16,
+    "carbsG": 31,
+    "fatG": 11,
+    "fiberG": 9,
+    "sodiumMg": 170,
+    "sugarG": 18,
+    "potassiumMg": 180,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-152",
+    "name": "Carrot (4)",
+    "category": "Vegetables",
+    "servingSize": "1 medium serving",
+    "calories": 182,
+    "proteinG": 23,
+    "carbsG": 42,
+    "fatG": 14,
+    "fiberG": 14,
+    "sodiumMg": 243,
+    "sugarG": 21,
+    "potassiumMg": 277,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-153",
+    "name": "Sweet Potato (4)",
+    "category": "Fruit",
+    "servingSize": "100 g",
+    "calories": 219,
+    "proteinG": 2,
+    "carbsG": 53,
+    "fatG": 17,
+    "fiberG": 5,
+    "sodiumMg": 316,
+    "sugarG": 0,
+    "potassiumMg": 374,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-154",
+    "name": "Quinoa (4)",
+    "category": "Protein",
+    "servingSize": "1 cup",
+    "calories": 256,
+    "proteinG": 9,
+    "carbsG": 64,
+    "fatG": 20,
+    "fiberG": 10,
+    "sodiumMg": 389,
+    "sugarG": 3,
+    "potassiumMg": 471,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-155",
+    "name": "Greek Yogurt (4)",
+    "category": "Dairy",
+    "servingSize": "1 medium serving",
+    "calories": 293,
+    "proteinG": 16,
+    "carbsG": 10,
+    "fatG": 1,
+    "fiberG": 1,
+    "sodiumMg": 462,
+    "sugarG": 6,
+    "potassiumMg": 568,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-156",
+    "name": "Lentil Soup (4)",
+    "category": "Grains",
+    "servingSize": "100 g",
+    "calories": 330,
+    "proteinG": 23,
+    "carbsG": 21,
+    "fatG": 4,
+    "fiberG": 6,
+    "sodiumMg": 535,
+    "sugarG": 9,
+    "potassiumMg": 665,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "HYPERTENSION",
+      "HEART_DISEASE"
+    ]
+  },
+  {
+    "id": "food-157",
+    "name": "Tofu (4)",
+    "category": "Vegetables",
+    "servingSize": "1 cup",
+    "calories": 367,
+    "proteinG": 2,
+    "carbsG": 32,
+    "fatG": 7,
+    "fiberG": 11,
+    "sodiumMg": 608,
+    "sugarG": 12,
+    "potassiumMg": 762,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-158",
+    "name": "Avocado (4)",
+    "category": "Fruit",
+    "servingSize": "1 medium serving",
+    "calories": 404,
+    "proteinG": 9,
+    "carbsG": 43,
+    "fatG": 10,
+    "fiberG": 2,
+    "sodiumMg": 681,
+    "sugarG": 15,
+    "potassiumMg": 859,
+    "glycemicIndex": "MEDIUM",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-159",
+    "name": "Whole Grain Bread (4)",
+    "category": "Protein",
+    "servingSize": "100 g",
+    "calories": 441,
+    "proteinG": 16,
+    "carbsG": 54,
+    "fatG": 13,
+    "fiberG": 7,
+    "sodiumMg": 754,
+    "sugarG": 18,
+    "potassiumMg": 106,
+    "glycemicIndex": "HIGH",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  },
+  {
+    "id": "food-160",
+    "name": "Corn (4)",
+    "category": "Dairy",
+    "servingSize": "1 cup",
+    "calories": 58,
+    "proteinG": 23,
+    "carbsG": 65,
+    "fatG": 16,
+    "fiberG": 12,
+    "sodiumMg": 827,
+    "sugarG": 21,
+    "potassiumMg": 203,
+    "glycemicIndex": "LOW",
+    "safeForConditions": [
+      "DIABETES",
+      "HYPERTENSION",
+      "OBESITY"
+    ]
+  }
+]
