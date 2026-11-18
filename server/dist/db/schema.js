@@ -1,10 +1,10 @@
-import { DatabaseSync } from 'node:sqlite';
-import fs from 'node:fs';
-import path from 'node:path';
-import { config } from '../config.js';
+import { DatabaseSync } from "node:sqlite";
+import fs from "node:fs";
+import path from "node:path";
+import { config } from "../config.js";
 fs.mkdirSync(path.dirname(config.databasePath), { recursive: true });
 export const db = new DatabaseSync(config.databasePath);
-db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
+db.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;");
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, name TEXT NOT NULL, role TEXT NOT NULL, age INTEGER, conditions TEXT NOT NULL DEFAULT '[]', active INTEGER NOT NULL DEFAULT 1, settings TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT NOT NULL, date TEXT NOT NULL, adherence REAL, weight REAL, water INTEGER, calories INTEGER, systolic INTEGER, diastolic INTEGER, glucose REAL, meals INTEGER, symptoms TEXT DEFAULT '', FOREIGN KEY(user_id) REFERENCES users(id));
