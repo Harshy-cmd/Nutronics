@@ -92,7 +92,7 @@ app.get("/api/patient/dashboard", (req, res) => {
     const uid = req.user.id;
     const today = new Date().toISOString().slice(0, 10);
     const latest = one("SELECT * FROM logs WHERE user_id=? ORDER BY date DESC LIMIT 1", uid);
-    const allFoods = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"));
+    const allFoods = JSON.parse(fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"));
     const todays = rows("SELECT * FROM meals WHERE user_id=? AND day=0", uid).map((m) => ({ ...m, ...allFoods.find((f) => f.id === m.food_id) }));
     const reminders = rows("SELECT * FROM reminders WHERE user_id=? ORDER BY time", uid);
     res.json({
@@ -106,7 +106,7 @@ app.get("/api/patient/dashboard", (req, res) => {
     });
 });
 app.get("/api/patient/diet", (req, res) => {
-    const foods = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"));
+    const foods = JSON.parse(fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"));
     res.json({
         meals: rows("SELECT * FROM meals WHERE user_id=? ORDER BY day,slot", req.user.id).map((m) => ({
             ...m,
@@ -304,7 +304,7 @@ import { attachRoutes } from "./routes.js";
 attachRoutes(app);
 app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
     const q = String(req.body.query || "");
-    const foods = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"));
+    const foods = JSON.parse(fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"));
     const fallback = {
         source: "local",
         results: foods
@@ -313,7 +313,7 @@ app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
     };
     if (req.body.kind === "medicine")
         return res.json({
-            data: await rxNavLookup(q, JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data/medicines.json"), "utf8")).filter((m) => m.genericName.toLowerCase().includes(q.toLowerCase()))),
+            data: await rxNavLookup(q, JSON.parse(fs.readFileSync(path.resolve(config.dataPath, "medicines.json"), "utf8")).filter((m) => m.genericName.toLowerCase().includes(q.toLowerCase()))),
         });
     if (req.body.kind === "condition")
         return res.json({ data: await medlineLookup(q, fallback) });
@@ -328,7 +328,7 @@ app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
     });
 });
 app.get("/api/shared/foods", (req, res) => {
-    const foods = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"));
+    const foods = JSON.parse(fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"));
     const q = String(req.query.q || "").toLowerCase();
     res.json({
         foods: foods.filter((f) => !q || f.name.toLowerCase().includes(q)),
@@ -336,7 +336,7 @@ app.get("/api/shared/foods", (req, res) => {
     });
 });
 app.get("/api/shared/medicines", (_req, res) => res.json({
-    medicines: JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data/medicines.json"), "utf8")),
+    medicines: JSON.parse(fs.readFileSync(path.resolve(config.dataPath, "medicines.json"), "utf8")),
     disclaimer: DISCLAIMER,
 }));
 app.get("/api/shared/guidelines", (_req, res) => res.json({

@@ -121,7 +121,7 @@ app.get("/api/patient/dashboard", (req, res) => {
     uid,
   );
   const allFoods = JSON.parse(
-    fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"),
+    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
   );
   const todays = rows("SELECT * FROM meals WHERE user_id=? AND day=0", uid).map(
     (m: any) => ({ ...m, ...allFoods.find((f: any) => f.id === m.food_id) }),
@@ -142,7 +142,7 @@ app.get("/api/patient/dashboard", (req, res) => {
 });
 app.get("/api/patient/diet", (req, res) => {
   const foods = JSON.parse(
-    fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"),
+    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
   );
   res.json({
     meals: rows(
@@ -484,7 +484,7 @@ attachRoutes(app);
 app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
   const q = String(req.body.query || "");
   const foods = JSON.parse(
-    fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"),
+    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
   );
   const fallback = {
     source: "local",
@@ -498,7 +498,7 @@ app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
         q,
         JSON.parse(
           fs.readFileSync(
-            path.resolve(process.cwd(), "data/medicines.json"),
+            path.resolve(config.dataPath, "medicines.json"),
             "utf8",
           ),
         ).filter((m: any) =>
@@ -520,7 +520,7 @@ app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
 });
 app.get("/api/shared/foods", (req, res) => {
   const foods = JSON.parse(
-    fs.readFileSync(path.resolve(process.cwd(), "data/foods.json"), "utf8"),
+    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
   );
   const q = String(req.query.q || "").toLowerCase();
   res.json({
@@ -532,7 +532,7 @@ app.get("/api/shared/medicines", (_req, res) =>
   res.json({
     medicines: JSON.parse(
       fs.readFileSync(
-        path.resolve(process.cwd(), "data/medicines.json"),
+        path.resolve(config.dataPath, "medicines.json"),
         "utf8",
       ),
     ),

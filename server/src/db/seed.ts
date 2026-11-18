@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs";
 import fs from "node:fs";
 import path from "node:path";
 import { db } from "./schema.js";
+import { config } from "../config.js";
 import "./generateDatasets.js";
 faker.seed(20250303);
-const dataDir = path.resolve(process.cwd(), "data");
+const dataDir = config.dataPath;
 const read = (name: string) =>
   JSON.parse(
     fs.readFileSync(path.join(dataDir, `${name}.json`), "utf8"),
@@ -147,7 +148,7 @@ for (const uid of ["patient-1", "patient-2", "patient-3"])
     "Fitness Band",
   ].entries())
     device.run(uid, name, i === 0 ? 1 : 0, uid, name);
-fs.mkdirSync(path.resolve(process.cwd(), "uploads"), { recursive: true });
+fs.mkdirSync(config.uploadsPath, { recursive: true });
 for (const [uid, name] of [
   ["patient-1", "Aarav Sharma"],
   ["patient-2", "Meera Nair"],
@@ -155,7 +156,7 @@ for (const [uid, name] of [
 ]) {
   const file = `demo-${uid}.txt`;
   fs.writeFileSync(
-    path.resolve(process.cwd(), "uploads", file),
+    path.resolve(config.uploadsPath, file),
     `Nutronics sample health record for ${name}. Synthetic demo content.`,
   );
   db.prepare(

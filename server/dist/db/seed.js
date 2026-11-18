@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs";
 import fs from "node:fs";
 import path from "node:path";
 import { db } from "./schema.js";
+import { config } from "../config.js";
 import "./generateDatasets.js";
 faker.seed(20250303);
-const dataDir = path.resolve(process.cwd(), "data");
+const dataDir = config.dataPath;
 const read = (name) => JSON.parse(fs.readFileSync(path.join(dataDir, `${name}.json`), "utf8"));
 const foods = read("foods");
 const accounts = [
@@ -92,14 +93,14 @@ for (const uid of ["patient-1", "patient-2", "patient-3"])
         "Fitness Band",
     ].entries())
         device.run(uid, name, i === 0 ? 1 : 0, uid, name);
-fs.mkdirSync(path.resolve(process.cwd(), "uploads"), { recursive: true });
+fs.mkdirSync(config.uploadsPath, { recursive: true });
 for (const [uid, name] of [
     ["patient-1", "Aarav Sharma"],
     ["patient-2", "Meera Nair"],
     ["patient-3", "Kabir Verma"],
 ]) {
     const file = `demo-${uid}.txt`;
-    fs.writeFileSync(path.resolve(process.cwd(), "uploads", file), `Nutronics sample health record for ${name}. Synthetic demo content.`);
+    fs.writeFileSync(path.resolve(config.uploadsPath, file), `Nutronics sample health record for ${name}. Synthetic demo content.`);
     db.prepare("INSERT INTO records(user_id,name,category,file_path) SELECT ?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM records WHERE user_id=? AND name=?)").run(uid, "Sample Health Summary", "Lab report", file, uid, "Sample Health Summary");
 }
 for (const [uid, message] of [

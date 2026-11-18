@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-const dir = path.resolve(process.cwd(), "data");
+import { config } from "../config.js";
+const dir = config.dataPath;
 fs.mkdirSync(dir, { recursive: true });
 const staples = [
     "Moong Dal Tadka",
