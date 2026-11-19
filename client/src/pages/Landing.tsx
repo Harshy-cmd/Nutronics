@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 export function Landing({ login }: { login: (email: string) => Promise<void> }) {
+  const showDemo = import.meta.env.VITE_SHOW_DEMO === "true";
   const [loginError, setLoginError] = useState("");
   const startDemo = async (email: string) => {
     setLoginError("");
@@ -55,20 +56,33 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
             one place.
           </p>
           <div className="hero-actions">
-            <button
-              className="button primary"
-              onClick={() => void startDemo("patient@nutronics.org")}
-            >
-              Explore as a patient <ArrowRight size={17} />
-            </button>
-            <button
-              className="text-button"
-              onClick={() => void startDemo("doctor@nutronics.org")}
-            >
-              Doctor sign in <ChevronRight size={16} />
-            </button>
+            {showDemo ? (
+              <>
+                <button
+                  className="button primary"
+                  onClick={() => void startDemo("patient@nutronics.org")}
+                >
+                  Explore as a patient <ArrowRight size={17} />
+                </button>
+                <button
+                  className="text-button"
+                  onClick={() => void startDemo("doctor@nutronics.org")}
+                >
+                  Doctor sign in <ChevronRight size={16} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link className="button primary" to="/auth/register">
+                  Create your account <ArrowRight size={17} />
+                </Link>
+                <Link className="text-button" to="/auth">
+                  Sign in <ChevronRight size={16} />
+                </Link>
+              </>
+            )}
           </div>
-          {loginError && (
+          {showDemo && loginError && (
             <div className="auth-error" role="alert">
               {loginError}
             </div>
@@ -166,20 +180,22 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
           </div>
         ))}
       </section>
-      <div className="demo-banner">
-        <span>
-          <Sparkles size={17} /> Try the local demo with one click
-        </span>
-        <button onClick={() => void startDemo("patient@nutronics.org")}>
-          Patient <ArrowRight size={15} />
-        </button>
-        <button onClick={() => void startDemo("doctor@nutronics.org")}>
-          Doctor <ArrowRight size={15} />
-        </button>
-        <button onClick={() => void startDemo("admin@nutronics.org")}>
-          Admin <ArrowRight size={15} />
-        </button>
-      </div>
+      {showDemo && (
+        <div className="demo-banner">
+          <span>
+            <Sparkles size={17} /> Try the local demo with one click
+          </span>
+          <button onClick={() => void startDemo("patient@nutronics.org")}>
+            Patient <ArrowRight size={15} />
+          </button>
+          <button onClick={() => void startDemo("doctor@nutronics.org")}>
+            Doctor <ArrowRight size={15} />
+          </button>
+          <button onClick={() => void startDemo("admin@nutronics.org")}>
+            Admin <ArrowRight size={15} />
+          </button>
+        </div>
+      )}
       <footer className="landing-footer">
         © 2026 Nutronics <span>·</span> Thoughtful digital health for everyday
         life
