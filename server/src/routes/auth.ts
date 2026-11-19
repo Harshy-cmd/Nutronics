@@ -47,7 +47,7 @@ function parseCookies(header?: string): Record<string, string> {
 function setRefreshTokenCookie(res: Response, token: string) {
   res.cookie(REFRESH_COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: config.nodeEnv === 'production' ? 'none' : 'lax',
     secure: config.nodeEnv === 'production',
     path: '/api/auth',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -57,7 +57,7 @@ function setRefreshTokenCookie(res: Response, token: string) {
 function clearRefreshTokenCookie(res: Response) {
   res.clearCookie(REFRESH_COOKIE_NAME, {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: config.nodeEnv === 'production' ? 'none' : 'lax',
     secure: config.nodeEnv === 'production',
     path: '/api/auth',
   });

@@ -11,7 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export function Landing({ login }: { login: (email: string) => void }) {
+export function Landing({ login }: { login: (email: string) => Promise<void> }) {
   return (
     <div className="landing">
       <header className="landing-nav">
@@ -46,13 +46,13 @@ export function Landing({ login }: { login: (email: string) => void }) {
           <div className="hero-actions">
             <button
               className="button primary"
-              onClick={() => login("patient@nutronics.org")}
+              onClick={() => void login("patient@nutronics.org").catch(() => {})}
             >
               Explore as a patient <ArrowRight size={17} />
             </button>
             <button
               className="text-button"
-              onClick={() => login("doctor@nutronics.org")}
+              onClick={() => void login("doctor@nutronics.org").catch(() => {})}
             >
               Doctor sign in <ChevronRight size={16} />
             </button>
@@ -154,13 +154,13 @@ export function Landing({ login }: { login: (email: string) => void }) {
         <span>
           <Sparkles size={17} /> Try the local demo with one click
         </span>
-        <button onClick={() => login("patient@nutronics.org")}>
+        <button onClick={() => void login("patient@nutronics.org").catch(() => {})}>
           Patient <ArrowRight size={15} />
         </button>
-        <button onClick={() => login("doctor@nutronics.org")}>
+        <button onClick={() => void login("doctor@nutronics.org").catch(() => {})}>
           Doctor <ArrowRight size={15} />
         </button>
-        <button onClick={() => login("admin@nutronics.org")}>
+        <button onClick={() => void login("admin@nutronics.org").catch(() => {})}>
           Admin <ArrowRight size={15} />
         </button>
       </div>

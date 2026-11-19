@@ -36,7 +36,10 @@ export const config = {
     serverDir,
     process.env.DATABASE_PATH || "data/nutronics.sqlite",
   ),
-  uploadsPath: path.resolve(serverDir, "uploads"),
+  uploadsPath: path.resolve(
+    serverDir,
+    process.env.UPLOADS_PATH || "uploads",
+  ),
   dataPath: path.resolve(serverDir, "data"),
   clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
   googleClientId: process.env.GOOGLE_CLIENT_ID || "",

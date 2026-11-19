@@ -108,6 +108,17 @@ npm run dev
 
 Visit **`http://localhost:5173`** to access the web application. The REST API health endpoint runs at **`http://localhost:4000/api/health`**.
 
+### Production deployment
+
+The Vercel client is a static frontend; it does not host the Express API. This repository includes a Render Blueprint in `render.yaml` for the API, with a persistent disk for SQLite and uploaded records.
+
+1. Push this repository to GitHub and create a **Blueprint** in Render from it. Render reads `render.yaml` and generates `JWT_SECRET`. The API starts at `/api/health` and seeds the demo data on its first start.
+2. Copy the API's Render URL, such as `https://nutronics-api.onrender.com`.
+3. In Vercel, open **Project Settings → Environment Variables** and add `VITE_API_URL` with the value `https://nutronics-api.onrender.com/api` for **Production**.
+4. Redeploy the Vercel client so the build includes the new URL.
+
+The Blueprint uses Render's free web-service tier. Its filesystem is ephemeral: user-created data and uploaded records can disappear when Render restarts or spins down the service. Free services can also take about a minute to wake after 15 minutes without traffic. Use this deployment for a demo, not for storing real health records.
+
 ---
 
 ## 📊 Dataset Ingestion & Management

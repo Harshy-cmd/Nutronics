@@ -1,4 +1,5 @@
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const configuredApi = import.meta.env.VITE_API_URL?.trim();
+const API = configuredApi || (import.meta.env.DEV ? 'http://localhost:4000/api' : '');
 
 let refreshPromise: Promise<string> | null = null;
 
@@ -40,6 +41,11 @@ export async function api<T = any>(
   options: RequestInit = {},
   isRetry = false
 ): Promise<T> {
+  if (!API) {
+    throw new Error(
+      'The Nutronics API is not configured for this deployment. Set VITE_API_URL to the deployed API base URL and redeploy the client.'
+    );
+  }
   const token = localStorage.getItem('nutronics_token');
   const isAuthCall = path.startsWith('/auth/');
 
@@ -53,7 +59,14 @@ export async function api<T = any>(
     },
   };
 
-  const response = await fetch(`${API}${path}`, fetchOptions);
+  let response: Response;
+  try {
+    response = await fetch(`${API}${path}`, fetchOptions);
+  } catch {
+    throw new Error(
+      'Can’t reach the Nutronics API. Check that the backend is deployed and VITE_API_URL points to it.'
+    );
+  }
   const data = await response.json().catch(() => ({}));
 
   // Handle 401 with single-flight refresh

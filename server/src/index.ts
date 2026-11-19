@@ -21,6 +21,13 @@ import {
 import { authRouter, safeUser } from './routes/auth.js';
 import { attachRoutes } from './routes.js';
 
+const seededUserCount = (
+  db.prepare('SELECT COUNT(*) AS count FROM users').get() as { count: number }
+).count;
+if (seededUserCount === 0) {
+  await import('./db/seed.js');
+}
+
 fs.mkdirSync(config.uploadsPath, { recursive: true });
 
 const upload = multer({
