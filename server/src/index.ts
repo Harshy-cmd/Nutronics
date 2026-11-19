@@ -10,6 +10,7 @@ import { auth, roles } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { answerFor, DISCLAIMER } from './services/aiEngine.js';
 import { foods, medicines } from './services/dataService.js';
+import { ensurePatientStarterData } from './services/starterDataService.js';
 import {
   usdaLookup,
   openFoodFactsLookup,
@@ -54,6 +55,7 @@ app.use('/api/patient', auth, roles('PATIENT'));
 
 app.get('/api/patient/dashboard', (req, res) => {
   const uid = req.user!.id;
+  ensurePatientStarterData(uid);
   const today = new Date().toISOString().slice(0, 10);
   const latest = one('SELECT * FROM logs WHERE user_id=? ORDER BY date DESC LIMIT 1', uid);
   const todays = rows('SELECT * FROM meals WHERE user_id=? AND day=0', uid).map(
@@ -72,6 +74,7 @@ app.get('/api/patient/dashboard', (req, res) => {
 });
 
 app.get('/api/patient/diet', (req, res) => {
+  ensurePatientStarterData(req.user!.id);
   res.json({
     meals: rows(
       'SELECT * FROM meals WHERE user_id=? ORDER BY day,slot',
@@ -91,11 +94,12 @@ app.post('/api/patient/diet/swap', (req, res) => {
   res.json({ ok: true, verificationStatus: 'PENDING' });
 });
 
-app.get('/api/patient/reminders', (req, res) =>
+app.get('/api/patient/reminders', (req, res) => {
+  ensurePatientStarterData(req.user!.id);
   res.json({
     reminders: rows('SELECT * FROM reminders WHERE user_id=? ORDER BY time', req.user!.id),
-  })
-);
+  });
+});
 
 app.post('/api/patient/reminders', (req, res) => {
   const p = z
@@ -132,11 +136,12 @@ app.delete('/api/patient/reminders/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/patient/progress', (req, res) =>
+app.get('/api/patient/progress', (req, res) => {
+  ensurePatientStarterData(req.user!.id);
   res.json({
     logs: rows('SELECT * FROM logs WHERE user_id=? ORDER BY date', req.user!.id),
-  })
-);
+  });
+});
 
 app.post('/api/patient/progress', (req, res) => {
   const p = z
@@ -253,12 +258,13 @@ app.delete('/api/patient/records/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/patient/profile', (req, res) =>
+app.get('/api/patient/profile', (req, res) => {
+  ensurePatientStarterData(req.user!.id);
   res.json({
     user: safeUser(one('SELECT * FROM users WHERE id=?', req.user!.id)),
     contacts: rows('SELECT * FROM contacts WHERE user_id=?', req.user!.id),
-  })
-);
+  });
+});
 
 app.patch('/api/patient/profile', (req, res) => {
   const user = one('SELECT * FROM users WHERE id=?', req.user!.id);
@@ -298,9 +304,16 @@ app.delete('/api/patient/contacts/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/patient/devices', (req, res) =>
-  res.json({ devices: rows('SELECT * FROM devices WHERE user_id=?', req.user!.id) })
-);
+app.get('/api/patient/devices', (req, res) => {
+  ensurePatientStarterData(req.user!.id);
+  res.json({ devices: rows('SELECT * FROM devices WHERE user_id=?', req.user!.id) });
+});
+
+app.post('/api/patient/devices', (req, res) => {
+  const name = String(req.body.name || 'Health Tracker');
+  const r = run('INSERT INTO devices(user_id,name,paired) VALUES(?,?,0)', req.user!.id, name);
+  res.status(201).json(one('SELECT * FROM devices WHERE id=?', r.lastInsertRowid));
+});
 
 app.patch('/api/patient/devices/:id', (req, res) => {
   run(

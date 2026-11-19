@@ -1,6 +1,8 @@
-import { FileText, Plus, Download } from "lucide-react";
+import { FileText, Plus, Download, Trash2 } from "lucide-react";
 import { api } from "../api";
 import { Card } from "../components/Card";
+
+const API = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
 export function HealthRecords({
   data,
@@ -11,6 +13,40 @@ export function HealthRecords({
   refresh: () => void;
   notify: (s: string) => void;
 }) {
+  const submit = async (path: string, method = "POST", body: any = {}) => {
+    try {
+      await api(path, { method, body: JSON.stringify(body) });
+      notify("Saved successfully");
+      refresh();
+    } catch (e) {
+      notify((e as Error).message);
+    }
+  };
+
+  const handleDownload = async (r: any) => {
+    try {
+      const token = localStorage.getItem("nutronics_token");
+      const res = await fetch(`${API}/patient/records/${r.id}/download`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) throw new Error("Download failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = r.name || "health-record";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      notify("Download started");
+    } catch {
+      notify("Unable to download record");
+    }
+  };
+
+  const records = data?.records || [];
+
   return (
     <Card
       title="Your health records"
@@ -39,33 +75,45 @@ export function HealthRecords({
           <small>PDF, PNG, JPG, TXT · up to 5 MB</small>
         </label>
       </div>
+
       <div className="record-list">
-        {(data?.records || []).map((r: any) => (
-          <div className="record-item" key={r.id}>
-            <FileText />
-            <div>
-              <b>{r.name}</b>
-              <small>
-                {r.category} · {r.created_at?.slice(0, 10)}
-              </small>
+        {records.length > 0 ? (
+          records.map((r: any) => (
+            <div className="record-item" key={r.id}>
+              <FileText />
+              <div>
+                <b>{r.name}</b>
+                <small>
+                  {r.category} · {r.created_at?.slice(0, 10)}
+                </small>
+              </div>
+              <div style={{ marginLeft: "auto", display: "flex", gap: 6, alignItems: "center" }}>
+                <button
+                  className="icon-button"
+                  onClick={() => handleDownload(r)}
+                  aria-label="Download record"
+                  title="Download file"
+                >
+                  <Download size={18} />
+                </button>
+                <button
+                  className="action-icon-btn"
+                  onClick={() => submit(`/patient/records/${r.id}`, "DELETE")}
+                  aria-label="Delete record"
+                  title="Delete record"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
-            <a
-              className="icon-button"
-              href={`http://localhost:4000/api/patient/records/${r.id}/download`}
-              onClick={(e) => {
-                e.preventDefault();
-                api(`/patient/records/${r.id}/download`).catch(() => {});
-                window.open(
-                  `http://localhost:4000/api/patient/records/${r.id}/download`,
-                  "_blank",
-                );
-              }}
-              aria-label="Download record"
-            >
-              <Download size={18} />
-            </a>
+          ))
+        ) : (
+          <div className="empty-state-card">
+            <FileText size={32} style={{ color: "var(--teal)", opacity: 0.7 }} />
+            <b>No records uploaded yet</b>
+            <p>Upload lab results, doctor prescriptions, or nutrition summaries.</p>
           </div>
-        ))}
+        )}
       </div>
     </Card>
   );

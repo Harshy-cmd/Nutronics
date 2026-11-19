@@ -13,6 +13,9 @@ export function DoctorDashboard({ data }: { data: any }) {
           note="Active patient accounts"
           icon={Users}
           tint="mint"
+          onClick={() => {
+            document.querySelector(".table")?.scrollIntoView({ behavior: "smooth" });
+          }}
         />
         <Stat
           label="Awaiting your review"
@@ -20,6 +23,7 @@ export function DoctorDashboard({ data }: { data: any }) {
           note="AI answers to review"
           icon={ShieldCheck}
           tint="peach"
+          to="/doctor/verification"
         />
       </div>
       <Card

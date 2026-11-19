@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -7,15 +8,19 @@ export function Stat({
   note,
   icon: Icon,
   tint,
+  to,
+  onClick,
 }: {
   label: string;
   value: any;
   note: string;
   icon: LucideIcon;
   tint: string;
+  to?: string;
+  onClick?: () => void;
 }) {
-  return (
-    <div className="stat-card">
+  const content = (
+    <>
       <span className={`stat-icon ${tint}`}>
         <Icon size={20} />
       </span>
@@ -25,6 +30,29 @@ export function Stat({
         <span>{note}</span>
       </div>
       <ChevronRight className="stat-arrow" size={17} />
-    </div>
+    </>
   );
+
+  if (to) {
+    return (
+      <Link to={to} className="stat-card stat-card-link">
+        {content}
+      </Link>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <div
+        className="stat-card stat-card-link"
+        onClick={onClick}
+        role="button"
+        tabIndex={0}
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return <div className="stat-card">{content}</div>;
 }

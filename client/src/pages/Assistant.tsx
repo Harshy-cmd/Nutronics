@@ -15,15 +15,23 @@ export function Assistant({
   const [question, setQuestion] = useState("");
   const [reply, setReply] = useState<any>(null);
 
-  const handleSend = async () => {
-    if (!question) return;
-    const r = await api("/patient/assistant/ask", {
-      method: "POST",
-      body: JSON.stringify({ question }),
-    });
-    setReply(r);
-    setQuestion("");
-    refresh();
+  const [loading, setLoading] = useState(false);
+
+  const handleSend = async (customQ?: string) => {
+    const q = (customQ || question).trim();
+    if (!q || loading) return;
+    setLoading(true);
+    try {
+      const r = await api("/patient/assistant/ask", {
+        method: "POST",
+        body: JSON.stringify({ question: q }),
+      });
+      setReply(r);
+      setQuestion("");
+      refresh();
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,7 +82,7 @@ export function Assistant({
             "Low-sodium breakfast swap for idli",
             "When should I take Metformin?",
           ].map((x) => (
-            <button key={x} onClick={() => setQuestion(x)}>
+            <button key={x} onClick={() => { setQuestion(x); handleSend(x); }}>
               {x}
             </button>
           ))}
@@ -83,6 +91,7 @@ export function Assistant({
           <input
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
+            disabled={loading}
             onKeyDown={async (e) => {
               if (e.key === "Enter" && question) {
                 await handleSend();
@@ -90,7 +99,7 @@ export function Assistant({
             }}
             placeholder="Ask about a food or your care plan…"
           />
-          <button aria-label="Send question" onClick={handleSend}>
+          <button aria-label="Send question" onClick={() => handleSend()} disabled={loading || !question.trim()}>
             <ArrowRight />
           </button>
         </div>

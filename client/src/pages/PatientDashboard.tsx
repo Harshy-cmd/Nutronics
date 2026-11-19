@@ -8,6 +8,7 @@ import {
   Check,
   ArrowRight,
   Utensils,
+  Plus,
 } from "lucide-react";
 import { api } from "../api";
 import { Stat } from "../components/Stat";
@@ -34,6 +35,9 @@ export function PatientDashboard({
     }
   };
 
+  const reminders = data?.reminders || [];
+  const meals = data?.meals || [];
+
   return (
     <>
       <div className="stat-grid">
@@ -43,13 +47,15 @@ export function PatientDashboard({
           note="A steady, healthy rhythm"
           icon={HeartPulse}
           tint="mint"
+          to="/patient/diet"
         />
         <Stat
           label="Today's reminders"
-          value={`${data?.reminders?.filter((r: any) => !r.done).length || 0} to go`}
+          value={`${reminders.filter((r: any) => !r.done).length} to go`}
           note="You've got this"
           icon={Clock}
           tint="peach"
+          to="/patient/reminders"
         />
         <Stat
           label="Daily hydration"
@@ -57,8 +63,10 @@ export function PatientDashboard({
           note="A sip at a time"
           icon={Droplets}
           tint="blue"
+          to="/patient/progress"
         />
       </div>
+
       <div className="dashboard-grid">
         <Card
           title="A little progress, every day"
@@ -85,62 +93,115 @@ export function PatientDashboard({
             <b>Consistency is its own kind of progress.</b>
             <small>Every small choice adds up.</small>
           </div>
+          <Link
+            className="inline-link"
+            to="/patient/progress"
+            style={{ marginTop: 14 }}
+          >
+            View health trends & logs <ArrowRight size={15} />
+          </Link>
         </Card>
+
         <Card
           title="Today's gentle schedule"
           subtitle="Take things one step at a time"
           icon={CalendarCheck}
         >
-          <div className="schedule">
-            {(data?.reminders || []).slice(0, 4).map((r: any) => (
-              <div
-                className={`schedule-item ${r.done ? "done" : ""}`}
-                key={r.id}
-              >
-                <button
-                  className="check-circle"
-                  aria-label={`Mark ${r.label} complete`}
-                  onClick={() =>
-                    submit(`/patient/reminders/${r.id}`, "PATCH", {
-                      done: !r.done,
-                    })
-                  }
+          {reminders.length > 0 ? (
+            <div className="schedule">
+              {reminders.slice(0, 4).map((r: any) => (
+                <div
+                  className={`schedule-item ${r.done ? "done" : ""}`}
+                  key={r.id}
                 >
-                  {r.done ? <Check size={15} /> : null}
-                </button>
-                <div>
-                  <b>{r.label}</b>
-                  <small>
-                    {r.kind} · {r.time}
-                  </small>
+                  <button
+                    className="check-circle"
+                    aria-label={`Mark ${r.label} complete`}
+                    onClick={() =>
+                      submit(`/patient/reminders/${r.id}`, "PATCH", {
+                        done: !r.done,
+                      })
+                    }
+                  >
+                    {r.done ? <Check size={15} /> : null}
+                  </button>
+                  <div>
+                    <b>{r.label}</b>
+                    <small>
+                      {r.kind} · {r.time}
+                    </small>
+                  </div>
+                  <span className="time-tag">{r.time}</span>
                 </div>
-                <span className="time-tag">{r.time}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state-card">
+              <p>No reminders scheduled for today yet.</p>
+              <Link
+                className="button small primary"
+                to="/patient/reminders"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <Plus size={14} /> Add a reminder
+              </Link>
+            </div>
+          )}
           <Link className="inline-link" to="/patient/reminders">
             See all reminders <ArrowRight size={15} />
           </Link>
         </Card>
       </div>
+
       <Card
         title="Thoughtfully planned for you"
         subtitle="Today's meals · Doctor reviewed"
         icon={Utensils}
       >
-        <div className="meal-row">
-          {(data?.meals || []).map((m: any) => (
-            <div className="meal-card" key={m.id}>
-              <span className="meal-time">{m.slot}</span>
-              <b>{m.name}</b>
-              <small>
-                {m.calories} kcal · {m.proteinG}g protein
-              </small>
-              <Badge status={m.status} />
-            </div>
-          ))}
+        {meals.length > 0 ? (
+          <div className="meal-row">
+            {meals.map((m: any) => (
+              <Link
+                to="/patient/diet"
+                className="meal-card meal-card-link"
+                key={m.id}
+              >
+                <span className="meal-time">{m.slot}</span>
+                <b>{m.name}</b>
+                <small>
+                  {m.calories} kcal · {m.proteinG}g protein
+                </small>
+                <Badge status={m.status} />
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state-card">
+            <p>No meals scheduled for today yet.</p>
+            <Link
+              className="button small primary"
+              to="/patient/diet"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <Utensils size={14} /> View 7-day diet plan
+            </Link>
+          </div>
+        )}
+        <div style={{ marginTop: 14 }}>
+          <Link className="inline-link" to="/patient/diet">
+            Explore and customize your diet plan <ArrowRight size={15} />
+          </Link>
         </div>
       </Card>
+
       <QuickLinks />
     </>
   );

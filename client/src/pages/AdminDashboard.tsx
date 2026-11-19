@@ -18,6 +18,7 @@ export function AdminDashboard({ data }: { data: any }) {
           note="Patient accounts"
           icon={Users}
           tint="mint"
+          to="/admin/users"
         />
         <Stat
           label="Care team"
@@ -25,6 +26,7 @@ export function AdminDashboard({ data }: { data: any }) {
           note="Active doctors"
           icon={Stethoscope}
           tint="blue"
+          to="/admin/users"
         />
         <Stat
           label="SOS this week"

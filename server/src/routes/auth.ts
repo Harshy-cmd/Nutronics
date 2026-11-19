@@ -8,6 +8,7 @@ import { OAuth2Client } from 'google-auth-library';
 import nodemailer from 'nodemailer';
 import { config } from '../config.js';
 import { db } from '../db/schema.js';
+import { ensurePatientStarterData } from '../services/starterDataService.js';
 import { auth } from '../middleware/auth.js';
 
 export const authRouter = Router();
@@ -241,6 +242,7 @@ authRouter.post('/register', registerLimiter, (req: Request, res: Response) => {
     );
 
     const user = one('SELECT * FROM users WHERE id=?', id);
+    ensurePatientStarterData(id);
     const accessToken = createAccessToken(id);
     const refreshToken = issueRefreshToken(id);
     setRefreshTokenCookie(res, refreshToken);
@@ -330,6 +332,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
       'google'
     );
     user = one('SELECT * FROM users WHERE id=?', id);
+    ensurePatientStarterData(id);
   }
 
   const accessToken = createAccessToken(user.id);

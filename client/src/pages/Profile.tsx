@@ -1,4 +1,5 @@
-import { Settings, Heart, Plus } from "lucide-react";
+import { useState } from "react";
+import { Settings, Heart, Plus, Trash2, X, Check } from "lucide-react";
 import { api } from "../api";
 import { Card } from "../components/Card";
 
@@ -11,6 +12,12 @@ export function Profile({
   refresh: () => void;
   notify: (s: string) => void;
 }) {
+  const [showAddContact, setShowAddContact] = useState(false);
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactRel, setContactRel] = useState("Family");
+  const [savingContact, setSavingContact] = useState(false);
+
   const submit = async (path: string, method = "POST", body: any = {}) => {
     try {
       await api(path, { method, body: JSON.stringify(body) });
@@ -20,6 +27,26 @@ export function Profile({
       notify((e as Error).message);
     }
   };
+
+  const handleCreateContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactName.trim() || !contactPhone.trim()) return;
+    setSavingContact(true);
+    try {
+      await submit("/patient/contacts", "POST", {
+        name: contactName.trim(),
+        phone: contactPhone.trim(),
+        relationship: contactRel,
+      });
+      setContactName("");
+      setContactPhone("");
+      setShowAddContact(false);
+    } finally {
+      setSavingContact(false);
+    }
+  };
+
+  const contacts = data?.contacts || [];
 
   return (
     <>
@@ -66,38 +93,119 @@ export function Profile({
           Save profile
         </button>
       </Card>
+
       <Card
         title="Emergency contacts"
         subtitle="People you trust to reach in an urgent moment"
         icon={Heart}
       >
-        {(data?.contacts || []).map((c: any) => (
-          <div className="record-item" key={c.id}>
-            <div className="avatar">{c.name[0]}</div>
-            <div>
-              <b>{c.name}</b>
-              <small>
-                {c.relationship} · {c.phone}
-              </small>
+        <div className="record-list" style={{ marginBottom: 16 }}>
+          {contacts.length > 0 ? (
+            contacts.map((c: any) => (
+              <div className="record-item" key={c.id}>
+                <div className="avatar">{c.name[0]}</div>
+                <div>
+                  <b>{c.name}</b>
+                  <small>
+                    {c.relationship} · {c.phone}
+                  </small>
+                </div>
+                <button
+                  className="action-icon-btn"
+                  style={{ marginLeft: "auto" }}
+                  onClick={() => submit(`/patient/contacts/${c.id}`, "DELETE")}
+                  aria-label={`Delete ${c.name}`}
+                  title="Remove contact"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="empty-state-card">
+              <p>No emergency contacts added yet.</p>
             </div>
-          </div>
-        ))}
+          )}
+        </div>
         <button
           className="button outline"
-          onClick={() => {
-            const name = prompt("Contact name"),
-              phone = prompt("Phone number");
-            if (name && phone)
-              submit("/patient/contacts", "POST", {
-                name,
-                phone,
-                relationship: "Family",
-              });
-          }}
+          onClick={() => setShowAddContact(true)}
+          style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
         >
           <Plus size={16} /> Add contact
         </button>
       </Card>
+
+      {showAddContact && (
+        <div className="modal-back">
+          <div className="modal">
+            <button
+              className="close"
+              onClick={() => setShowAddContact(false)}
+              aria-label="Close"
+            >
+              <X />
+            </button>
+            <div className="eyebrow">NEW CONTACT</div>
+            <h2>Add emergency contact</h2>
+            <form onSubmit={handleCreateContact} className="modal-form">
+              <label>
+                Contact name
+                <input
+                  required
+                  placeholder="e.g. Priya Sharma"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  autoFocus
+                />
+              </label>
+
+              <label>
+                Phone number
+                <input
+                  type="tel"
+                  required
+                  placeholder="+91 98765 43210"
+                  value={contactPhone}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                />
+              </label>
+
+              <label>
+                Relationship
+                <select
+                  value={contactRel}
+                  onChange={(e) => setContactRel(e.target.value)}
+                >
+                  <option value="Family">Family</option>
+                  <option value="Doctor">Doctor / Caregiver</option>
+                  <option value="Friend">Friend</option>
+                  <option value="Neighbor">Neighbor</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="button subtle"
+                  onClick={() => setShowAddContact(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="button primary"
+                  disabled={savingContact || !contactName.trim() || !contactPhone.trim()}
+                >
+                  <Check size={16} />{" "}
+                  {savingContact ? "Saving…" : "Save contact"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
