@@ -1,0 +1,202 @@
+[
+  {
+    "id": "med-1",
+    "genericName": "Metformin",
+    "drugClass": "Antidiabetic",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-2",
+    "genericName": "Amlodipine",
+    "drugClass": "Antihypertensive",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-3",
+    "genericName": "Losartan",
+    "drugClass": "Statin",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-4",
+    "genericName": "Atorvastatin",
+    "drugClass": "Antiplatelet",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-5",
+    "genericName": "Glimepiride",
+    "drugClass": "Diuretic",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-6",
+    "genericName": "Telmisartan",
+    "drugClass": "Antidiabetic",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-7",
+    "genericName": "Aspirin",
+    "drugClass": "Antihypertensive",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-8",
+    "genericName": "Furosemide",
+    "drugClass": "Statin",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-9",
+    "genericName": "Pantoprazole",
+    "drugClass": "Antiplatelet",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-10",
+    "genericName": "Levothyroxine",
+    "drugClass": "Diuretic",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-11",
+    "genericName": "Empagliflozin",
+    "drugClass": "Antidiabetic",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-12",
+    "genericName": "Insulin glargine",
+    "drugClass": "Antihypertensive",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-13",
+    "genericName": "Bisoprolol",
+    "drugClass": "Statin",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-14",
+    "genericName": "Clopidogrel",
+    "drugClass": "Antiplatelet",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-15",
+    "genericName": "Ramipril",
+    "drugClass": "Diuretic",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-16",
+    "genericName": "Lisinopril",
+    "drugClass": "Antidiabetic",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-17",
+    "genericName": "Hydrochlorothiazide",
+    "drugClass": "Antihypertensive",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-18",
+    "genericName": "Carvedilol",
+    "drugClass": "Statin",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-19",
+    "genericName": "Warfarin",
+    "drugClass": "Antiplatelet",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-20",
+    "genericName": "Omeprazole",
+    "drugClass": "Diuretic",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-21",
+    "genericName": "Vitamin D3",
+    "drugClass": "Antidiabetic",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-22",
+    "genericName": "Calcium carbonate",
+    "drugClass": "Antihypertensive",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-23",
+    "genericName": "Spironolactone",
+    "drugClass": "Statin",
+    "timingInstruction": "Take at the same time daily as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-24",
+    "genericName": "Gabapentin",
+    "drugClass": "Antiplatelet",
+    "timingInstruction": "Follow your clinician’s exact timing",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  },
+  {
+    "id": "med-25",
+    "genericName": "Paracetamol",
+    "drugClass": "Diuretic",
+    "timingInstruction": "Take with meals as prescribed",
+    "foodInteractionNote": "Ask your pharmacist or doctor about food interactions for your specific prescription.",
+    "warningSigns": "Seek urgent care for severe allergy, fainting, breathing difficulty, or unusual bleeding."
+  }
+]

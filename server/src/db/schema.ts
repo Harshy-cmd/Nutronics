@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS guidelines (condition TEXT PRIMARY KEY, data TEXT NOT
 CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT NOT NULL, message TEXT NOT NULL, read INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS foods (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL, servingSize TEXT NOT NULL, calories REAL NOT NULL, proteinG REAL NOT NULL, carbsG REAL NOT NULL, fatG REAL NOT NULL, fiberG REAL NOT NULL, sodiumMg REAL NOT NULL, sugarG REAL NOT NULL DEFAULT 0, potassiumMg REAL DEFAULT NULL, phosphorusMg REAL DEFAULT NULL, glycemicIndex TEXT DEFAULT NULL, safeForConditions TEXT DEFAULT NULL, source TEXT NOT NULL, isEstimated INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS medicines (id TEXT PRIMARY KEY, genericName TEXT NOT NULL, brandNames TEXT NOT NULL DEFAULT '[]', drugClass TEXT DEFAULT NULL, timingInstruction TEXT DEFAULT NULL, foodInteractionNote TEXT DEFAULT NULL, warningSigns TEXT DEFAULT NULL, indications TEXT DEFAULT NULL, warnings TEXT DEFAULT NULL, boxedWarning TEXT DEFAULT NULL, rxNormId TEXT DEFAULT NULL, source TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE INDEX IF NOT EXISTS idx_users_role_active ON users(role, active);
 CREATE INDEX IF NOT EXISTS idx_logs_user_date ON logs(user_id, date);
@@ -33,4 +35,7 @@ CREATE INDEX IF NOT EXISTS idx_sos_user_created ON sos(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_sos_created_at ON sos(created_at);
 CREATE INDEX IF NOT EXISTS idx_devices_user_id ON devices(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id, id);
+CREATE INDEX IF NOT EXISTS idx_foods_name ON foods(name);
+CREATE INDEX IF NOT EXISTS idx_foods_category ON foods(category);
+CREATE INDEX IF NOT EXISTS idx_medicines_generic_name ON medicines(genericName);
 `);
