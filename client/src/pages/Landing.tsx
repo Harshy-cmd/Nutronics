@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export function Landing({ login }: { login: (email: string) => Promise<void> }) {
-  const showDemo = import.meta.env.VITE_SHOW_DEMO === "true";
+  const showDemo = import.meta.env.DEV && import.meta.env.VITE_SHOW_DEMO === "true";
   const [loginError, setLoginError] = useState("");
   const startDemo = async (email: string) => {
     setLoginError("");
@@ -81,6 +81,10 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
                 </Link>
               </>
             )}
+          </div>
+          <div className="portal-entry-links">
+            <Link to="/doctor/login">Doctor portal sign in <ChevronRight size={15} /></Link>
+            <Link to="/admin/login">Admin portal sign in <ChevronRight size={15} /></Link>
           </div>
           {showDemo && loginError && (
             <div className="auth-error" role="alert">

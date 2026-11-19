@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { randomUUID, randomBytes, createHash } from 'node:crypto';
+import { randomUUID, randomBytes, randomInt, createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import { z } from 'zod';
 import rateLimit from 'express-rate-limit';
 import { OAuth2Client } from 'google-auth-library';
@@ -117,6 +117,25 @@ async function sendResetEmail(email: string, resetUrl: string) {
   }
 }
 
+async function sendLoginOtpEmail(email: string, code: string) {
+  if (!config.smtpHost || !config.smtpUser || !config.smtpPass) {
+    throw new Error('Email OTP is not configured');
+  }
+  const transporter = nodemailer.createTransport({
+    host: config.smtpHost,
+    port: config.smtpPort,
+    secure: config.smtpPort === 465,
+    auth: { user: config.smtpUser, pass: config.smtpPass },
+  });
+  await transporter.sendMail({
+    from: config.smtpFrom,
+    to: email,
+    subject: 'Your Nutronics sign-in code',
+    text: `Your Nutronics sign-in code is ${code}. It expires in 10 minutes. If you did not request it, you can ignore this email.`,
+    html: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:20px;color:#193b37"><h2 style="color:#167d73">Your sign-in code</h2><p>Enter this code to sign in to Nutronics:</p><p style="font-size:28px;font-weight:700;letter-spacing:8px">${code}</p><p>This code expires in 10 minutes. If you did not request it, you can ignore this email.</p></div>`,
+  });
+}
+
 // Rate limiters
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -125,6 +144,37 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'Too many login attempts. Please try again after 15 minutes.' },
 });
+
+const otpRequestLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many code requests. Try again in 15 minutes.' },
+});
+
+const otpVerifyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many sign-in attempts. Try again in 15 minutes.' },
+});
+
+const staffRoleSchema = z.enum(['DOCTOR', 'ADMIN']);
+const isProductionDemoEmail = (email: string) =>
+  config.nodeEnv === 'production' && DEMO_EMAILS.includes(email);
+
+function codeHash(userId: string, code: string) {
+  return createHmac('sha256', config.jwtSecret).update(`${userId}:${code}`).digest('hex');
+}
+
+async function authenticateUser(user: any, res: Response) {
+  const accessToken = createAccessToken(user.id);
+  const refreshToken = await issueRefreshToken(user.id);
+  setRefreshTokenCookie(res, refreshToken);
+  res.json({ token: accessToken, user: safeUser(user) });
+}
 
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
@@ -162,6 +212,7 @@ authRouter.post('/login', loginLimiter, async (req: Request, res: Response) => {
     .object({
       email: z.string().trim().email('Enter a valid email address'),
       password: z.string().min(1, 'Password is required'),
+      portalRole: staffRoleSchema.optional(),
     })
     .safeParse(req.body);
 
@@ -172,11 +223,14 @@ authRouter.post('/login', loginLimiter, async (req: Request, res: Response) => {
   const emailLower = parsed.data.email.toLowerCase();
 
   // Reject demo accounts in production
-  if (config.nodeEnv === 'production' && DEMO_EMAILS.includes(emailLower)) {
+  if (isProductionDemoEmail(emailLower)) {
     return res.status(403).json({ error: 'Demo accounts are disabled in production' });
   }
 
   const user = await one('SELECT * FROM users WHERE email=?', emailLower);
+  if (parsed.data.portalRole && user?.role !== parsed.data.portalRole) {
+    return res.status(403).json({ error: 'This account does not have access to that portal.' });
+  }
 
   // Safe password comparison (handles Google-only users with empty/dummy password safely without crash)
   let passwordValid = false;
@@ -191,14 +245,76 @@ authRouter.post('/login', loginLimiter, async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Email or password is incorrect' });
   }
 
-  const accessToken = createAccessToken(user.id);
-  const refreshToken = await issueRefreshToken(user.id);
-  setRefreshTokenCookie(res, refreshToken);
+  await authenticateUser(user, res);
+});
 
-  res.json({
-    token: accessToken,
-    user: safeUser(user),
-  });
+// POST /api/auth/otp/request — only active, already-provisioned staff accounts can request a code.
+authRouter.post('/otp/request', otpRequestLimiter, async (req: Request, res: Response) => {
+  const parsed = z.object({
+    email: z.string().trim().email(),
+    portalRole: staffRoleSchema,
+  }).safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: 'Enter a valid email address.' });
+  if (!config.smtpHost || !config.smtpUser || !config.smtpPass) {
+    return res.status(503).json({ error: 'Email code sign-in is not configured yet.' });
+  }
+
+  const email = parsed.data.email.toLowerCase();
+  const genericResponse = { message: 'If an eligible account exists, a sign-in code has been sent.' };
+  if (isProductionDemoEmail(email)) return res.json(genericResponse);
+  const user = await one('SELECT id,email,role,active FROM users WHERE email=?', email);
+  if (!user || !user.active || user.role !== parsed.data.portalRole) return res.json(genericResponse);
+
+  const code = String(randomInt(100000, 1000000));
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+  await run('UPDATE email_login_otps SET used=1 WHERE user_id=? AND used=0', user.id);
+  await run(
+    'INSERT INTO email_login_otps(user_id,code_hash,expires_at) VALUES(?,?,?)',
+    user.id,
+    codeHash(user.id, code),
+    expiresAt,
+  );
+  try {
+    await sendLoginOtpEmail(user.email, code);
+  } catch (error) {
+    await run('UPDATE email_login_otps SET used=1 WHERE user_id=? AND used=0', user.id);
+    console.error('Failed to send staff login OTP:', (error as Error).message);
+    return res.status(503).json({ error: 'Could not send a sign-in code. Try again later.' });
+  }
+  return res.json(genericResponse);
+});
+
+// POST /api/auth/otp/verify — a code is single-use, expires after 10 minutes, and allows 5 attempts.
+authRouter.post('/otp/verify', otpVerifyLimiter, async (req: Request, res: Response) => {
+  const parsed = z.object({
+    email: z.string().trim().email(),
+    code: z.string().regex(/^\d{6}$/),
+    portalRole: staffRoleSchema,
+  }).safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: 'Enter a valid email and 6-digit code.' });
+
+  const email = parsed.data.email.toLowerCase();
+  const user = await one('SELECT * FROM users WHERE email=? AND active=1', email);
+  if (!user || user.role !== parsed.data.portalRole || isProductionDemoEmail(email)) {
+    return res.status(401).json({ error: 'The code is invalid or expired.' });
+  }
+  const otp = await one(
+    'SELECT * FROM email_login_otps WHERE user_id=? AND used=0 ORDER BY created_at DESC LIMIT 1',
+    user.id,
+  );
+  if (!otp || new Date(otp.expires_at).getTime() <= Date.now() || otp.attempts >= 5) {
+    if (otp && !otp.used) await run('UPDATE email_login_otps SET used=1 WHERE id=?', otp.id);
+    return res.status(401).json({ error: 'The code is invalid or expired.' });
+  }
+  const expected = Buffer.from(otp.code_hash, 'hex');
+  const supplied = Buffer.from(codeHash(user.id, parsed.data.code), 'hex');
+  if (expected.length !== supplied.length || !timingSafeEqual(expected, supplied)) {
+    await run('UPDATE email_login_otps SET attempts=attempts+1, used=CASE WHEN attempts+1>=5 THEN 1 ELSE used END WHERE id=? AND used=0', otp.id);
+    return res.status(401).json({ error: 'The code is invalid or expired.' });
+  }
+  const consumed = await run('UPDATE email_login_otps SET used=1 WHERE id=? AND used=0', otp.id);
+  if (!consumed.changes) return res.status(401).json({ error: 'The code is invalid or expired.' });
+  await authenticateUser(user, res);
 });
 
 // POST /api/auth/register
@@ -263,6 +379,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
   const parsed = z
     .object({
       credential: z.string().min(1, 'Google credential token is required'),
+      portalRole: staffRoleSchema.optional(),
     })
     .safeParse(req.body);
 
@@ -292,17 +409,23 @@ authRouter.post('/google', async (req: Request, res: Response) => {
 
   const emailLower = payload.email.toLowerCase();
   let user = await one('SELECT * FROM users WHERE email=?', emailLower);
+  if (isProductionDemoEmail(emailLower)) {
+    return res.status(403).json({ error: 'Demo accounts are disabled in production.' });
+  }
 
   if (user) {
     if (!user.active) {
       return res.status(401).json({ error: 'Account unavailable or deactivated' });
     }
-    // Do NOT auto-link into DOCTOR or ADMIN accounts
     if (user.role === 'DOCTOR' || user.role === 'ADMIN') {
-      return res.status(403).json({
-        error:
-          'Google sign-in is not permitted for clinical or administrative accounts. Please sign in with your email and password.',
-      });
+      if (!parsed.data.portalRole || parsed.data.portalRole !== user.role) {
+        return res.status(403).json({ error: 'Use the matching staff portal for this account.' });
+      }
+      if (user.google_id && user.google_id !== payload.sub) {
+        return res.status(403).json({ error: 'This Google account is not linked to the staff account.' });
+      }
+    } else if (parsed.data.portalRole) {
+      return res.status(403).json({ error: 'This account does not have access to that portal.' });
     }
     // Link google_id if not linked yet
     if (!user.google_id) {
@@ -314,6 +437,9 @@ authRouter.post('/google', async (req: Request, res: Response) => {
       user = await one('SELECT * FROM users WHERE id=?', user.id);
     }
   } else {
+    if (parsed.data.portalRole) {
+      return res.status(403).json({ error: 'Staff accounts must be provisioned before Google sign-in.' });
+    }
     // New Google users are ALWAYS created with PATIENT role
     const id = `user-${randomUUID()}`;
     const dummyPasswordHash = bcrypt.hashSync(randomUUID(), 10);
@@ -335,14 +461,16 @@ authRouter.post('/google', async (req: Request, res: Response) => {
     await ensurePatientStarterData(id);
   }
 
-  const accessToken = createAccessToken(user.id);
-  const refreshToken = await issueRefreshToken(user.id);
-  setRefreshTokenCookie(res, refreshToken);
+  if ((user.role === 'DOCTOR' || user.role === 'ADMIN') && !user.google_id) {
+    await run(
+      'UPDATE users SET google_id=?, auth_provider=CASE WHEN auth_provider="local" THEN "google" ELSE auth_provider END WHERE id=?',
+      payload.sub,
+      user.id,
+    );
+    user = await one('SELECT * FROM users WHERE id=?', user.id);
+  }
 
-  res.json({
-    token: accessToken,
-    user: safeUser(user),
-  });
+  await authenticateUser(user, res);
 });
 
 // POST /api/auth/refresh

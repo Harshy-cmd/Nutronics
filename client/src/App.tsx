@@ -288,22 +288,30 @@ export default function App() {
     navigate("/auth");
   };
 
-  const login = async (email: string, password = "password123") => {
+  const finishLogin = (a: any) => {
+    localStorage.setItem("nutronics_token", a.token);
+    localStorage.setItem("nutronics_user", JSON.stringify(a.user));
+    setMe(a.user);
+    navigate(
+      a.user.role === "PATIENT"
+        ? "/patient/home"
+        : a.user.role === "DOCTOR"
+          ? "/doctor/dashboard"
+          : "/admin/dashboard",
+    );
+  };
+
+  const login = async (
+    email: string,
+    password = "password123",
+    portalRole?: "DOCTOR" | "ADMIN",
+  ) => {
     try {
       const a = await api("/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, ...(portalRole ? { portalRole } : {}) }),
       });
-      localStorage.setItem("nutronics_token", a.token);
-      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
-      setMe(a.user);
-      navigate(
-        a.user.role === "PATIENT"
-          ? "/patient/home"
-          : a.user.role === "DOCTOR"
-            ? "/doctor/dashboard"
-            : "/admin/dashboard",
-      );
+      finishLogin(a);
     } catch (e) {
       msg((e as Error).message);
       throw e;
@@ -326,22 +334,40 @@ export default function App() {
     }
   };
 
-  const loginWithGoogle = async (credential: string) => {
+  const loginWithGoogle = async (
+    credential: string,
+    portalRole?: "DOCTOR" | "ADMIN",
+  ) => {
     try {
       const a = await api("/auth/google", {
         method: "POST",
-        body: JSON.stringify({ credential }),
+        body: JSON.stringify({ credential, ...(portalRole ? { portalRole } : {}) }),
       });
-      localStorage.setItem("nutronics_token", a.token);
-      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
-      setMe(a.user);
-      navigate(
-        a.user.role === "PATIENT"
-          ? "/patient/home"
-          : a.user.role === "DOCTOR"
-            ? "/doctor/dashboard"
-            : "/admin/dashboard",
-      );
+      finishLogin(a);
+    } catch (e) {
+      msg((e as Error).message);
+      throw e;
+    }
+  };
+
+  const requestStaffOtp = async (email: string, portalRole: "DOCTOR" | "ADMIN") => {
+    await api("/auth/otp/request", {
+      method: "POST",
+      body: JSON.stringify({ email, portalRole }),
+    });
+  };
+
+  const loginWithStaffOtp = async (
+    email: string,
+    code: string,
+    portalRole: "DOCTOR" | "ADMIN",
+  ) => {
+    try {
+      const a = await api("/auth/otp/verify", {
+        method: "POST",
+        body: JSON.stringify({ email, code, portalRole }),
+      });
+      finishLogin(a);
     } catch (e) {
       msg((e as Error).message);
       throw e;
@@ -352,12 +378,20 @@ export default function App() {
     return <ForgotPasswordPage disclaimer={DISCLAIMER} />;
   if (!me && loc.pathname === "/auth/reset-password")
     return <ResetPasswordPage disclaimer={DISCLAIMER} />;
-  if (!me && (loc.pathname === "/auth" || loc.pathname === "/auth/register"))
+  const portalRole = loc.pathname === "/doctor/login"
+    ? "DOCTOR"
+    : loc.pathname === "/admin/login"
+      ? "ADMIN"
+      : undefined;
+  if (!me && (loc.pathname === "/auth" || loc.pathname === "/auth/register" || portalRole))
     return (
       <AuthPage
         login={login}
         register={register}
         loginWithGoogle={loginWithGoogle}
+        requestOtp={requestStaffOtp}
+        loginWithOtp={loginWithStaffOtp}
+        portalRole={portalRole}
         initialTab={loc.pathname === "/auth/register" ? "register" : "signin"}
         disclaimer={DISCLAIMER}
       />

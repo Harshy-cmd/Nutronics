@@ -4,9 +4,12 @@ import { ArrowRight, Eye, EyeOff, HeartPulse, AlertCircle } from 'lucide-react';
 import { GoogleAuthButton } from './GoogleAuthButton';
 
 interface AuthPageProps {
-  login: (email: string, password?: string) => Promise<void>;
+  login: (email: string, password?: string, portalRole?: 'DOCTOR' | 'ADMIN') => Promise<void>;
   register: (payload: any) => Promise<void>;
-  loginWithGoogle: (credential: string) => Promise<void>;
+  loginWithGoogle: (credential: string, portalRole?: 'DOCTOR' | 'ADMIN') => Promise<void>;
+  requestOtp: (email: string, portalRole: 'DOCTOR' | 'ADMIN') => Promise<void>;
+  loginWithOtp: (email: string, code: string, portalRole: 'DOCTOR' | 'ADMIN') => Promise<void>;
+  portalRole?: 'DOCTOR' | 'ADMIN';
   initialTab?: 'signin' | 'register';
   disclaimer: string;
 }
@@ -15,6 +18,9 @@ export function AuthPage({
   login,
   register,
   loginWithGoogle,
+  requestOtp,
+  loginWithOtp,
+  portalRole,
   initialTab = 'signin',
   disclaimer,
 }: AuthPageProps) {
@@ -22,6 +28,10 @@ export function AuthPage({
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [authMethod, setAuthMethod] = useState<'password' | 'otp'>('password');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [notice, setNotice] = useState('');
 
   // Form states
   const [email, setEmail] = useState('');
@@ -30,7 +40,7 @@ export function AuthPage({
   const [age, setAge] = useState('45');
   const [conditions, setConditions] = useState('');
 
-  const showDemo = import.meta.env.VITE_SHOW_DEMO === 'true';
+  const showDemo = import.meta.env.DEV && import.meta.env.VITE_SHOW_DEMO === 'true';
   const showGoogle = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const passwordHelpId = useId();
@@ -57,9 +67,39 @@ export function AuthPage({
     setError('');
     setSubmitting(true);
     try {
-      await login(email.trim(), password);
+      await login(email.trim(), password, portalRole);
     } catch (err: any) {
       setError(err.message || 'Email or password is incorrect');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleRequestOtp = async () => {
+    if (!portalRole) return;
+    setError('');
+    setNotice('');
+    setSubmitting(true);
+    try {
+      await requestOtp(email.trim(), portalRole);
+      setOtpSent(true);
+      setNotice('If an eligible account exists, a sign-in code has been sent.');
+    } catch (err: any) {
+      setError(err.message || 'Could not send a sign-in code.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!portalRole) return;
+    setError('');
+    setSubmitting(true);
+    try {
+      await loginWithOtp(email.trim(), otp.trim(), portalRole);
+    } catch (err: any) {
+      setError(err.message || 'The code is invalid or expired.');
     } finally {
       setSubmitting(false);
     }
@@ -97,7 +137,7 @@ export function AuthPage({
     setError('');
     setSubmitting(true);
     try {
-      await loginWithGoogle(credential);
+      await loginWithGoogle(credential, portalRole);
     } catch (err: any) {
       setError(err.message || 'Google sign-in could not be completed');
     } finally {
@@ -127,21 +167,25 @@ export function AuthPage({
           <HeartPulse size={20} />
         </span>
         <div className="eyebrow">
-          {tab === 'signin' ? 'WELCOME BACK' : 'GET STARTED'}
+          {portalRole ? `${portalRole} PORTAL` : tab === 'signin' ? 'WELCOME BACK' : 'GET STARTED'}
         </div>
         <h1>
-          {tab === 'signin'
+          {portalRole
+            ? portalRole === 'DOCTOR' ? 'Doctor sign in' : 'Administrator sign in'
+            : tab === 'signin'
             ? 'Sign in to your care space'
             : 'Create your patient account'}
         </h1>
         <p>
-          {tab === 'signin'
+          {portalRole
+            ? 'Use your provisioned staff account. Choose a password, email code, or Google sign-in.'
+            : tab === 'signin'
             ? 'Sign in with your email, password, or Google account.'
             : 'Personalized nutrition and care support, set up around you.'}
         </p>
 
         {/* Tab Switcher */}
-        <div className="auth-tabs">
+        {!portalRole && <div className="auth-tabs">
           <button
             type="button"
             className={tab === 'signin' ? 'active' : ''}
@@ -162,8 +206,20 @@ export function AuthPage({
           >
             Create Account
           </button>
-        </div>
+        </div>}
 
+        {portalRole && (
+          <div className="auth-tabs" role="tablist" aria-label="Staff sign-in method">
+            <button type="button" className={authMethod === 'password' ? 'active' : ''} onClick={() => { setAuthMethod('password'); setError(''); setNotice(''); }}>
+              Password
+            </button>
+            <button type="button" className={authMethod === 'otp' ? 'active' : ''} onClick={() => { setAuthMethod('otp'); setError(''); setNotice(''); }}>
+              Email code
+            </button>
+          </div>
+        )}
+
+        {notice && <div className="auth-notice" role="status">{notice}</div>}
         {error && (
           <div className="auth-error">
             <AlertCircle size={16} />
@@ -172,7 +228,7 @@ export function AuthPage({
         )}
 
         {/* Sign In Form */}
-        {tab === 'signin' && (
+        {tab === 'signin' && authMethod === 'password' && (
           <form onSubmit={handleSignIn}>
             <label>
               Email address
@@ -221,8 +277,52 @@ export function AuthPage({
           </form>
         )}
 
+        {portalRole && authMethod === 'otp' && (
+          <form onSubmit={handleVerifyOtp}>
+            <label>
+              Work email
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="you@work.com"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setOtpSent(false); setNotice(''); }}
+              />
+            </label>
+            {otpSent && (
+              <label>
+                6-digit sign-in code
+                <input
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  pattern="[0-9]{6}"
+                  maxLength={6}
+                  required
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                />
+              </label>
+            )}
+            {!otpSent ? (
+              <button type="button" className="button primary" disabled={submitting || !email.trim()} onClick={() => void handleRequestOtp()} style={{ width: '100%' }}>
+                {submitting ? 'Sending code…' : 'Send sign-in code'} <ArrowRight size={16} />
+              </button>
+            ) : (
+              <>
+                <button className="button primary" disabled={submitting || otp.length !== 6} style={{ width: '100%' }}>
+                  {submitting ? 'Verifying…' : 'Verify and sign in'} <ArrowRight size={16} />
+                </button>
+                <button type="button" className="text-button" disabled={submitting} onClick={() => void handleRequestOtp()}>
+                  Send a new code
+                </button>
+              </>
+            )}
+          </form>
+        )}
+
         {/* Create Account Form */}
-        {tab === 'register' && (
+        {!portalRole && tab === 'register' && (
           <form onSubmit={handleRegister}>
             <label>
               Full name
@@ -305,7 +405,7 @@ export function AuthPage({
         )}
 
         {/* Google Sign-in */}
-        {showGoogle && (
+        {showGoogle && tab === 'signin' && (
           <>
             <div className="auth-divider">or continue with</div>
             <GoogleAuthButton
@@ -316,7 +416,7 @@ export function AuthPage({
         )}
 
         {/* Quick Demo Access (only when VITE_SHOW_DEMO is true) */}
-        {showDemo && (
+        {!portalRole && showDemo && (
           <div className="auth-demos">
             <b>Quick demo access</b>
             <button

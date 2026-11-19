@@ -39,7 +39,7 @@ function prepareSql(sql: string, args: unknown[]) {
   const table = insert[1].toLowerCase();
   const idTables = new Set([
     "logs", "reminders", "meals", "chat", "records", "contacts", "sos",
-    "devices", "notifications", "password_reset_tokens", "refresh_tokens",
+    "devices", "notifications", "password_reset_tokens", "refresh_tokens", "email_login_otps",
   ]);
   if (/INSERT\s+OR\s+IGNORE/i.test(sql)) value += " ON CONFLICT DO NOTHING";
   if (/INSERT\s+OR\s+REPLACE/i.test(sql)) {
@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT NOT NULL, exp
 CREATE TABLE IF NOT EXISTS foods (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL, "servingSize" TEXT NOT NULL, calories DOUBLE PRECISION NOT NULL, "proteinG" DOUBLE PRECISION NOT NULL, "carbsG" DOUBLE PRECISION NOT NULL, "fatG" DOUBLE PRECISION NOT NULL, "fiberG" DOUBLE PRECISION NOT NULL, "sodiumMg" DOUBLE PRECISION NOT NULL, "sugarG" DOUBLE PRECISION NOT NULL DEFAULT 0, "potassiumMg" DOUBLE PRECISION, "phosphorusMg" DOUBLE PRECISION, "glycemicIndex" TEXT, "safeForConditions" TEXT, source TEXT NOT NULL, "isEstimated" INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
 CREATE TABLE IF NOT EXISTS medicines (id TEXT PRIMARY KEY, "genericName" TEXT NOT NULL, "brandNames" TEXT NOT NULL DEFAULT '[]', "drugClass" TEXT, "timingInstruction" TEXT, "foodInteractionNote" TEXT, "warningSigns" TEXT, indications TEXT, warnings TEXT, "boxedWarning" TEXT, "rxNormId" TEXT, source TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
 CREATE TABLE IF NOT EXISTS password_reset_tokens (id SERIAL PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), token_hash TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL, used INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
+CREATE TABLE IF NOT EXISTS email_login_otps (id SERIAL PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE, code_hash TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, used INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
 CREATE TABLE IF NOT EXISTS refresh_tokens (id SERIAL PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), token_hash TEXT NOT NULL, expires_at TIMESTAMPTZ NOT NULL, revoked INTEGER NOT NULL DEFAULT 0, revoked_at TIMESTAMPTZ, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
 CREATE INDEX IF NOT EXISTS idx_users_role_active ON users(role, active);
 CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id);
@@ -106,6 +107,7 @@ CREATE INDEX IF NOT EXISTS idx_sos_user_created ON sos(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_devices_user_id ON devices(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id, id);
 CREATE INDEX IF NOT EXISTS idx_reset_token_hash ON password_reset_tokens(token_hash);
+CREATE INDEX IF NOT EXISTS idx_email_login_otps_user ON email_login_otps(user_id, created_at DESC) WHERE used=0;
 CREATE INDEX IF NOT EXISTS idx_refresh_token_hash ON refresh_tokens(token_hash);
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE logs ENABLE ROW LEVEL SECURITY;
@@ -123,6 +125,7 @@ ALTER TABLE cache ENABLE ROW LEVEL SECURITY;
 ALTER TABLE foods ENABLE ROW LEVEL SECURITY;
 ALTER TABLE medicines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE password_reset_tokens ENABLE ROW LEVEL SECURITY;
+ALTER TABLE email_login_otps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE refresh_tokens ENABLE ROW LEVEL SECURITY;
 `;
 

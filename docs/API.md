@@ -7,8 +7,8 @@ Base URL: `http://localhost:4000/api`. JSON requests use `Content-Type: applicat
 - **Reverse Proxy & Trust Proxy**: The Express app enables `app.set('trust proxy', 1)` so that IP-based rate limiting (`express-rate-limit`) correctly identifies client IPs behind reverse proxies (Nginx, Caddy, Cloudflare, AWS ALB) via the standard `X-Forwarded-For` header.
 - **Environment Variables**:
   - `JWT_SECRET`: Secret used to sign and verify JSON Web Tokens. In production (`NODE_ENV=production`), the server refuses to start if this is unset or left as the default placeholder.
-  - `GOOGLE_CLIENT_ID`: OAuth 2.0 Client ID for Google Identity Services. Verified server-side with `google-auth-library`.
-  - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`: SMTP configuration for sending transactional password-reset emails via Nodemailer. When unconfigured in development, the reset link is logged to the server console; in production, dev console fallback is strictly disabled.
+  - `GOOGLE_CLIENT_ID`: OAuth 2.0 Client ID for Google Identity Services. Verified server-side with `google-auth-library`; must match the frontend's `VITE_GOOGLE_CLIENT_ID`.
+  - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`: SMTP configuration for password-reset email and staff email OTP sign-in. Keep SMTP credentials server-side. Email OTP is unavailable until SMTP is configured.
   - `CLIENT_ORIGIN`: Exact frontend origin (default `http://localhost:5173`) used by CORS with `credentials: true`.
   - `DATABASE_PATH`: Relative or absolute path to the SQLite database file.
 
@@ -19,8 +19,10 @@ All auth tokens have a 15-minute access lifetime and carry version claim `v: 2` 
 | Method | Endpoint | Access | Rate Limit | Purpose |
 |---|---|---|---|---|
 | POST | `/auth/login` | Public | 15 / 15m | Email/password login; returns 15m access token and sets refresh cookie |
+| POST | `/auth/otp/request` | Public | 5 / 15m | Request a 10-minute email OTP for an existing Doctor or Admin account |
+| POST | `/auth/otp/verify` | Public | 10 / 15m | Verify and consume a one-time Doctor/Admin OTP |
 | POST | `/auth/register` | Public | 10 / hr | Register new PATIENT account; returns access token and sets refresh cookie |
-| POST | `/auth/google` | Public | Default | Verify Google ID token; link PATIENT account or create new PATIENT account |
+| POST | `/auth/google` | Public | Default | Verify Google ID token; create PATIENT accounts or authenticate a pre-provisioned Doctor/Admin account through its matching portal |
 | POST | `/auth/refresh` | Public (cookie) | Default | Rotate refresh token cookie and receive fresh 15m access token |
 | POST | `/auth/logout` | Public (cookie) | Default | Revoke refresh token in database and clear refresh cookie |
 | POST | `/auth/forgot-password` | Public | 5 / 15m | Request password reset email (30m token); generic response prevents enumeration |
