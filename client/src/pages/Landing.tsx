@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Activity,
@@ -12,6 +13,16 @@ import {
 } from "lucide-react";
 
 export function Landing({ login }: { login: (email: string) => Promise<void> }) {
+  const [loginError, setLoginError] = useState("");
+  const startDemo = async (email: string) => {
+    setLoginError("");
+    try {
+      await login(email);
+    } catch (error) {
+      setLoginError((error as Error).message || "Could not sign in. Try again.");
+    }
+  };
+
   return (
     <div className="landing">
       <header className="landing-nav">
@@ -46,17 +57,22 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
           <div className="hero-actions">
             <button
               className="button primary"
-              onClick={() => void login("patient@nutronics.org").catch(() => {})}
+              onClick={() => void startDemo("patient@nutronics.org")}
             >
               Explore as a patient <ArrowRight size={17} />
             </button>
             <button
               className="text-button"
-              onClick={() => void login("doctor@nutronics.org").catch(() => {})}
+              onClick={() => void startDemo("doctor@nutronics.org")}
             >
               Doctor sign in <ChevronRight size={16} />
             </button>
           </div>
+          {loginError && (
+            <div className="auth-error" role="alert">
+              {loginError}
+            </div>
+          )}
           <div className="trust-row">
             <div className="trust-avatars">
               <span>A</span>
@@ -154,13 +170,13 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
         <span>
           <Sparkles size={17} /> Try the local demo with one click
         </span>
-        <button onClick={() => void login("patient@nutronics.org").catch(() => {})}>
+        <button onClick={() => void startDemo("patient@nutronics.org")}>
           Patient <ArrowRight size={15} />
         </button>
-        <button onClick={() => void login("doctor@nutronics.org").catch(() => {})}>
+        <button onClick={() => void startDemo("doctor@nutronics.org")}>
           Doctor <ArrowRight size={15} />
         </button>
-        <button onClick={() => void login("admin@nutronics.org").catch(() => {})}>
+        <button onClick={() => void startDemo("admin@nutronics.org")}>
           Admin <ArrowRight size={15} />
         </button>
       </div>
