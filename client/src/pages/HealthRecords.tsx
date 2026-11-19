@@ -36,7 +36,7 @@ export function HealthRecords({
         />
         <label htmlFor="upload">
           <Plus size={18} /> Upload a record{" "}
-          <small>PDF, PNG, JPG, TXT Â· up to 5 MB</small>
+          <small>PDF, PNG, JPG, TXT · up to 5 MB</small>
         </label>
       </div>
       <div className="record-list">
@@ -46,7 +46,7 @@ export function HealthRecords({
             <div>
               <b>{r.name}</b>
               <small>
-                {r.category} Â· {r.created_at?.slice(0, 10)}
+                {r.category} · {r.created_at?.slice(0, 10)}
               </small>
             </div>
             <a

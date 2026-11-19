@@ -54,7 +54,7 @@ export function AdminPanel({
         Save configuration
       </button>
       <p>
-        Verified {data?.verified || 0} Â· Pending {data?.pending || 0} Â·
+        Verified {data?.verified || 0} · Pending {data?.pending || 0} ·
         Rejected {data?.rejected || 0}
       </p>
     </Card>

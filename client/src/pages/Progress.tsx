@@ -28,7 +28,7 @@ export function Progress({
     <>
       <Card
         title="Your wellbeing, over time"
-        subtitle="A gentle look at the trends youâ€™re building"
+        subtitle="A gentle look at the trends you're building"
         icon={TrendingUp}
       >
         <div className="chart">
@@ -44,7 +44,7 @@ export function Progress({
         </div>
       </Card>
       <Card
-        title="Add todayâ€™s check-in"
+        title="Add today's check-in"
         subtitle="A few numbers help you notice patterns"
         icon={Plus}
       >

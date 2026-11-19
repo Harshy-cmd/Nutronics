@@ -31,7 +31,7 @@ export function Landing({ login }: { login: (email: string) => void }) {
       <main className="hero">
         <div className="hero-copy">
           <div className="hero-tag">
-            <span>âœ³</span> PERSONALIZED CARE, IN YOUR CORNER
+            <span>✳</span> PERSONALIZED CARE, IN YOUR CORNER
           </div>
           <h1>
             Feel more confident
@@ -90,7 +90,7 @@ export function Landing({ login }: { login: (email: string) => void }) {
               <small>DAILY WELLNESS</small>
               <b>One step at a time</b>
             </div>
-            <span className="spark-line">âŒ âŒ âŒ </span>
+            <span className="spark-line">~~~</span>
           </div>
           <div className="float-card card-verified">
             <span className="mini-icon green">
@@ -113,7 +113,7 @@ export function Landing({ login }: { login: (email: string) => void }) {
             <Droplets size={17} className="teal-text" />
           </div>
           <div className="art-caption">
-            <span>âœ³</span> WELLNESS, WITH YOU IN MIND
+            <span>✳</span> WELLNESS, WITH YOU IN MIND
           </div>
         </div>
       </main>
@@ -131,7 +131,7 @@ export function Landing({ login }: { login: (email: string) => void }) {
           {
             icon: Clock,
             title: "Small reminders, big help",
-            text: "Medication, meals, and waterâ€”right on time.",
+            text: "Medication, meals, and water—right on time.",
           },
           {
             icon: HeartPulse,
@@ -165,7 +165,7 @@ export function Landing({ login }: { login: (email: string) => void }) {
         </button>
       </div>
       <footer className="landing-footer">
-        Â© 2026 Nutronics <span>Â·</span> Thoughtful digital health for everyday
+        © 2026 Nutronics <span>·</span> Thoughtful digital health for everyday
         life
       </footer>
     </div>

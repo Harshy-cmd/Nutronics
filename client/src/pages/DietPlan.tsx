@@ -27,7 +27,7 @@ export function DietPlan({
       <div className="tabs">
         <button className="selected">Today</button>
         <button>This week</button>
-        <span>7-day plan Â· reviewed by Dr. Priya Menon</span>
+        <span>7-day plan · reviewed by Dr. Priya Menon</span>
       </div>
       <div className="meal-list">
         {(data?.meals || []).map((m: any) => (
@@ -37,11 +37,11 @@ export function DietPlan({
             </div>
             <div className="meal-info">
               <span className="meal-time">
-                DAY {m.day + 1} Â· {m.slot.toUpperCase()}
+                DAY {m.day + 1} · {m.slot.toUpperCase()}
               </span>
               <h3>{m.name}</h3>
               <p>
-                {m.servingSize} Â· {m.calories} kcal
+                {m.servingSize} · {m.calories} kcal
               </p>
               <Badge status={m.status} />
             </div>

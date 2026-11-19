@@ -77,7 +77,7 @@ export function Profile({
             <div>
               <b>{c.name}</b>
               <small>
-                {c.relationship} Â· {c.phone}
+                {c.relationship} · {c.phone}
               </small>
             </div>
           </div>

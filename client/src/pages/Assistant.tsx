@@ -36,7 +36,7 @@ export function Assistant({
           <b>A little clarity, whenever you need it.</b>
           <p>
             Ask about a food, a meal swap, or medicine timing. New guidance may
-            need your doctorâ€™s review.
+            need your doctor's review.
           </p>
         </div>
       </div>
@@ -60,8 +60,8 @@ export function Assistant({
               {reply.answer}
               {reply.food && (
                 <div className="macro-mini">
-                  {reply.food.calories} kcal Â· {reply.food.proteinG}g protein
-                  Â· {reply.food.sodiumMg}mg sodium
+                  {reply.food.calories} kcal · {reply.food.proteinG}g protein ·{" "}
+                  {reply.food.sodiumMg}mg sodium
                 </div>
               )}
               <Badge status={reply.verificationStatus} />
@@ -88,7 +88,7 @@ export function Assistant({
                 await handleSend();
               }
             }}
-            placeholder="Ask about a food or your care planâ€¦"
+            placeholder="Ask about a food or your care plan…"
           />
           <button aria-label="Send question" onClick={handleSend}>
             <ArrowRight />

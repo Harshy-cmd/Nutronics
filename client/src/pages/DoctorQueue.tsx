@@ -27,7 +27,7 @@ export function DoctorQueue({
         <Card
           key={x.id}
           title={x.question}
-          subtitle={`${x.patient_name} Â· ${x.created_at?.slice(0, 10)}`}
+          subtitle={`${x.patient_name} · ${x.created_at?.slice(0, 10)}`}
           icon={MessageCircle}
         >
           <p>{x.answer}</p>

@@ -45,15 +45,15 @@ export function PatientDashboard({
           tint="mint"
         />
         <Stat
-          label="Todayâ€™s reminders"
+          label="Today's reminders"
           value={`${data?.reminders?.filter((r: any) => !r.done).length || 0} to go`}
-          note="Youâ€™ve got this"
+          note="You've got this"
           icon={Clock}
           tint="peach"
         />
         <Stat
           label="Daily hydration"
-          value={`${data?.log?.water || "â€”"} ml`}
+          value={`${data?.log?.water || "—"} ml`}
           note="A sip at a time"
           icon={Droplets}
           tint="blue"
@@ -87,7 +87,7 @@ export function PatientDashboard({
           </div>
         </Card>
         <Card
-          title="Todayâ€™s gentle schedule"
+          title="Today's gentle schedule"
           subtitle="Take things one step at a time"
           icon={CalendarCheck}
         >
@@ -111,7 +111,7 @@ export function PatientDashboard({
                 <div>
                   <b>{r.label}</b>
                   <small>
-                    {r.kind} Â· {r.time}
+                    {r.kind} · {r.time}
                   </small>
                 </div>
                 <span className="time-tag">{r.time}</span>
@@ -125,7 +125,7 @@ export function PatientDashboard({
       </div>
       <Card
         title="Thoughtfully planned for you"
-        subtitle="Todayâ€™s meals Â· Doctor reviewed"
+        subtitle="Today's meals · Doctor reviewed"
         icon={Utensils}
       >
         <div className="meal-row">
@@ -134,7 +134,7 @@ export function PatientDashboard({
               <span className="meal-time">{m.slot}</span>
               <b>{m.name}</b>
               <small>
-                {m.calories} kcal Â· {m.proteinG}g protein
+                {m.calories} kcal · {m.proteinG}g protein
               </small>
               <Badge status={m.status} />
             </div>
