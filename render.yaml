@@ -18,6 +18,10 @@ services:
         generateValue: true
       - key: SUPABASE_DATABASE_URL
         sync: false
+      - key: SUPABASE_URL
+        value: https://nbcljkbdzptsuuzqbjgk.supabase.co
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
       - key: UPLOADS_PATH
         value: /tmp/nutronics-uploads
       - key: CLIENT_ORIGIN

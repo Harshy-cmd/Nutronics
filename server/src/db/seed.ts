@@ -4,9 +4,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { db, initializeDatabase } from "./schema.js";
 import { config } from "../config.js";
+import { ensureRecordBucket, uploadRecordObject } from "../services/recordStorageService.js";
 import "./generateDatasets.js";
 async function seed() {
 await initializeDatabase();
+await ensureRecordBucket();
 faker.seed(20250303);
 const dataDir = config.dataPath;
 const read = (name: string) =>
@@ -150,24 +152,21 @@ for (const uid of ["patient-1", "patient-2", "patient-3"])
     "Fitness Band",
   ].entries())
     await device.run(uid, name, i === 0 ? 1 : 0, uid, name);
-fs.mkdirSync(config.uploadsPath, { recursive: true });
 for (const [uid, name] of [
   ["patient-1", "Aarav Sharma"],
   ["patient-2", "Meera Nair"],
   ["patient-3", "Kabir Verma"],
 ]) {
   const file = `demo-${uid}.txt`;
-  fs.writeFileSync(
-    path.resolve(config.uploadsPath, file),
-    `Nutronics sample health record for ${name}. Synthetic demo content.`,
-  );
+  const objectKey = `${uid}/sample/${file}`;
+  await uploadRecordObject(objectKey, Buffer.from(`Nutronics sample health record for ${name}. Synthetic demo content.`), "text/plain");
   await db.prepare(
     "INSERT INTO records(user_id,name,category,file_path) SELECT ?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM records WHERE user_id=? AND name=?)",
   ).run(
     uid,
     "Sample Health Summary",
     "Lab report",
-    file,
+    objectKey,
     uid,
     "Sample Health Summary",
   );

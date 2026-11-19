@@ -1,8 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import fs from 'node:fs';
-import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { config } from './config.js';
 import { db, initializeDatabase } from './db/schema.js';
@@ -20,17 +19,17 @@ import {
 } from './services/externalDataService.js';
 import { authRouter, safeUser } from './routes/auth.js';
 import { attachRoutes } from './routes.js';
+import { deleteRecordObject, downloadRecordObject, ensureRecordBucket, uploadRecordObject } from './services/recordStorageService.js';
 
 await initializeDatabase();
 const seededUserCount = Number((await db.prepare('SELECT COUNT(*) AS count FROM users').get() as { count: string | number }).count);
 if (seededUserCount === 0) {
   await import('./db/seed.js');
 }
-
-fs.mkdirSync(config.uploadsPath, { recursive: true });
+if (config.nodeEnv === 'production') await ensureRecordBucket();
 
 const upload = multer({
-  dest: config.uploadsPath,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_req, file, cb) =>
     cb(null, /\.(pdf|png|jpe?g|txt)$/i.test(file.originalname)),
@@ -231,13 +230,28 @@ app.get('/api/patient/records', async (req, res) =>
 app.post('/api/patient/records', upload.single('file'), async (req, res) => {
   if (!req.file)
     return res.status(400).json({ error: 'Select a PDF, image, or text file under 5 MB' });
-  const id = (await run(
-    'INSERT INTO records(user_id,name,category,file_path) VALUES(?,?,?,?)',
-    req.user!.id,
-    req.body.name || req.file.originalname,
-    req.body.category || 'Other',
-    req.file.filename
-  )).lastInsertRowid;
+  const extension = req.file.originalname.split('.').pop()?.toLowerCase() || '';
+  const mimeByExtension: Record<string, string> = {
+    pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', txt: 'text/plain',
+  };
+  const contentType = mimeByExtension[extension];
+  if (!contentType) return res.status(400).json({ error: 'Unsupported record file type' });
+  const safeName = req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 120) || 'record';
+  const storageKey = `${req.user!.id}/${randomUUID()}-${safeName}`;
+  await uploadRecordObject(storageKey, req.file.buffer, contentType);
+  let id: number;
+  try {
+    id = (await run(
+      'INSERT INTO records(user_id,name,category,file_path) VALUES(?,?,?,?)',
+      req.user!.id,
+      req.body.name || req.file.originalname,
+      req.body.category || 'Other',
+      storageKey
+    )).lastInsertRowid;
+  } catch (error) {
+    await deleteRecordObject(storageKey);
+    throw error;
+  }
   res.status(201).json(await one('SELECT id,name,category,created_at FROM records WHERE id=?', id));
 });
 
@@ -248,7 +262,8 @@ app.get('/api/patient/records/:id/download', async (req, res) => {
     req.user!.id
   );
   if (!rec) return res.status(404).json({ error: 'Record not found' });
-  res.download(path.join(config.uploadsPath, rec.file_path), rec.name);
+  const file = await downloadRecordObject(rec.file_path);
+  res.type(file.contentType).attachment(rec.name).send(Buffer.from(file.bytes));
 });
 
 app.delete('/api/patient/records/:id', async (req, res) => {
@@ -258,7 +273,7 @@ app.delete('/api/patient/records/:id', async (req, res) => {
     req.user!.id
   );
   if (rec) {
-    fs.rmSync(path.join(config.uploadsPath, rec.file_path), { force: true });
+    await deleteRecordObject(rec.file_path);
     await run('DELETE FROM records WHERE id=?', rec.id);
   }
   res.json({ ok: true });
