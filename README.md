@@ -1,101 +1,187 @@
-# Nutronics — Smart Health Companion
+<div align="center">
 
-**Personalized Wellness Powered by AI and Medical Expertise.** Nutronics is an offline-first health companion demo aligned with UN SDG 3: Good Health & Well-Being. It brings condition-aware meal guidance, gentle reminders, progress logs, health records, simulated devices, and a doctor review queue into an accessible web experience. Business rules live behind a REST API so a future Flutter client can reuse them.
+# 🌿 Nutronics — Smart Health Companion
+**Personalized Wellness Powered by AI, Verified Nutrition Data, and Clinical Oversight**
 
-## Requirements and Setup
+[![UN SDG 3](https://img.shields.io/badge/UN%20SDG-3%20Good%20Health-4C9F38?style=flat-square&logo=united-nations&logoColor=white)](https://sdgs.un.org/goals/goal3)
+[![Node.js](https://img.shields.io/badge/Node.js-22.5%2B-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Express](https://img.shields.io/badge/Express-4.21-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![SQLite](https://img.shields.io/badge/Database-node%3Asqlite-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://nodejs.org/api/sqlite.html)
+[![Architecture](https://img.shields.io/badge/Architecture-Offline--First-0d9488?style=flat-square)](https://github.com/Harshy-cmd/Nutronics)
 
-- Node.js **22.5 or later** (uses the built-in `node:sqlite` driver, avoiding native addon compilation).
-- npm.
+[Features](#features) • [Architecture](#architecture) • [Quick Start](#setup) • [API Reference](docs/API.md) • [Demo Accounts](#demo-accounts)
+
+</div>
+
+---
+
+## 📌 Overview
+
+**Nutronics** is an offline-first digital health companion designed to advance **UN Sustainable Development Goal 3 (Good Health & Well-Being)**. Managing chronic conditions—such as Type 2 Diabetes, Hypertension, and Chronic Kidney Disease—demands strict nutritional vigilance and routine symptom tracking, yet patients rarely receive continuous guidance between clinic visits.
+
+Nutronics bridges this divide through an evidence-based **physician-in-the-loop review architecture**. It delivers condition-tailored meal recommendations, medication reminders, biometric logging, and AI guidance, while keeping all business logic and clinical safety thresholds encapsulated behind an extensible REST API.
+
+---
+
+<a id="features"></a>
+## ✨ Key Features
+
+- 🥗 **Condition-Aware Nutrition Engine**: Validates dietary choices against clinical limits using 542 foods and 16 composite dishes from the **ICMR-NIN Indian Food Composition Tables (IFCT 2017)** and USDA FoodData Central.
+- 🩺 **Doctor-in-the-Loop Oversight**: Patient meal substitutions and AI guidance flag as pending in a dedicated clinical queue for physician review, approval, or notes.
+- 🔐 **Dual-Token Authentication**: 15-minute access tokens (`v: 2` claim) paired with rotated 7-day `httpOnly` refresh cookies, single-flight client mutex, 10-second grace window, and automatic session revocation on token reuse.
+- 📈 **Biometric & Adherence Trends**: Visualizes blood pressure, glucose, hydration, and care-plan adherence via responsive Recharts graphs.
+- ⏰ **Care Reminders & Logging**: Daily medication and water schedules with one-tap status toggles and historical tracking.
+- 🚨 **Emergency Protocol**: Single-tap SOS trigger recording incident details and surfacing emergency caregiver contacts.
+- 👥 **Multi-Role Portals**: Dedicated, role-scoped interfaces for **Patients**, **Doctors**, and **Administrators**.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Stack |
+|---|---|
+| **Frontend** | React 18, TypeScript, Vite 6, Tailwind CSS, React Router 6, Recharts, Lucide React |
+| **Backend** | Node.js (>=22.5), Express 4, TypeScript, Zod, bcryptjs, google-auth-library, Nodemailer |
+| **Database** | Native `node:sqlite` (zero node-gyp native addon compilation; synchronous WAL mode) |
+| **Clinical Datasets** | ICMR-NIN IFCT 2017, USDA FoodData Central, openFDA Drug Labels & RxNorm |
+| **Security & Auth** | Dual-token rotation, `httpOnly` cookies, SHA-256 token hashing, IP rate limiting, CORS |
+
+---
+
+<a id="architecture"></a>
+## 🏛️ System Architecture
+
+```mermaid
+graph LR
+    subgraph Client ["Client (React 18 + Vite)"]
+        UI[Patient / Doctor / Admin UI]
+        Mutex[Single-Flight Refresh Mutex]
+    end
+
+    subgraph Server ["Server (Express + TypeScript)"]
+        Guard[Auth Guards & Rate Limiter]
+        Rules[Clinical Nutrition Engine]
+        Controller[REST Controllers]
+    end
+
+    subgraph Storage ["Data Layer"]
+        DB[(node:sqlite)]
+        IFCT[(IFCT 2017 Data)]
+        Cache[(External API Cache)]
+    end
+
+    UI -->|Bearer JWT + httpOnly Cookie| Guard
+    Guard --> Controller
+    Controller --> Rules
+    Rules --> DB
+    DB --- IFCT
+    Controller -.->|Cached Lookups| Cache
+```
+
+---
+
+<a id="setup"></a>
+## 🚀 Installation & Setup
+
+### Prerequisites
+- **Node.js**: `>= 22.5.0` (required for native `node:sqlite`).
+- **npm**: `>= 10.0.0`.
 
 ### Quick Start
-
 ```sh
-# 1. Install dependencies across client and server
+# 1. Clone repository and install dependencies across workspaces
+git clone https://github.com/Harshy-cmd/Nutronics.git
+cd Nutronics
 npm install
 
-# 2. Copy environment file and customize settings
+# 2. Copy and configure environment variables
 cp .env.example .env
 
-# 3. Create the database, seed initial data, and import IFCT 2017 foods
+# 3. Initialize SQLite schema, demo records, and IFCT 2017 nutrition dataset
 npm run db:setup
 
-# 4. Start both API and frontend dev servers
+# 4. Start concurrent development servers (API: 4000, Client: 5173)
 npm run dev
 ```
 
-Open `http://localhost:5173`. The API runs at `http://localhost:4000`; check `http://localhost:4000/api/health`.
+Visit **`http://localhost:5173`** to access the web application. The REST API health endpoint runs at **`http://localhost:4000/api/health`**.
 
 ---
 
-## Database & Data Import Scripts
+## 📊 Dataset Ingestion & Management
 
-Nutronics stores its data in a local SQLite database (`data/nutronics.sqlite`). The schema, initial records, and dataset imports are fully reproducible using npm scripts:
+Nutronics includes automated CLI data pipelines for clinical datasets:
 
-| Script | Command | Description |
+| Script | Command | Network Requirement |
 |---|---|---|
-| **Database Setup** | `npm run db:setup` | Seeds base database tables, demo users, guidelines, and imports real IFCT 2017 foods and composite recipe dishes. |
-| **Base Seed** | `npm run db:seed` | Re-seeds initial users, patient logs, meals, guidelines, and simulated devices. |
-| **IFCT Import** | `npm run db:import:ifct` | Imports 542 foods from the Indian Food Composition Tables (IFCT 2017) and calculates macros for 16 Indian composite recipes. (No API key needed) |
-| **USDA Gap Import** | `npm run db:import:usda` | Imports missing food items (e.g. rolled oats, Greek yogurt, broccoli, tofu) from USDA FoodData Central. *(Requires `USDA_API_KEY` in `.env`)* |
-| **openFDA Import** | `npm run db:import:openfda` | Imports FDA labels, indications, warnings, and RxNorm mappings for 50 chronic condition medications. *(Requires `OPENFDA_API_KEY` in `.env`)* |
-| **All Imports** | `npm run db:import:all` | Sequentially runs IFCT, USDA gap-filling, and openFDA imports. |
-
-> [!NOTE]
-> `npm run db:import:ifct` runs offline using the bundled `ifct2017` package. For USDA and openFDA imports, add your keys to the root `.env` file as `USDA_API_KEY` and `OPENFDA_API_KEY` (never use `DEMO_KEY`).
+| **Full Setup** | `npm run db:setup` | Offline (seeds base schema, demo users & IFCT 2017 data) |
+| **IFCT Import** | `npm run db:import:ifct` | Offline (imports 542 foods + 16 composite recipe dishes) |
+| **USDA Import** | `npm run db:import:usda` | Online (gap-fills Western foods via `USDA_API_KEY`) |
+| **openFDA Import** | `npm run db:import:openfda` | Online (fetches labels, warnings & RxNorm via `OPENFDA_API_KEY`) |
+| **All Datasets** | `npm run db:import:all` | Sequentially executes IFCT, USDA, and openFDA importers |
 
 ---
 
-## Authentication System
+<a id="demo-accounts"></a>
+## 🔑 Demo Accounts
 
-Nutronics features a complete authentication system:
-- **Email + Password**: Secure bcrypt password hashing, form validation, strength hints, and generic error messages.
-- **Token Security**: Short-lived 15-minute access tokens (`v: 2` claim) stored in client memory/storage, paired with 7-day rotated `httpOnly` refresh cookies (`Path=/api/auth`, `SameSite=Lax`, `Secure` in production).
-- **Grace Window & Reuse Detection**: A 10-second server grace window allows in-flight concurrent requests to succeed without session loss; token reuse outside the grace window immediately revokes all sessions for that account.
-- **Single-Flight Refresh**: Concurrent 401 responses on the client share a single in-flight refresh promise and retry once.
-- **Sign in with Google**: One-tap Google Sign-In with verified email matching.
-- **Password Reset**: Secure forgot-password flow with 30-minute SHA-256 hashed single-use tokens. Requesting a new reset link immediately invalidates previous unused tokens.
+When `VITE_SHOW_DEMO=true` in `.env`, instant demo buttons appear on the login screen. All demo accounts use password: `password123`.
 
----
-
-## Demo Accounts
-
-When `VITE_SHOW_DEMO=true` in `.env`, demo sign-in buttons are available on the login page. In production (`NODE_ENV=production`), demo account endpoints are disabled.
-
-All demo passwords are `password123`.
-
-| Role | Email | Demo Profile |
+| Role | Email | Clinical Focus |
 |---|---|---|
-| Patient | `patient@nutronics.org` | Aarav Sharma, 68, diabetes and hypertension |
-| Patient | `meera@nutronics.org` | Meera Nair, 72, CKD and hypertension |
-| Patient | `kabir@nutronics.org` | Kabir Verma, 58, heart disease and obesity |
-| Doctor | `doctor@nutronics.org` | Dr. Priya Menon, internal medicine and clinical nutrition |
-| Admin | `admin@nutronics.org` | Vikram Desai, platform administrator |
+| **Patient** | `patient@nutronics.org` | Aarav Sharma (68) — Type 2 Diabetes & Hypertension |
+| **Patient** | `meera@nutronics.org` | Meera Nair (72) — Chronic Kidney Disease (Stage 3) |
+| **Patient** | `kabir@nutronics.org` | Kabir Verma (58) — Cardiovascular Health & Obesity |
+| **Doctor** | `doctor@nutronics.org` | Dr. Priya Menon — Internal Medicine & Clinical Nutrition |
+| **Admin** | `admin@nutronics.org` | Vikram Desai — Systems Administrator |
 
 ---
 
-## Useful Commands
+## 📁 Project Structure
 
-```sh
-npm run dev      # run client and server concurrently
-npm run build    # production build for API (tsc) and web client (Vite)
-npm run lint     # TypeScript type-checks for both workspaces
-npm run test     # run endpoint test suites (e.g. npx tsx server/scripts/testHttpEndpoints.ts)
+```
+Nutronics/
+├── client/                     # Frontend SPA workspace (React + Vite)
+│   ├── src/
+│   │   ├── components/         # Reusable UI (Stat, Card, Badge, QuickLinks)
+│   │   ├── pages/              # Portal views (Patient, Doctor, Admin, Auth)
+│   │   ├── api.ts              # Fetch client with single-flight refresh mutex
+│   │   └── App.tsx             # Route declarations & role guards
+├── server/                     # Backend REST API workspace (Node.js + Express)
+│   ├── scripts/                # Data pipelines (IFCT, USDA, openFDA) & test suites
+│   ├── src/
+│   │   ├── db/                 # Database schema definitions & seeding (node:sqlite)
+│   │   ├── middleware/         # JWT validation, role authorization & rate limiting
+│   │   ├── routes/             # Modular REST routers (auth, patient, doctor, admin)
+│   │   ├── services/           # Nutrition engine, starter data & threshold checks
+│   │   └── index.ts            # Server entrypoint and Express middleware chain
+├── docs/                       # Technical specifications
+│   ├── API.md                  # REST API reference, proxy settings & auth claims
+│   └── DATA_SOURCES.md         # Clinical sources, guidelines & safety notes
+└── package.json                # Root workspace configuration
 ```
 
 ---
 
-## Synthetic and External Data
+## 🔮 Roadmap
 
-Food nutrient values from IFCT 2017 and composite dishes provide real macronutrient and mineral data. Condition guidance is general education, with editable rules stored by the API. Live public API lookups are optional and cached; an offline installation remains usable. See [Data sources and safety](docs/DATA_SOURCES.md). Clinical and nutrition pages display: “General guidance, not a substitute for professional medical advice.”
-
----
-
-## Storage Evolution
-
-The application uses SQLite via Node's native `node:sqlite` driver. The table boundaries in `server/src/db/schema.ts` separate accounts, progress, reminders, meals, chat, records, contacts, and guidelines. For a hosted deployment, move persistence behind repository functions and migrate the schema to PostgreSQL.
+- [ ] **Cross-Platform Mobile App**: Flutter client consuming the existing REST API.
+- [ ] **Cloud Database Migration**: PostgreSQL / Supabase adapter for multi-tenant production deployments.
+- [ ] **Direct Wearable Telemetry**: Web Bluetooth and Health Connect synchronization for real-time vitals.
+- [ ] **Critical Clinical Webhooks**: Automated push/SMS notifications to physicians for abnormal biometrics.
 
 ---
 
-## Important Note
+## 👨‍💻 Author & Connect
 
-This project is a local software demonstration, not a medical device. It does not diagnose, treat, or replace professional care. Seek urgent medical attention for emergency symptoms.
+**Harsh Yadav**
+- **GitHub**: [@Harshy-cmd](https://github.com/Harshy-cmd)
+- **Repository**: [github.com/Harshy-cmd/Nutronics](https://github.com/Harshy-cmd/Nutronics)
+
+---
+
+## ⚠️ Medical Disclaimer
+
+*Nutronics is an engineering demonstration and academic project aligned with UN SDG 3. It is **not a certified medical device** and does not provide clinical diagnosis, medical treatment, or prescription advice. Always consult a qualified physician or healthcare provider for medical advice.*
