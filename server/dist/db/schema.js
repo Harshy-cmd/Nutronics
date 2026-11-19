@@ -19,4 +19,18 @@ CREATE TABLE IF NOT EXISTS guidelines (condition TEXT PRIMARY KEY, data TEXT NOT
 CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT NOT NULL, message TEXT NOT NULL, read INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at INTEGER NOT NULL);
+
+CREATE INDEX IF NOT EXISTS idx_users_role_active ON users(role, active);
+CREATE INDEX IF NOT EXISTS idx_logs_user_date ON logs(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_logs_date ON logs(date);
+CREATE INDEX IF NOT EXISTS idx_reminders_user_time ON reminders(user_id, time);
+CREATE INDEX IF NOT EXISTS idx_meals_user_day_slot ON meals(user_id, day, slot);
+CREATE INDEX IF NOT EXISTS idx_chat_user_id ON chat(user_id, id);
+CREATE INDEX IF NOT EXISTS idx_chat_status ON chat(status);
+CREATE INDEX IF NOT EXISTS idx_records_user_id ON records(user_id, id);
+CREATE INDEX IF NOT EXISTS idx_contacts_user_id ON contacts(user_id);
+CREATE INDEX IF NOT EXISTS idx_sos_user_created ON sos(user_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_sos_created_at ON sos(created_at);
+CREATE INDEX IF NOT EXISTS idx_devices_user_id ON devices(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id, id);
 `);
