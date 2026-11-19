@@ -463,7 +463,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
 
   if ((user.role === 'DOCTOR' || user.role === 'ADMIN') && !user.google_id) {
     await run(
-      'UPDATE users SET google_id=?, auth_provider=CASE WHEN auth_provider="local" THEN "google" ELSE auth_provider END WHERE id=?',
+      `UPDATE users SET google_id=?, auth_provider=CASE WHEN auth_provider='local' THEN 'google' ELSE auth_provider END WHERE id=?`,
       payload.sub,
       user.id,
     );
