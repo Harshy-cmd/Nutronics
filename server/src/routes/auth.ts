@@ -68,11 +68,11 @@ function createAccessToken(userId: string): string {
   return jwt.sign({ id: userId, v: 2 }, config.jwtSecret, { expiresIn: '15m' });
 }
 
-function issueRefreshToken(userId: string): string {
+async function issueRefreshToken(userId: string): Promise<string> {
   const rawToken = randomBytes(32).toString('hex');
   const tokenHash = createHash('sha256').update(rawToken).digest('hex');
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-  run(
+  await run(
     'INSERT INTO refresh_tokens(user_id, token_hash, expires_at) VALUES(?,?,?)',
     userId,
     tokenHash,
@@ -157,7 +157,7 @@ const DEMO_EMAILS = [
 ];
 
 // POST /api/auth/login
-authRouter.post('/login', loginLimiter, (req: Request, res: Response) => {
+authRouter.post('/login', loginLimiter, async (req: Request, res: Response) => {
   const parsed = z
     .object({
       email: z.string().trim().email('Enter a valid email address'),
@@ -176,7 +176,7 @@ authRouter.post('/login', loginLimiter, (req: Request, res: Response) => {
     return res.status(403).json({ error: 'Demo accounts are disabled in production' });
   }
 
-  const user = one('SELECT * FROM users WHERE email=?', emailLower);
+  const user = await one('SELECT * FROM users WHERE email=?', emailLower);
 
   // Safe password comparison (handles Google-only users with empty/dummy password safely without crash)
   let passwordValid = false;
@@ -192,7 +192,7 @@ authRouter.post('/login', loginLimiter, (req: Request, res: Response) => {
   }
 
   const accessToken = createAccessToken(user.id);
-  const refreshToken = issueRefreshToken(user.id);
+  const refreshToken = await issueRefreshToken(user.id);
   setRefreshTokenCookie(res, refreshToken);
 
   res.json({
@@ -202,7 +202,7 @@ authRouter.post('/login', loginLimiter, (req: Request, res: Response) => {
 });
 
 // POST /api/auth/register
-authRouter.post('/register', registerLimiter, (req: Request, res: Response) => {
+authRouter.post('/register', registerLimiter, async (req: Request, res: Response) => {
   const parsed = z
     .object({
       name: z.string().trim().min(2, 'Name must be at least 2 characters'),
@@ -220,7 +220,7 @@ authRouter.post('/register', registerLimiter, (req: Request, res: Response) => {
   const emailLower = parsed.data.email.toLowerCase();
 
   // Check existing user to avoid exposing detailed errors
-  const existing = one('SELECT id FROM users WHERE email=?', emailLower);
+  const existing = await one('SELECT id FROM users WHERE email=?', emailLower);
   if (existing) {
     return res.status(400).json({
       error: 'Unable to register with that email. If you already have an account, please sign in.',
@@ -229,7 +229,7 @@ authRouter.post('/register', registerLimiter, (req: Request, res: Response) => {
 
   const id = `user-${randomUUID()}`;
   try {
-    run(
+    await run(
       'INSERT INTO users(id, email, password, name, role, age, conditions, auth_provider) VALUES(?,?,?,?,?,?,?,?)',
       id,
       emailLower,
@@ -241,10 +241,10 @@ authRouter.post('/register', registerLimiter, (req: Request, res: Response) => {
       'local'
     );
 
-    const user = one('SELECT * FROM users WHERE id=?', id);
-    ensurePatientStarterData(id);
+    const user = await one('SELECT * FROM users WHERE id=?', id);
+    await ensurePatientStarterData(id);
     const accessToken = createAccessToken(id);
-    const refreshToken = issueRefreshToken(id);
+    const refreshToken = await issueRefreshToken(id);
     setRefreshTokenCookie(res, refreshToken);
 
     res.status(201).json({
@@ -291,7 +291,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
   }
 
   const emailLower = payload.email.toLowerCase();
-  let user = one('SELECT * FROM users WHERE email=?', emailLower);
+  let user = await one('SELECT * FROM users WHERE email=?', emailLower);
 
   if (user) {
     if (!user.active) {
@@ -306,12 +306,12 @@ authRouter.post('/google', async (req: Request, res: Response) => {
     }
     // Link google_id if not linked yet
     if (!user.google_id) {
-      run(
+      await run(
         'UPDATE users SET google_id=?, auth_provider=CASE WHEN auth_provider="local" THEN "google" ELSE auth_provider END WHERE id=?',
         payload.sub,
         user.id
       );
-      user = one('SELECT * FROM users WHERE id=?', user.id);
+      user = await one('SELECT * FROM users WHERE id=?', user.id);
     }
   } else {
     // New Google users are ALWAYS created with PATIENT role
@@ -319,7 +319,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
     const dummyPasswordHash = bcrypt.hashSync(randomUUID(), 10);
     const name = payload.name || payload.email.split('@')[0];
 
-    run(
+    await run(
       'INSERT INTO users(id, email, password, name, role, age, conditions, google_id, auth_provider) VALUES(?,?,?,?,?,?,?,?,?)',
       id,
       emailLower,
@@ -331,12 +331,12 @@ authRouter.post('/google', async (req: Request, res: Response) => {
       payload.sub,
       'google'
     );
-    user = one('SELECT * FROM users WHERE id=?', id);
-    ensurePatientStarterData(id);
+    user = await one('SELECT * FROM users WHERE id=?', id);
+    await ensurePatientStarterData(id);
   }
 
   const accessToken = createAccessToken(user.id);
-  const refreshToken = issueRefreshToken(user.id);
+  const refreshToken = await issueRefreshToken(user.id);
   setRefreshTokenCookie(res, refreshToken);
 
   res.json({
@@ -346,7 +346,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
 });
 
 // POST /api/auth/refresh
-authRouter.post('/refresh', (req: Request, res: Response) => {
+authRouter.post('/refresh', async (req: Request, res: Response) => {
   const cookies = parseCookies(req.headers.cookie);
   const rawToken = cookies[REFRESH_COOKIE_NAME];
 
@@ -355,7 +355,7 @@ authRouter.post('/refresh', (req: Request, res: Response) => {
   }
 
   const tokenHash = createHash('sha256').update(rawToken).digest('hex');
-  const record = one('SELECT * FROM refresh_tokens WHERE token_hash=?', tokenHash);
+  const record = await one('SELECT * FROM refresh_tokens WHERE token_hash=?', tokenHash);
 
   const GRACE_WINDOW_MS = 10 * 1000; // 10-second grace window for concurrent/in-flight requests
 
@@ -367,7 +367,7 @@ authRouter.post('/refresh', (req: Request, res: Response) => {
 
       if (isWithinGrace) {
         // Just rotated within the grace window: issue a valid access token without revoking
-        const user = one('SELECT * FROM users WHERE id=? AND active=1', record.user_id);
+        const user = await one('SELECT * FROM users WHERE id=? AND active=1', record.user_id);
         if (user) {
           const accessToken = createAccessToken(user.id);
           return res.json({
@@ -378,7 +378,7 @@ authRouter.post('/refresh', (req: Request, res: Response) => {
       }
 
       // Outside grace window: genuine reuse attempt -> revoke ALL refresh tokens for this user
-      run('UPDATE refresh_tokens SET revoked=1 WHERE user_id=?', record.user_id);
+      await run('UPDATE refresh_tokens SET revoked=1 WHERE user_id=?', record.user_id);
     }
     clearRefreshTokenCookie(res);
     return res.status(401).json({ error: 'Invalid or revoked refresh token' });
@@ -389,7 +389,7 @@ authRouter.post('/refresh', (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Refresh token has expired' });
   }
 
-  const user = one('SELECT * FROM users WHERE id=? AND active=1', record.user_id);
+  const user = await one('SELECT * FROM users WHERE id=? AND active=1', record.user_id);
   if (!user) {
     clearRefreshTokenCookie(res);
     return res.status(401).json({ error: 'Account unavailable or deactivated' });
@@ -397,8 +397,8 @@ authRouter.post('/refresh', (req: Request, res: Response) => {
 
   // Rotate refresh token: record revocation timestamp for grace window
   const nowIso = new Date().toISOString();
-  run('UPDATE refresh_tokens SET revoked=1, revoked_at=? WHERE id=?', nowIso, record.id);
-  const newRefreshToken = issueRefreshToken(user.id);
+  await run('UPDATE refresh_tokens SET revoked=1, revoked_at=? WHERE id=?', nowIso, record.id);
+  const newRefreshToken = await issueRefreshToken(user.id);
   setRefreshTokenCookie(res, newRefreshToken);
 
   const newAccessToken = createAccessToken(user.id);
@@ -409,13 +409,13 @@ authRouter.post('/refresh', (req: Request, res: Response) => {
 });
 
 // POST /api/auth/logout
-authRouter.post('/logout', (req: Request, res: Response) => {
+authRouter.post('/logout', async (req: Request, res: Response) => {
   const cookies = parseCookies(req.headers.cookie);
   const rawToken = cookies[REFRESH_COOKIE_NAME];
 
   if (rawToken) {
     const tokenHash = createHash('sha256').update(rawToken).digest('hex');
-    run('UPDATE refresh_tokens SET revoked=1 WHERE token_hash=?', tokenHash);
+    await run('UPDATE refresh_tokens SET revoked=1 WHERE token_hash=?', tokenHash);
   }
 
   clearRefreshTokenCookie(res);
@@ -439,20 +439,20 @@ authRouter.post('/forgot-password', forgotPasswordLimiter, async (req: Request, 
     message: 'If an account exists with that email, password reset instructions have been sent.',
   };
 
-  const user = one('SELECT * FROM users WHERE email=? AND active=1', emailLower);
+  const user = await one('SELECT * FROM users WHERE email=? AND active=1', emailLower);
   if (!user) {
     // Always return generic response to prevent user enumeration
     return res.json(genericResponse);
   }
 
   // Invalidate older unused reset tokens for this user before issuing a new one
-  run('UPDATE password_reset_tokens SET used=1 WHERE user_id=? AND used=0', user.id);
+  await run('UPDATE password_reset_tokens SET used=1 WHERE user_id=? AND used=0', user.id);
 
   const rawToken = randomBytes(32).toString('hex');
   const tokenHash = createHash('sha256').update(rawToken).digest('hex');
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes
 
-  run(
+  await run(
     'INSERT INTO password_reset_tokens(user_id, token_hash, expires_at) VALUES(?,?,?)',
     user.id,
     tokenHash,
@@ -466,7 +466,7 @@ authRouter.post('/forgot-password', forgotPasswordLimiter, async (req: Request, 
 });
 
 // POST /api/auth/reset-password
-authRouter.post('/reset-password', resetPasswordLimiter, (req: Request, res: Response) => {
+authRouter.post('/reset-password', resetPasswordLimiter, async (req: Request, res: Response) => {
   const parsed = z
     .object({
       token: z.string().min(1, 'Reset token is required'),
@@ -481,7 +481,7 @@ authRouter.post('/reset-password', resetPasswordLimiter, (req: Request, res: Res
   }
 
   const tokenHash = createHash('sha256').update(parsed.data.token).digest('hex');
-  const record = one('SELECT * FROM password_reset_tokens WHERE token_hash=?', tokenHash);
+  const record = await one('SELECT * FROM password_reset_tokens WHERE token_hash=?', tokenHash);
 
   if (!record || record.used === 1) {
     return res.status(400).json({
@@ -496,14 +496,14 @@ authRouter.post('/reset-password', resetPasswordLimiter, (req: Request, res: Res
   }
 
   // Mark token used
-  run('UPDATE password_reset_tokens SET used=1 WHERE id=?', record.id);
+  await run('UPDATE password_reset_tokens SET used=1 WHERE id=?', record.id);
 
   // Update user password
   const newHash = bcrypt.hashSync(parsed.data.password, 10);
-  run('UPDATE users SET password=? WHERE id=?', newHash, record.user_id);
+  await run('UPDATE users SET password=? WHERE id=?', newHash, record.user_id);
 
   // Revoke all refresh tokens for security on password reset
-  run('UPDATE refresh_tokens SET revoked=1 WHERE user_id=?', record.user_id);
+  await run('UPDATE refresh_tokens SET revoked=1 WHERE user_id=?', record.user_id);
 
   res.json({
     message: 'Password has been reset successfully. Please sign in with your new password.',
@@ -511,8 +511,8 @@ authRouter.post('/reset-password', resetPasswordLimiter, (req: Request, res: Res
 });
 
 // GET /api/auth/me
-authRouter.get('/me', auth, (req: Request, res: Response) => {
-  const user = one('SELECT * FROM users WHERE id=?', req.user!.id);
+authRouter.get('/me', auth, async (req: Request, res: Response) => {
+  const user = await one('SELECT * FROM users WHERE id=?', req.user!.id);
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }

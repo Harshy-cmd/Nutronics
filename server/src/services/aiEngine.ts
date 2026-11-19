@@ -3,18 +3,13 @@ import { db } from "../db/schema.js";
 import { foods } from "./dataService.js";
 export const DISCLAIMER =
   "General guidance, not a substitute for professional medical advice.";
-export function answerFor(userId: string, question: string) {
-  const user = db
+export async function answerFor(userId: string, question: string) {
+  const user = await db
     .prepare("SELECT conditions FROM users WHERE id=?")
     .get(userId) as any;
   const conditions = JSON.parse(user?.conditions || "[]") as string[];
-  const guidelines = conditions
-    .map(
-      (c) =>
-        db
-          .prepare("SELECT data FROM guidelines WHERE condition=?")
-          .get(c) as any,
-    )
+  const guidelineRows = await Promise.all(conditions.map((c) => db.prepare("SELECT data FROM guidelines WHERE condition=?").get(c)));
+  const guidelines = guidelineRows
     .filter(Boolean)
     .map((r) => JSON.parse(r.data));
   const low = question.toLowerCase();

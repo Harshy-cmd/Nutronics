@@ -36,6 +36,10 @@ export const config = {
     serverDir,
     process.env.DATABASE_PATH || "data/nutronics.sqlite",
   ),
+  supabaseCaCertPath: path.resolve(
+    serverDir,
+    process.env.SUPABASE_CA_CERT_PATH || "certs/supabase-prod-ca-2021.crt",
+  ),
   uploadsPath: path.resolve(
     serverDir,
     process.env.UPLOADS_PATH || "uploads",

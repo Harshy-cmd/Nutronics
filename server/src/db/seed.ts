@@ -2,9 +2,11 @@ import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 import fs from "node:fs";
 import path from "node:path";
-import { db } from "./schema.js";
+import { db, initializeDatabase } from "./schema.js";
 import { config } from "../config.js";
 import "./generateDatasets.js";
+async function seed() {
+await initializeDatabase();
 faker.seed(20250303);
 const dataDir = config.dataPath;
 const read = (name: string) =>
@@ -44,7 +46,7 @@ const insertUser = db.prepare(
   "INSERT OR IGNORE INTO users(id,email,password,name,role,age,conditions) VALUES(?,?,?,?,?,?,?)",
 );
 for (const [id, email, name, role, age, conditions] of accounts)
-  insertUser.run(
+  await insertUser.run(
     id,
     email,
     bcrypt.hashSync("password123", 10),
@@ -57,18 +59,18 @@ const insertGuideline = db.prepare(
   "INSERT OR REPLACE INTO guidelines(condition,data) VALUES(?,?)",
 );
 for (const g of read("guidelines"))
-  insertGuideline.run(g.condition, JSON.stringify(g));
+  await insertGuideline.run(g.condition, JSON.stringify(g));
 const logCount = db.prepare("SELECT COUNT(*) n FROM logs WHERE user_id=?");
 const addLog = db.prepare(
   "INSERT INTO logs(user_id,date,adherence,weight,water,calories,systolic,diastolic,glucose,meals,symptoms) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
 );
 for (let p = 0; p < 3; p++) {
   const uid = `patient-${p + 1}`;
-  if (logCount.get(uid)!.n === 0)
+  if ((await logCount.get(uid))!.n === 0)
     for (let d = 29; d >= 0; d--) {
       const date = new Date();
       date.setDate(date.getDate() - d);
-      addLog.run(
+      await addLog.run(
         uid,
         date.toISOString().slice(0, 10),
         65 + ((d * 7 + p * 11) % 35),
@@ -93,14 +95,14 @@ for (const [uid] of accounts.slice(0, 3))
     ["Breakfast", "Meal", "09:00"],
     ["Evening medicine", "Medicine", "20:00"],
   ] as const)
-    addReminder.run(uid, label, kind, time, uid, label);
+    await addReminder.run(uid, label, kind, time, uid, label);
 const addMeal = db.prepare(
   "INSERT INTO meals(user_id,day,slot,food_id,status,doctor) SELECT ?,?,?,? ,'VERIFIED','Dr. Priya Menon' WHERE NOT EXISTS (SELECT 1 FROM meals WHERE user_id=? AND day=? AND slot=?)",
 );
 for (let p = 0; p < 3; p++)
   for (let day = 0; day < 7; day++)
     for (const [j, slot] of ["Breakfast", "Lunch", "Dinner"].entries())
-      addMeal.run(
+      await addMeal.run(
         `patient-${p + 1}`,
         day,
         slot,
@@ -116,7 +118,7 @@ for (const [condition, data] of [
   ["sosCountdownSeconds", "5"],
   ["maintenanceBanner", ""],
 ] as const)
-  db.prepare("INSERT OR IGNORE INTO config(key,value) VALUES(?,?)").run(
+  await db.prepare("INSERT OR IGNORE INTO config(key,value) VALUES(?,?)").run(
     condition,
     data,
   );
@@ -131,8 +133,8 @@ for (const [uid, name] of [
   ["patient-2", "Meera Nair"],
   ["patient-3", "Kabir Verma"],
 ])
-  if (contactCount.get(uid)!.n === 0)
-    addContact.run(
+  if ((await contactCount.get(uid))!.n === 0)
+    await addContact.run(
       uid,
       `${name.split(" ")[0]} Family`,
       "+91 90000 00000",
@@ -147,7 +149,7 @@ for (const uid of ["patient-1", "patient-2", "patient-3"])
     "Blood Pressure Monitor",
     "Fitness Band",
   ].entries())
-    device.run(uid, name, i === 0 ? 1 : 0, uid, name);
+    await device.run(uid, name, i === 0 ? 1 : 0, uid, name);
 fs.mkdirSync(config.uploadsPath, { recursive: true });
 for (const [uid, name] of [
   ["patient-1", "Aarav Sharma"],
@@ -159,7 +161,7 @@ for (const [uid, name] of [
     path.resolve(config.uploadsPath, file),
     `Nutronics sample health record for ${name}. Synthetic demo content.`,
   );
-  db.prepare(
+  await db.prepare(
     "INSERT INTO records(user_id,name,category,file_path) SELECT ?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM records WHERE user_id=? AND name=?)",
   ).run(
     uid,
@@ -175,12 +177,12 @@ for (const [uid, message] of [
   ["patient-2", "Remember to follow your clinician’s fluid guidance."],
   ["patient-3", "Your progress log is ready to update."],
 ])
-  db.prepare(
+  await db.prepare(
     "INSERT INTO notifications(user_id,message) SELECT ?,? WHERE NOT EXISTS(SELECT 1 FROM notifications WHERE user_id=? AND message=?)",
   ).run(uid, message, uid, message);
 const chatCount = db.prepare("SELECT COUNT(*) n FROM chat WHERE user_id=?");
-if (chatCount.get("patient-1")!.n === 0) {
-  db.prepare(
+if ((await chatCount.get("patient-1"))!.n === 0) {
+  await db.prepare(
     "INSERT INTO chat(user_id,question,answer,status) VALUES(?,?,?,?)",
   ).run(
     "patient-1",
@@ -188,7 +190,7 @@ if (chatCount.get("patient-1")!.n === 0) {
     "Mango contains natural sugar. Choose a modest portion and account for it within your personalized carbohydrate plan. Ask your clinician for an individual target.",
     "VERIFIED",
   );
-  db.prepare(
+  await db.prepare(
     "INSERT INTO chat(user_id,question,answer,status) VALUES(?,?,?,?)",
   ).run(
     "patient-1",
@@ -200,3 +202,7 @@ if (chatCount.get("patient-1")!.n === 0) {
 console.log(
   "Seed complete: 5 accounts, 30 days of logs, meal plans, reminders, records, contacts, devices, and guidelines.",
 );
+
+}
+
+await seed();
