@@ -8,6 +8,12 @@
     "build": "tsc -p tsconfig.json",
     "lint": "tsc --noEmit -p tsconfig.json",
     "seed": "tsx src/db/seed.ts",
+    "db:setup": "tsx src/db/seed.ts && tsx scripts/importIfctFoods.ts",
+    "db:seed": "tsx src/db/seed.ts",
+    "db:import:ifct": "tsx scripts/importIfctFoods.ts",
+    "db:import:usda": "tsx scripts/importUsdaGaps.ts",
+    "db:import:openfda": "tsx scripts/importOpenFdaMedicines.ts",
+    "db:import:all": "tsx scripts/importIfctFoods.ts && tsx scripts/importUsdaGaps.ts && tsx scripts/importOpenFdaMedicines.ts",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -16,9 +22,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.7.5",
+    "google-auth-library": "^11.3.4",
     "ifct2017": "^2.1.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
+    "nodemailer": "^10.6.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -27,6 +36,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.13.4",
+    "@types/nodemailer": "^8.0.2",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
   }

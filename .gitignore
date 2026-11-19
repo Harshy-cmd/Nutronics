@@ -2,5 +2,14 @@ node_modules
 .env
 .env.*
 !.env.example
+*.sqlite
 *.sqlite-shm
 *.sqlite-wal
+data/*.sqlite*
+server/data/*.sqlite*
+dist/
+client/dist/
+server/dist/
+uploads/
+server/uploads/
+*.tsbuildinfo

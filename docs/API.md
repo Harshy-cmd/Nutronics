@@ -1,14 +1,31 @@
 # Nutronics REST API (v1)
 
-Base URL: `http://localhost:4000/api`. JSON requests use `Content-Type: application/json`; record uploads use `multipart/form-data`. Protected endpoints take `Authorization: Bearer <token>`. Errors use `{ "error": "message", "details": [] }`.
+Base URL: `http://localhost:4000/api`. JSON requests use `Content-Type: application/json`; record uploads use `multipart/form-data`. Protected endpoints take `Authorization: Bearer <token>`. Errors use `{ "error": "message" }`.
+
+### Proxy and Environment Configuration
+
+- **Reverse Proxy & Trust Proxy**: The Express app enables `app.set('trust proxy', 1)` so that IP-based rate limiting (`express-rate-limit`) correctly identifies client IPs behind reverse proxies (Nginx, Caddy, Cloudflare, AWS ALB) via the standard `X-Forwarded-For` header.
+- **Environment Variables**:
+  - `JWT_SECRET`: Secret used to sign and verify JSON Web Tokens. In production (`NODE_ENV=production`), the server refuses to start if this is unset or left as the default placeholder.
+  - `GOOGLE_CLIENT_ID`: OAuth 2.0 Client ID for Google Identity Services. Verified server-side with `google-auth-library`.
+  - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`: SMTP configuration for sending transactional password-reset emails via Nodemailer. When unconfigured in development, the reset link is logged to the server console; in production, dev console fallback is strictly disabled.
+  - `CLIENT_ORIGIN`: Exact frontend origin (default `http://localhost:5173`) used by CORS with `credentials: true`.
+  - `DATABASE_PATH`: Relative or absolute path to the SQLite database file.
 
 ## Authentication
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/auth/login` | Public | Sign in with email/password; returns token and user |
-| POST | `/auth/register` | Public | Create patient account |
-| GET | `/auth/me` | Signed in | Current account |
+All auth tokens have a 15-minute access lifetime and carry version claim `v: 2` (legacy 7-day tokens without this claim are automatically rejected with 401). Refresh tokens are stored hashed (SHA-256) server-side and issued as `httpOnly`, `SameSite=Lax`, `Path=/api/auth`, `Secure` (in production) cookies with automatic rotation and token reuse detection.
+
+| Method | Endpoint | Access | Rate Limit | Purpose |
+|---|---|---|---|---|
+| POST | `/auth/login` | Public | 15 / 15m | Email/password login; returns 15m access token and sets refresh cookie |
+| POST | `/auth/register` | Public | 10 / hr | Register new PATIENT account; returns access token and sets refresh cookie |
+| POST | `/auth/google` | Public | Default | Verify Google ID token; link PATIENT account or create new PATIENT account |
+| POST | `/auth/refresh` | Public (cookie) | Default | Rotate refresh token cookie and receive fresh 15m access token |
+| POST | `/auth/logout` | Public (cookie) | Default | Revoke refresh token in database and clear refresh cookie |
+| POST | `/auth/forgot-password` | Public | 5 / 15m | Request password reset email (30m token); generic response prevents enumeration |
+| POST | `/auth/reset-password` | Public | 10 / 15m | Reset password with single-use token; revokes all active refresh tokens |
+| GET | `/auth/me` | Signed in | Default | Retrieve current authenticated user profile (`safeUser`) |
 
 ## Patient endpoints
 

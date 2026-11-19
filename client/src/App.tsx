@@ -29,8 +29,9 @@ import { DISCLAIMER } from "./constants";
 import type { User } from "./types";
 import { Card } from "./components/Card";
 import { Landing } from "./pages/Landing";
-import { AuthPage } from "./pages/AuthPage";
-import { RegisterPage } from "./pages/RegisterPage";
+import { AuthPage } from "./components/AuthPage";
+import { ForgotPasswordPage } from "./components/ForgotPasswordPage";
+import { ResetPasswordPage } from "./components/ResetPasswordPage";
 import { PatientDashboard } from "./pages/PatientDashboard";
 import { DietPlan } from "./pages/DietPlan";
 import { Reminders } from "./pages/Reminders";
@@ -264,15 +265,27 @@ export default function App() {
     localStorage.setItem("contrast", String(contrast));
   }, [large, contrast]);
 
+  useEffect(() => {
+    const onNutronicsLogout = () => {
+      setMe(null);
+      navigate("/auth");
+    };
+    window.addEventListener("nutronics_logout", onNutronicsLogout);
+    return () => window.removeEventListener("nutronics_logout", onNutronicsLogout);
+  }, [navigate]);
+
   const msg = (s: string) => {
     setToast(s);
     setTimeout(() => setToast(""), 3000);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await api("/auth/logout", { method: "POST" });
+    } catch {}
     localStorage.clear();
     setMe(null);
-    navigate("/");
+    navigate("/auth");
   };
 
   const login = async (email: string, password = "password123") => {
@@ -293,6 +306,7 @@ export default function App() {
       );
     } catch (e) {
       msg((e as Error).message);
+      throw e;
     }
   };
 
@@ -308,12 +322,46 @@ export default function App() {
       navigate("/patient/home");
     } catch (e) {
       msg((e as Error).message);
+      throw e;
     }
   };
 
-  if (!me && loc.pathname === "/auth/register")
-    return <RegisterPage register={register} />;
-  if (!me && loc.pathname === "/auth") return <AuthPage login={login} />;
+  const loginWithGoogle = async (credential: string) => {
+    try {
+      const a = await api("/auth/google", {
+        method: "POST",
+        body: JSON.stringify({ credential }),
+      });
+      localStorage.setItem("nutronics_token", a.token);
+      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
+      setMe(a.user);
+      navigate(
+        a.user.role === "PATIENT"
+          ? "/patient/home"
+          : a.user.role === "DOCTOR"
+            ? "/doctor/dashboard"
+            : "/admin/dashboard",
+      );
+    } catch (e) {
+      msg((e as Error).message);
+      throw e;
+    }
+  };
+
+  if (!me && loc.pathname === "/auth/forgot-password")
+    return <ForgotPasswordPage disclaimer={DISCLAIMER} />;
+  if (!me && loc.pathname === "/auth/reset-password")
+    return <ResetPasswordPage disclaimer={DISCLAIMER} />;
+  if (!me && (loc.pathname === "/auth" || loc.pathname === "/auth/register"))
+    return (
+      <AuthPage
+        login={login}
+        register={register}
+        loginWithGoogle={loginWithGoogle}
+        initialTab={loc.pathname === "/auth/register" ? "register" : "signin"}
+        disclaimer={DISCLAIMER}
+      />
+    );
   if (!me && !loc.pathname.startsWith("/auth"))
     return <Landing login={login} />;
   if (!me) return <Landing login={login} />;
