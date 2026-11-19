@@ -1,17 +1,23 @@
-import { db } from '../db/schema.js';
+import { db } from "../db/schema.js";
 const timeout = (ms) => AbortSignal.timeout(ms);
-async function cachedFetch(key, url, fallback) { const row = db.prepare('SELECT value,expires_at FROM cache WHERE key=?').get(key); if (row && row.expires_at > Date.now())
-    return JSON.parse(row.value); try {
-    const response = await fetch(url, { signal: timeout(3000) });
-    if (!response.ok)
-        throw new Error('External source unavailable');
-    const value = await response.json();
-    db.prepare('INSERT OR REPLACE INTO cache(key,value,expires_at) VALUES(?,?,?)').run(key, JSON.stringify(value), Date.now() + 3600000);
-    return value;
+async function cachedFetch(key, url, fallback) {
+    const row = db
+        .prepare("SELECT value,expires_at FROM cache WHERE key=?")
+        .get(key);
+    if (row && row.expires_at > Date.now())
+        return JSON.parse(row.value);
+    try {
+        const response = await fetch(url, { signal: timeout(3000) });
+        if (!response.ok)
+            throw new Error("External source unavailable");
+        const value = await response.json();
+        db.prepare("INSERT OR REPLACE INTO cache(key,value,expires_at) VALUES(?,?,?)").run(key, JSON.stringify(value), Date.now() + 3600000);
+        return value;
+    }
+    catch {
+        return fallback;
+    }
 }
-catch {
-    return fallback;
-} }
 // DATA-SOURCE: USDA FoodData Central https://api.nal.usda.gov/fdc/v1/foods/search (DEMO_KEY)
 export const usdaLookup = (query, fallback) => cachedFetch(`usda:${query}`, `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&api_key=DEMO_KEY`, fallback);
 // DATA-SOURCE: Open Food Facts https://world.openfoodfacts.org/cgi/search.pl

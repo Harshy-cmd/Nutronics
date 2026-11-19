@@ -1,10 +1,24 @@
-import dotenv from 'dotenv';
-import path from 'node:path';
-dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
+import dotenv from "dotenv";
+import path from "node:path";
+import fs from "node:fs";
+
+// Resolve .env path relative to this file's directory instead of process.cwd()
+const rootEnvPath = path.resolve(import.meta.dirname, "../../.env");
+const serverEnvPath = path.resolve(import.meta.dirname, "../.env");
+const envPath = fs.existsSync(rootEnvPath) ? rootEnvPath : serverEnvPath;
+
+dotenv.config({ path: envPath });
+
+const serverDir = path.resolve(import.meta.dirname, "..");
+
 export const config = {
   port: Number(process.env.PORT || 4000),
-  jwtSecret: process.env.JWT_SECRET || 'local-development-secret-change-me',
-  databasePath: path.resolve(process.cwd(), process.env.DATABASE_PATH || 'data/nutronics.sqlite'),
-  uploadsPath: path.resolve(process.cwd(), 'uploads'),
-  clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173'
+  jwtSecret: process.env.JWT_SECRET || "local-development-secret-change-me",
+  databasePath: path.resolve(
+    serverDir,
+    process.env.DATABASE_PATH || "data/nutronics.sqlite",
+  ),
+  uploadsPath: path.resolve(serverDir, "uploads"),
+  dataPath: path.resolve(serverDir, "data"),
+  clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
 };
