@@ -12,6 +12,7 @@ import { db } from "./db/schema.js";
 import { auth, roles } from "./middleware/auth.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { answerFor, DISCLAIMER } from "./services/aiEngine.js";
+import { foods, medicines } from "./services/dataService.js";
 import {
   usdaLookup,
   openFoodFactsLookup,
@@ -120,11 +121,8 @@ app.get("/api/patient/dashboard", (req, res) => {
     "SELECT * FROM logs WHERE user_id=? ORDER BY date DESC LIMIT 1",
     uid,
   );
-  const allFoods = JSON.parse(
-    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
-  );
   const todays = rows("SELECT * FROM meals WHERE user_id=? AND day=0", uid).map(
-    (m: any) => ({ ...m, ...allFoods.find((f: any) => f.id === m.food_id) }),
+    (m: any) => ({ ...m, ...foods.find((f: any) => f.id === m.food_id) }),
   );
   const reminders = rows(
     "SELECT * FROM reminders WHERE user_id=? ORDER BY time",
@@ -141,9 +139,6 @@ app.get("/api/patient/dashboard", (req, res) => {
   });
 });
 app.get("/api/patient/diet", (req, res) => {
-  const foods = JSON.parse(
-    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
-  );
   res.json({
     meals: rows(
       "SELECT * FROM meals WHERE user_id=? ORDER BY day,slot",
@@ -483,9 +478,6 @@ import { attachRoutes } from "./routes.js";
 attachRoutes(app);
 app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
   const q = String(req.body.query || "");
-  const foods = JSON.parse(
-    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
-  );
   const fallback = {
     source: "local",
     results: foods
@@ -496,12 +488,7 @@ app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
     return res.json({
       data: await rxNavLookup(
         q,
-        JSON.parse(
-          fs.readFileSync(
-            path.resolve(config.dataPath, "medicines.json"),
-            "utf8",
-          ),
-        ).filter((m: any) =>
+        medicines.filter((m: any) =>
           m.genericName.toLowerCase().includes(q.toLowerCase()),
         ),
       ),
@@ -519,9 +506,6 @@ app.post("/api/admin/lookup", auth, roles("ADMIN"), async (req, res) => {
   });
 });
 app.get("/api/shared/foods", (req, res) => {
-  const foods = JSON.parse(
-    fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
-  );
   const q = String(req.query.q || "").toLowerCase();
   res.json({
     foods: foods.filter((f: any) => !q || f.name.toLowerCase().includes(q)),
@@ -530,12 +514,7 @@ app.get("/api/shared/foods", (req, res) => {
 });
 app.get("/api/shared/medicines", (_req, res) =>
   res.json({
-    medicines: JSON.parse(
-      fs.readFileSync(
-        path.resolve(config.dataPath, "medicines.json"),
-        "utf8",
-      ),
-    ),
+    medicines,
     disclaimer: DISCLAIMER,
   }),
 );

@@ -1,13 +1,8 @@
 // TODO(ai): swap with a real LLM / recommendation engine
-import fs from "node:fs";
-import path from "node:path";
-import { config } from "../config.js";
 import { db } from "../db/schema.js";
+import { foods } from "./dataService.js";
 export const DISCLAIMER =
   "General guidance, not a substitute for professional medical advice.";
-const foods = JSON.parse(
-  fs.readFileSync(path.resolve(config.dataPath, "foods.json"), "utf8"),
-) as any[];
 export function answerFor(userId: string, question: string) {
   const user = db
     .prepare("SELECT conditions FROM users WHERE id=?")
