@@ -10,7 +10,7 @@
 
 Implemented: explicit assignments are required for doctor dashboards, dossiers, queue listings, and review actions. Admins can assign patients in User management. New local seed accounts receive sample assignments; existing deployed users require an administrator to assign them after the server deploys.
 
-- Add automated API-level authorization tests against a disposable database for assigned and unassigned access (unit authorization coverage is being added).
+- Focused assignment-policy unit checks exist; add API-level authorization tests against a disposable database for assigned and unassigned access.
 - Existing patient record routes remain patient-owner scoped; there is no doctor record-file download route.
 - Keep the service-role key server-only. The current Supabase setup has RLS enabled without browser-facing policies, so the API must enforce every access boundary correctly.
 
@@ -25,14 +25,14 @@ Implemented: the SOS UI says it records an event, only assigned doctors receive 
 
 Implemented: helper matches now use `RULE_MATCHED`; only the doctor review action sets `VERIFIED`. The landing page and README describe demo/synthetic nutrition data rather than clinical validation.
 
-- Call the current feature a rule-based nutrition helper unless an actual model is added.
-- Use separate states such as **Rule matched**, **Needs clinician review**, and **Reviewed by clinician**. Only a recorded clinician action should produce the last state.
+- The product now calls this a rule-based nutrition helper. Add a real model only after its safety and privacy requirements are addressed.
+- The UI distinguishes **Rule matched**, **Needs review**, and **Clinician reviewed**; only a doctor queue action produces the last state.
 - Reconcile dataset claims, verify every active food value and condition rule, and show source, version, units, and review date in the product.
 - Keep medication advice conservative; do not provide dosing or treatment changes. Add urgent-symptom guidance and a clearly visible medical disclaimer.
 
 ### 4. Add privacy and patient data controls
 
-The app accepts health profiles, vitals, emergency contacts, and uploaded records. Add a plain-language privacy notice and consent before collecting this information, plus a way to export and request deletion of an account and its records. Define retention and support/contact procedures.
+Implemented: a plain-language demo/data notice is required for new patient registration, consent timestamps are stored, patient JSON export is available, and account deletion requests are visible to admins. Uploaded files can be downloaded separately. The request does not erase data yet; complete deletion manually and define retention/support procedures before accepting real patient data.
 
 ## Priority 1 — Complete core workflows
 
@@ -60,8 +60,8 @@ Implemented: README/API docs now describe Supabase Postgres/private storage, Ren
 - Add a guided first-run setup for profile, conditions, units, timezone, emergency contacts, and notification preferences.
 - Audit mobile layouts, keyboard navigation, screen-reader labels, color contrast, and form errors.
 - Add clear loading, offline, retry, and empty states. Make failed uploads and assistant requests show an actionable message.
-- Patient JSON export and deletion requests with admin visibility are implemented; add CSV/PDF export, an actual deletion completion workflow, and patient-facing activity history.
-- Add end-to-end coverage for patient, doctor, admin, file access, and auth flows. Add uptime/error monitoring and a tested database backup/restore drill.
+- Patient JSON/CSV export, recent account activity, and deletion requests with admin visibility are implemented; an actual deletion completion workflow remains.
+- A manual backup/restore procedure is documented in `docs/OPERATIONS.md`, but it has not been run. Add end-to-end coverage for patient, doctor, admin, file access, and auth flows; uptime/error monitoring; and a tested database/storage backup/restore drill.
 
 ## Completed implementation notes
 

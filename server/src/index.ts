@@ -289,6 +289,7 @@ app.get('/api/patient/profile', async (req, res) => {
   res.json({
     user: safeUser(await one('SELECT * FROM users WHERE id=?', req.user!.id)),
     contacts: await rows('SELECT * FROM contacts WHERE user_id=?', req.user!.id),
+    activity: await rows("SELECT a.action,a.entity_type,a.entity_id,a.created_at,u.name actor_name FROM audit_logs a LEFT JOIN users u ON u.id=a.actor_id WHERE a.actor_id=? OR (a.entity_type='patient' AND a.entity_id=?) ORDER BY a.id DESC LIMIT 50", req.user!.id, req.user!.id),
   });
 });
 
@@ -307,6 +308,28 @@ app.get('/api/patient/export', async (req, res) => {
   ]);
   res.setHeader('Content-Disposition', 'attachment; filename="nutronics-data-export.json"');
   res.json({ exportedAt: new Date().toISOString(), note: 'Health record files are not bundled; download them separately from Health records.', user, logs, reminders, meals, conversations, records, contacts, sos, notifications });
+});
+
+app.get('/api/patient/export.csv', async (req, res) => {
+  const userId = req.user!.id;
+  const sections = await Promise.all([
+    one('SELECT id,email,name,age,conditions,settings,privacy_consented_at,created_at FROM users WHERE id=?', userId).then((x: any) => [x]),
+    rows('SELECT * FROM logs WHERE user_id=? ORDER BY date', userId),
+    rows('SELECT * FROM reminders WHERE user_id=? ORDER BY time', userId),
+    rows('SELECT * FROM meals WHERE user_id=? ORDER BY day,slot', userId),
+    rows('SELECT id,question,answer,status,created_at,doctor_note FROM chat WHERE user_id=? ORDER BY id', userId),
+    rows('SELECT id,name,category,created_at FROM records WHERE user_id=? ORDER BY id', userId),
+    rows('SELECT id,name,phone,relationship FROM contacts WHERE user_id=?', userId),
+    rows('SELECT id,created_at FROM sos WHERE user_id=? ORDER BY id', userId),
+    rows('SELECT id,message,read,created_at FROM notifications WHERE user_id=? ORDER BY id', userId),
+  ]);
+  const escapeCell = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
+  const lines = ['section,record_json'];
+  const names = ['profile', 'logs', 'reminders', 'meals', 'conversations', 'records', 'contacts', 'sos', 'notifications'];
+  for (const [index, records] of sections.entries()) for (const record of records as any[]) lines.push(`${escapeCell(names[index])},${escapeCell(JSON.stringify(record))}`);
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename="nutronics-data-export.csv"');
+  res.send(lines.join('\r\n'));
 });
 
 app.post('/api/patient/deletion-request', async (req, res) => {

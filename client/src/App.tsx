@@ -429,7 +429,7 @@ export default function App() {
     setSos(false);
     try {
       const r = await api("/patient/sos", { method: "POST", body: "{}" });
-      msg(`Alert logged. ${r.contacts.length} emergency contact(s) listed.`);
+      msg(r.message || "SOS event recorded. No emergency contact was notified.");
     } catch (e) {
       msg((e as Error).message);
     }

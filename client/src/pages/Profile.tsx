@@ -55,6 +55,14 @@ export function Profile({
       notify("Data export downloaded");
     } catch (e) { notify((e as Error).message); }
   };
+  const exportCsv = async () => {
+    try {
+      const result = await api("/patient/export.csv");
+      const url = URL.createObjectURL(new Blob([String(result)], { type: "text/csv" }));
+      const anchor = document.createElement("a"); anchor.href = url; anchor.download = "nutronics-data-export.csv"; anchor.click(); URL.revokeObjectURL(url);
+      notify("CSV export downloaded");
+    } catch (e) { notify((e as Error).message); }
+  };
 
   return (
     <>
@@ -110,9 +118,15 @@ export function Profile({
         <p>Nutronics is not a medical service. Avoid entering real patient information. The JSON export includes your account profile, logs, schedules, conversations, contact details, SOS events, and record file names. Download uploaded files separately from Health records.</p>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button className="button primary" onClick={() => void exportData()}>Download my data</button>
+          <button className="button outline" onClick={() => void exportCsv()}>Download CSV</button>
           <button className="button outline" onClick={async () => { if (window.confirm("Request administrator follow-up to delete this account and its stored health data? The request does not immediately erase data.")) await submit("/patient/deletion-request", "POST"); }}>Request account deletion</button>
         </div>
         <small>Deletion requests require administrator follow-up. For support, contact pujerakshay6002@gmail.com.</small>
+        <h3>Recent account activity</h3>
+        <div className="record-list">
+          {(data?.activity || []).map((event: any, index: number) => <div className="record-item" key={`${event.action}-${event.created_at}-${index}`}><div><b>{event.action.replaceAll("_", " ")}</b><small>{event.actor_name || "Your account"} · {new Date(event.created_at).toLocaleString()}</small></div></div>)}
+          {!data?.activity?.length && <small>No account activity recorded yet.</small>}
+        </div>
       </Card>
       <Card
         title="Emergency contacts"

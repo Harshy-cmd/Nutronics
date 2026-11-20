@@ -39,6 +39,8 @@ All `/patient/*` routes require a patient token. Patient-specific data is scoped
 |---|---|---|
 | GET | `/patient/dashboard` | Dashboard, reminders, today's meal guidance |
 | GET | `/patient/export` | Download profile, logs, schedules, chat, contacts, SOS, notifications, and record metadata as JSON |
+| GET | `/patient/export.csv` | Download the same data as sectioned CSV (`section,record_json`); uploaded file contents are separate |
+| GET | `/patient/activity` | Read recent account activity events |
 | POST | `/patient/deletion-request` | Record an account deletion request for administrator follow-up; does not immediately erase data |
 | GET | `/patient/diet` | Weekly meals and local food options |
 | POST | `/patient/diet/swap` | `{mealId, foodId}`; marks new recommendation pending review |

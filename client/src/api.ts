@@ -82,7 +82,10 @@ export async function api<T = any>(
       'Can’t reach the Nutronics API. Check that the backend is deployed and VITE_API_URL points to it.'
     );
   }
-  const data = await response.json().catch(() => ({}));
+  const contentType = response.headers.get('content-type') || '';
+  const data: any = contentType.includes('application/json')
+    ? await response.json().catch(() => ({}))
+    : await response.text().catch(() => '');
 
   // Handle 401 with single-flight refresh
   if (
@@ -111,7 +114,7 @@ export async function api<T = any>(
   }
 
   if (!response.ok) {
-    throw new Error(data.error || 'Something went wrong');
+    throw new Error((typeof data === 'object' && data?.error) || (typeof data === 'string' && data) || 'Something went wrong');
   }
 
   return data as T;
