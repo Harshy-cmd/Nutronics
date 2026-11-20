@@ -4,12 +4,29 @@ import {
   AlertTriangle,
   TrendingUp,
   FileText,
+  Download,
 } from "lucide-react";
 import { Stat } from "../components/Stat";
 import { Card } from "../components/Card";
 import { DISCLAIMER } from "../constants";
+import { apiBlob } from "../api";
 
-export function DoctorPatientDetail({ data }: { data: any }) {
+export function DoctorPatientDetail({ data, notify }: { data: any; notify: (message: string) => void }) {
+  const downloadRecord = async (record: any) => {
+    try {
+      const blob = await apiBlob(`/doctor/patients/${data.patient.id}/records/${record.id}/download`);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = record.name || "patient-record";
+      anchor.click();
+      URL.revokeObjectURL(url);
+      notify("Record download started");
+    } catch (error) {
+      notify((error as Error).message);
+    }
+  };
+
   return (
     <>
       <div className="stat-grid">
@@ -63,6 +80,9 @@ export function DoctorPatientDetail({ data }: { data: any }) {
                 {r.category} · {r.created_at?.slice(0, 10)}
               </small>
             </div>
+            <button className="button small outline" onClick={() => void downloadRecord(r)} aria-label={`Download ${r.name}`}>
+              <Download size={15} /> Download
+            </button>
           </div>
         ))}
       </Card>

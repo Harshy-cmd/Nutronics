@@ -14,6 +14,17 @@
 .stat-card-link{text-decoration:none;color:inherit;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .stat-card-link:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(22,125,115,.08);border-color:#c9ded6}
 .stat-card-link:hover .stat-arrow{transform:translateX(3px);color:var(--teal)}
+.stat-card-button{font:inherit;text-align:left;width:100%;color:inherit}
+.stat-card-button:focus-visible,.icon-button:focus-visible,.sos-button:focus-visible,.button:focus-visible{outline:3px solid #72b8a6;outline-offset:2px}
+.sos-contacts{display:grid;gap:8px;margin:14px 0;text-align:left}
+.sos-contacts>b{font-size:11px;color:#45645b}
+.sos-contacts a{border:1px solid var(--palette-line);border-radius:9px;padding:10px 12px;color:var(--deep-teal);font-size:12px;font-weight:700}
+.sos-contacts a:hover{background:var(--ice)}
+.guideline-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.guideline-form textarea{width:100%;border:1px solid var(--palette-line);border-radius:9px;padding:10px 11px;resize:vertical;color:var(--teal-black);font:inherit;font-size:12px}
+.guideline-form textarea:focus{outline:none;border-color:var(--classic-teal);box-shadow:0 0 0 3px #16857920}
+.guideline-list .card{margin:0}
+@media(max-width:760px){.guideline-list{grid-template-columns:1fr}.stat-card-button{min-width:0}}
 .meal-card-link{text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
 .meal-card-link:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.05);border-color:#c9ded6}
 .empty-state-card{padding:28px 16px;text-align:center;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}

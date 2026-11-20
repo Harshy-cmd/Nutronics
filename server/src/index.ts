@@ -371,6 +371,10 @@ app.post('/api/patient/contacts', async (req, res) => {
   res.status(201).json(await one('SELECT * FROM contacts WHERE id=?', r.lastInsertRowid));
 });
 
+app.get('/api/patient/contacts', async (req, res) => {
+  res.json({ contacts: await rows('SELECT id,name,phone,relationship FROM contacts WHERE user_id=? ORDER BY id', req.user!.id) });
+});
+
 app.delete('/api/patient/contacts/:id', async (req, res) => {
   await run('DELETE FROM contacts WHERE id=? AND user_id=?', Number(req.params.id), req.user!.id);
   res.json({ ok: true });
@@ -451,6 +455,22 @@ app.post('/api/patient/sos', async (req, res) => {
 });
 
 attachRoutes(app);
+
+app.get('/api/doctor/patients/:patientId/records/:recordId/download', auth, roles('DOCTOR'), async (req, res) => {
+  const record = await one(
+    `SELECT r.id,r.name,r.file_path FROM records r
+     JOIN doctor_patient_assignments a ON a.patient_id=r.user_id
+     JOIN users p ON p.id=r.user_id AND p.role='PATIENT' AND p.active=1
+     WHERE r.id=? AND r.user_id=? AND a.doctor_id=?`,
+    Number(req.params.recordId), String(req.params.patientId), req.user!.id,
+  );
+  if (!record) return res.status(404).json({ error: 'Record not found for an assigned patient' });
+  await run("INSERT INTO audit_logs(actor_id,action,entity_type,entity_id) VALUES(?,?,?,?)", req.user!.id, 'assigned_patient_record_downloaded', 'record', String(record.id));
+  const file = await downloadRecordObject(record.file_path);
+  res.setHeader('Content-Type', file.contentType);
+  res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(record.name)}`);
+  res.send(Buffer.from(file.bytes));
+});
 
 app.post('/api/admin/lookup', auth, roles('ADMIN'), async (req, res) => {
   const q = String(req.body.query || '');

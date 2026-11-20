@@ -29,7 +29,7 @@ export function Stat({
         <b>{value}</b>
         <span>{note}</span>
       </div>
-      <ChevronRight className="stat-arrow" size={17} />
+      {(to || onClick) && <ChevronRight className="stat-arrow" size={17} />}
     </>
   );
 
@@ -43,14 +43,14 @@ export function Stat({
 
   if (onClick) {
     return (
-      <div
-        className="stat-card stat-card-link"
+      <button
+        type="button"
+        className="stat-card stat-card-link stat-card-button"
         onClick={onClick}
-        role="button"
-        tabIndex={0}
+        aria-label={`${label}: ${value}. ${note}`}
       >
         {content}
-      </div>
+      </button>
     );
   }
 

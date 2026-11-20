@@ -119,3 +119,27 @@ export async function api<T = any>(
 
   return data as T;
 }
+
+export async function apiBlob(path: string, isRetry = false): Promise<Blob> {
+  if (!API) throw new Error('The Nutronics API is not configured for this deployment.');
+  let response: Response;
+  try {
+    response = await fetch(`${API}${path}`, {
+      credentials: 'same-origin',
+      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+    });
+  } catch {
+    throw new Error('Can’t reach the Nutronics API. Check that the backend is deployed.');
+  }
+  if (response.status === 401 && !isRetry) {
+    await getRefreshedToken();
+    return apiBlob(path, true);
+  }
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '');
+    let message = errorText;
+    try { message = JSON.parse(errorText).error || errorText; } catch {}
+    throw new Error(message || `Download failed (${response.status})`);
+  }
+  return response.blob();
+}
