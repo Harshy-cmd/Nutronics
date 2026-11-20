@@ -10,6 +10,7 @@ import { config } from '../config.js';
 import { db } from '../db/schema.js';
 import { ensurePatientStarterData } from '../services/starterDataService.js';
 import { auth } from '../middleware/auth.js';
+import { getUnverifiedFirebaseClaims, verifyFirebaseIdToken } from '../services/firebaseToken.js';
 
 export const authRouter = Router();
 
@@ -387,24 +388,38 @@ authRouter.post('/google', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Google credential token is required' });
   }
 
-  if (!config.googleClientId) {
-    return res.status(503).json({ error: 'Google sign-in is not configured on this server' });
+  const unverifiedFirebaseClaims = getUnverifiedFirebaseClaims(parsed.data.credential);
+  let payload: any;
+  let firebaseIdentity = false;
+  if (
+    config.firebaseProjectId &&
+    unverifiedFirebaseClaims?.iss === `https://securetoken.google.com/${config.firebaseProjectId}`
+  ) {
+    try {
+      payload = await verifyFirebaseIdToken(parsed.data.credential, config.firebaseProjectId);
+      firebaseIdentity = true;
+    } catch {
+      return res.status(401).json({ error: 'Invalid Firebase authentication token' });
+    }
+  } else {
+    if (!config.googleClientId) {
+      return res.status(503).json({ error: 'Google sign-in is not configured on this server' });
+    }
+    let ticket;
+    try {
+      ticket = await googleClient.verifyIdToken({
+        idToken: parsed.data.credential,
+        audience: config.googleClientId,
+      });
+    } catch {
+      return res.status(401).json({ error: 'Invalid Google authentication token' });
+    }
+    payload = ticket.getPayload();
   }
 
-  let ticket;
-  try {
-    ticket = await googleClient.verifyIdToken({
-      idToken: parsed.data.credential,
-      audience: config.googleClientId,
-    });
-  } catch (err) {
-    return res.status(401).json({ error: 'Invalid Google authentication token' });
-  }
-
-  const payload = ticket.getPayload();
   // Strictly enforce email_verified is true
   if (!payload || !payload.email || payload.email_verified !== true) {
-    return res.status(401).json({ error: 'Google account email is not verified' });
+    return res.status(401).json({ error: 'Sign-in account email is not verified' });
   }
 
   const emailLower = payload.email.toLowerCase();
@@ -421,19 +436,22 @@ authRouter.post('/google', async (req: Request, res: Response) => {
       if (!parsed.data.portalRole || parsed.data.portalRole !== user.role) {
         return res.status(403).json({ error: 'Use the matching staff portal for this account.' });
       }
-      if (user.google_id && user.google_id !== payload.sub) {
+      if (!firebaseIdentity && user.google_id && user.google_id !== payload.sub) {
         return res.status(403).json({ error: 'This Google account is not linked to the staff account.' });
       }
     } else if (parsed.data.portalRole) {
       return res.status(403).json({ error: 'This account does not have access to that portal.' });
     }
     // Link google_id if not linked yet
-    if (!user.google_id) {
+    if (!firebaseIdentity && !user.google_id) {
       await run(
         'UPDATE users SET google_id=?, auth_provider=CASE WHEN auth_provider="local" THEN "google" ELSE auth_provider END WHERE id=?',
         payload.sub,
         user.id
       );
+      user = await one('SELECT * FROM users WHERE id=?', user.id);
+    } else if (firebaseIdentity && user.auth_provider === 'local') {
+      await run('UPDATE users SET auth_provider=? WHERE id=?', 'firebase', user.id);
       user = await one('SELECT * FROM users WHERE id=?', user.id);
     }
   } else {
@@ -454,14 +472,14 @@ authRouter.post('/google', async (req: Request, res: Response) => {
       'PATIENT',
       null,
       '[]',
-      payload.sub,
-      'google'
+      firebaseIdentity ? null : payload.sub,
+      firebaseIdentity ? 'firebase' : 'google'
     );
     user = await one('SELECT * FROM users WHERE id=?', id);
     await ensurePatientStarterData(id);
   }
 
-  if ((user.role === 'DOCTOR' || user.role === 'ADMIN') && !user.google_id) {
+  if (!firebaseIdentity && (user.role === 'DOCTOR' || user.role === 'ADMIN') && !user.google_id) {
     await run(
       `UPDATE users SET google_id=?, auth_provider=CASE WHEN auth_provider='local' THEN 'google' ELSE auth_provider END WHERE id=?`,
       payload.sub,

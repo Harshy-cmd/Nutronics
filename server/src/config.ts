@@ -47,6 +47,7 @@ export const config = {
   dataPath: path.resolve(serverDir, "data"),
   clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
   googleClientId: process.env.GOOGLE_CLIENT_ID || "",
+  firebaseProjectId: process.env.FIREBASE_PROJECT_ID || "",
   smtpHost: process.env.SMTP_HOST || "",
   smtpPort: Number(process.env.SMTP_PORT || 587),
   smtpUser: process.env.SMTP_USER || "",

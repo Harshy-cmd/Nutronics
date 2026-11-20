@@ -13,7 +13,8 @@ declare global {
 
 export function GoogleAuthButton({ onSuccess, onError }: GoogleAuthButtonProps) {
   const buttonRef = useRef<HTMLDivElement>(null);
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const clientId =
+    import.meta.env.VITE_FIREBASE_GOOGLE_CLIENT_ID || import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   useEffect(() => {
     if (!clientId) {

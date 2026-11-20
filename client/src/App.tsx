@@ -47,6 +47,12 @@ import { DoctorGuidelines } from "./pages/DoctorGuidelines";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminUsers } from "./pages/AdminUsers";
 import { AdminPanel } from "./pages/AdminPanel";
+import {
+  completeFirebaseEmailLink,
+  exchangeGoogleCredentialForFirebaseToken,
+  firebaseAuthEnabled,
+  sendFirebaseEmailLink,
+} from "./auth/firebaseAuth";
 
 function PageRouter({
   page,
@@ -339,9 +345,12 @@ export default function App() {
     portalRole?: "DOCTOR" | "ADMIN",
   ) => {
     try {
+      const identityToken = firebaseAuthEnabled
+        ? await exchangeGoogleCredentialForFirebaseToken(credential)
+        : credential;
       const a = await api("/auth/google", {
         method: "POST",
-        body: JSON.stringify({ credential, ...(portalRole ? { portalRole } : {}) }),
+        body: JSON.stringify({ credential: identityToken, ...(portalRole ? { portalRole } : {}) }),
       });
       finishLogin(a);
     } catch (e) {
@@ -351,6 +360,11 @@ export default function App() {
   };
 
   const requestStaffOtp = async (email: string, portalRole: "DOCTOR" | "ADMIN") => {
+    if (firebaseAuthEnabled) {
+      localStorage.setItem("nutronics_pending_staff_email", email.toLowerCase());
+      await sendFirebaseEmailLink(email, window.location.pathname);
+      return;
+    }
     await api("/auth/otp/request", {
       method: "POST",
       body: JSON.stringify({ email, portalRole }),
@@ -363,6 +377,16 @@ export default function App() {
     portalRole: "DOCTOR" | "ADMIN",
   ) => {
     try {
+      if (firebaseAuthEnabled) {
+        const firebaseToken = await completeFirebaseEmailLink(email, code);
+        const a = await api("/auth/google", {
+          method: "POST",
+          body: JSON.stringify({ credential: firebaseToken, portalRole }),
+        });
+        localStorage.removeItem("nutronics_pending_staff_email");
+        finishLogin(a);
+        return;
+      }
       const a = await api("/auth/otp/verify", {
         method: "POST",
         body: JSON.stringify({ email, code, portalRole }),

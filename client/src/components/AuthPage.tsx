@@ -1,7 +1,8 @@
-import { useState, useId } from 'react';
+import { useState, useId, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff, HeartPulse, AlertCircle } from 'lucide-react';
 import { GoogleAuthButton } from './GoogleAuthButton';
+import { firebaseAuthEnabled } from '../auth/firebaseAuth';
 
 interface AuthPageProps {
   login: (email: string, password?: string, portalRole?: 'DOCTOR' | 'ADMIN') => Promise<void>;
@@ -29,12 +30,18 @@ export function AuthPage({
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [authMethod, setAuthMethod] = useState<'password' | 'otp'>('password');
-  const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [notice, setNotice] = useState('');
+  const [emailLinkCode, setEmailLinkCode] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('mode') === 'signIn' ? params.get('oobCode') || '' : '';
+  });
+  const completingLink = useRef(false);
 
   // Form states
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() =>
+    portalRole ? localStorage.getItem('nutronics_pending_staff_email') || '' : ''
+  );
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [age, setAge] = useState('45');
@@ -81,9 +88,12 @@ export function AuthPage({
     setNotice('');
     setSubmitting(true);
     try {
+      localStorage.setItem('nutronics_pending_staff_email', email.trim().toLowerCase());
       await requestOtp(email.trim(), portalRole);
       setOtpSent(true);
-      setNotice('If an eligible account exists, a sign-in code has been sent.');
+      setNotice(firebaseAuthEnabled
+        ? 'If an eligible account exists, a sign-in link has been sent. Open it in this browser to finish signing in.'
+        : 'If an eligible account exists, a sign-in code has been sent.');
     } catch (err: any) {
       setError(err.message || 'Could not send a sign-in code.');
     } finally {
@@ -93,17 +103,44 @@ export function AuthPage({
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!portalRole) return;
+    if (!portalRole || !emailLinkCode) return;
     setError('');
     setSubmitting(true);
     try {
-      await loginWithOtp(email.trim(), otp.trim(), portalRole);
+      await loginWithOtp(email.trim(), emailLinkCode, portalRole);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setEmailLinkCode('');
+      localStorage.removeItem('nutronics_pending_staff_email');
     } catch (err: any) {
       setError(err.message || 'The code is invalid or expired.');
     } finally {
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (
+      !firebaseAuthEnabled || !portalRole || !emailLinkCode || !email.trim() ||
+      email.trim().toLowerCase() !== localStorage.getItem('nutronics_pending_staff_email') ||
+      completingLink.current
+    ) return;
+
+    completingLink.current = true;
+    setAuthMethod('otp');
+    setError('');
+    setSubmitting(true);
+    void loginWithOtp(email.trim(), emailLinkCode, portalRole)
+      .then(() => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        localStorage.removeItem('nutronics_pending_staff_email');
+        setEmailLinkCode('');
+      })
+      .catch((err: any) => setError(err.message || 'The sign-in link is invalid or expired.'))
+      .finally(() => {
+        setSubmitting(false);
+        completingLink.current = false;
+      });
+  }, [email, emailLinkCode, loginWithOtp, portalRole]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,7 +215,9 @@ export function AuthPage({
         </h1>
         <p>
           {portalRole
-            ? 'Use your provisioned staff account. Choose a password, email code, or Google sign-in.'
+            ? firebaseAuthEnabled
+              ? 'Use your provisioned staff account. Sign in with a password, email link, or Google.'
+              : 'Use your provisioned staff account. Choose a password, email code, or Google sign-in.'
             : tab === 'signin'
             ? 'Sign in with your email, password, or Google account.'
             : 'Personalized nutrition and care support, set up around you.'}
@@ -214,7 +253,7 @@ export function AuthPage({
               Password
             </button>
             <button type="button" className={authMethod === 'otp' ? 'active' : ''} onClick={() => { setAuthMethod('otp'); setError(''); setNotice(''); }}>
-              Email code
+              {firebaseAuthEnabled ? 'Email link' : 'Email code'}
             </button>
           </div>
         )}
@@ -290,7 +329,7 @@ export function AuthPage({
                 onChange={(e) => { setEmail(e.target.value); setOtpSent(false); setNotice(''); }}
               />
             </label>
-            {otpSent && (
+            {!firebaseAuthEnabled && otpSent && (
               <label>
                 6-digit sign-in code
                 <input
@@ -299,25 +338,40 @@ export function AuthPage({
                   pattern="[0-9]{6}"
                   maxLength={6}
                   required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  value={emailLinkCode}
+                  onChange={(e) => setEmailLinkCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 />
               </label>
             )}
-            {!otpSent ? (
+            {firebaseAuthEnabled && emailLinkCode && (
+              <div className="auth-notice" role="status">
+                Opened a sign-in link. {email === localStorage.getItem('nutronics_pending_staff_email')
+                  ? 'Completing sign-in…'
+                  : 'Enter the same email address that received the link, then continue.'}
+              </div>
+            )}
+            {!otpSent && !emailLinkCode ? (
               <button type="button" className="button primary" disabled={submitting || !email.trim()} onClick={() => void handleRequestOtp()} style={{ width: '100%' }}>
-                {submitting ? 'Sending code…' : 'Send sign-in code'} <ArrowRight size={16} />
+                {submitting ? (firebaseAuthEnabled ? 'Sending link…' : 'Sending code…') : (firebaseAuthEnabled ? 'Send sign-in link' : 'Send sign-in code')} <ArrowRight size={16} />
               </button>
-            ) : (
+            ) : (!firebaseAuthEnabled && otpSent) ? (
               <>
-                <button className="button primary" disabled={submitting || otp.length !== 6} style={{ width: '100%' }}>
+                <button className="button primary" disabled={submitting || emailLinkCode.length !== 6} style={{ width: '100%' }}>
                   {submitting ? 'Verifying…' : 'Verify and sign in'} <ArrowRight size={16} />
                 </button>
                 <button type="button" className="text-button" disabled={submitting} onClick={() => void handleRequestOtp()}>
                   Send a new code
                 </button>
               </>
-            )}
+            ) : firebaseAuthEnabled && emailLinkCode ? (
+              <button className="button primary" disabled={submitting || !email.trim()} style={{ width: '100%' }}>
+                {submitting ? 'Verifying link…' : 'Complete sign-in'} <ArrowRight size={16} />
+              </button>
+            ) : firebaseAuthEnabled && otpSent ? (
+              <button type="button" className="button primary" disabled={submitting || !email.trim()} onClick={() => void handleRequestOtp()} style={{ width: '100%' }}>
+                {submitting ? 'Sending link…' : 'Send a new sign-in link'} <ArrowRight size={16} />
+              </button>
+            ) : null}
           </form>
         )}
 
