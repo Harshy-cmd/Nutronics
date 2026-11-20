@@ -327,6 +327,7 @@ authRouter.post('/register', registerLimiter, async (req: Request, res: Response
       password: z.string().min(8, 'Password must be at least 8 characters'),
       age: z.coerce.number().int().min(18).max(120).optional().default(30),
       conditions: z.array(z.string()).optional().default([]),
+      privacyConsent: z.literal(true, { errorMap: () => ({ message: 'Privacy notice consent is required' }) }),
     })
     .safeParse(req.body);
 
@@ -347,7 +348,7 @@ authRouter.post('/register', registerLimiter, async (req: Request, res: Response
   const id = `user-${randomUUID()}`;
   try {
     await run(
-      'INSERT INTO users(id, email, password, name, role, age, conditions, auth_provider) VALUES(?,?,?,?,?,?,?,?)',
+      'INSERT INTO users(id, email, password, name, role, age, conditions, auth_provider, privacy_consented_at) VALUES(?,?,?,?,?,?,?,? ,NOW())',
       id,
       emailLower,
       bcrypt.hashSync(parsed.data.password, 10),
@@ -381,6 +382,7 @@ authRouter.post('/google', async (req: Request, res: Response) => {
     .object({
       credential: z.string().min(1, 'Google credential token is required'),
       portalRole: staffRoleSchema.optional(),
+      privacyConsent: z.boolean().optional(),
     })
     .safeParse(req.body);
 
@@ -458,13 +460,14 @@ authRouter.post('/google', async (req: Request, res: Response) => {
     if (parsed.data.portalRole) {
       return res.status(403).json({ error: 'Staff accounts must be provisioned before Google sign-in.' });
     }
+    if (parsed.data.privacyConsent !== true) return res.status(400).json({ error: 'Please accept the privacy notice before creating an account.' });
     // New Google users are ALWAYS created with PATIENT role
     const id = `user-${randomUUID()}`;
     const dummyPasswordHash = bcrypt.hashSync(randomUUID(), 10);
     const name = payload.name || payload.email.split('@')[0];
 
     await run(
-      'INSERT INTO users(id, email, password, name, role, age, conditions, google_id, auth_provider) VALUES(?,?,?,?,?,?,?,?,?)',
+      'INSERT INTO users(id, email, password, name, role, age, conditions, google_id, auth_provider, privacy_consented_at) VALUES(?,?,?,?,?,?,?,?,?,NOW())',
       id,
       emailLower,
       dummyPasswordHash,

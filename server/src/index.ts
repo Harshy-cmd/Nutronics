@@ -42,6 +42,11 @@ if (config.trustProxy) {
 
 // Support CORS with credentials for httpOnly refresh cookies
 app.use(cors({ origin: config.clientOrigin, credentials: true }));
+app.use('/api/auth', (req, res, next) => {
+  const origin = req.get('origin');
+  if (origin && origin !== config.clientOrigin) return res.status(403).json({ error: 'Origin not allowed' });
+  next();
+});
 app.use(express.json({ limit: '1mb' }));
 
 const rows = (sql: string, ...args: any[]) => db.prepare(sql).all(...args);
@@ -287,6 +292,29 @@ app.get('/api/patient/profile', async (req, res) => {
   });
 });
 
+app.get('/api/patient/export', async (req, res) => {
+  const userId = req.user!.id;
+  const [user, logs, reminders, meals, conversations, records, contacts, sos, notifications] = await Promise.all([
+    one('SELECT id,email,name,role,age,conditions,settings,privacy_consented_at,created_at FROM users WHERE id=?', userId),
+    rows('SELECT * FROM logs WHERE user_id=? ORDER BY date', userId),
+    rows('SELECT * FROM reminders WHERE user_id=? ORDER BY time', userId),
+    rows('SELECT * FROM meals WHERE user_id=? ORDER BY day,slot', userId),
+    rows('SELECT id,question,answer,status,created_at,doctor_note FROM chat WHERE user_id=? ORDER BY id', userId),
+    rows('SELECT id,name,category,created_at FROM records WHERE user_id=? ORDER BY id', userId),
+    rows('SELECT id,name,phone,relationship FROM contacts WHERE user_id=?', userId),
+    rows('SELECT id,created_at FROM sos WHERE user_id=? ORDER BY id', userId),
+    rows('SELECT id,message,read,created_at FROM notifications WHERE user_id=? ORDER BY id', userId),
+  ]);
+  res.setHeader('Content-Disposition', 'attachment; filename="nutronics-data-export.json"');
+  res.json({ exportedAt: new Date().toISOString(), note: 'Health record files are not bundled; download them separately from Health records.', user, logs, reminders, meals, conversations, records, contacts, sos, notifications });
+});
+
+app.post('/api/patient/deletion-request', async (req, res) => {
+  await run("INSERT INTO deletion_requests(user_id,status) VALUES(?,'PENDING') ON CONFLICT DO NOTHING", req.user!.id);
+  await run("INSERT INTO audit_logs(actor_id,action,entity_type,entity_id) VALUES(?,?,?,?)", req.user!.id, 'account_deletion_requested', 'user', req.user!.id);
+  res.status(202).json({ ok: true, message: 'Your request was recorded. Account and file deletion requires administrator follow-up; this request does not immediately erase data.' });
+});
+
 app.patch('/api/patient/profile', async (req, res) => {
   const user = await one('SELECT * FROM users WHERE id=?', req.user!.id);
   const settings = { ...JSON.parse(user.settings || '{}'), ...(req.body.settings || {}) };
@@ -387,13 +415,15 @@ app.patch('/api/patient/notifications/:id', async (req, res) => {
 app.post('/api/patient/sos', async (req, res) => {
   await run('INSERT INTO sos(user_id) VALUES(?)', req.user!.id);
   await run(
-    "INSERT INTO notifications(user_id,message) SELECT id,? FROM users WHERE role='DOCTOR'",
-    'SOS alert dispatched by ' + req.user!.name
+    "INSERT INTO notifications(user_id,message) SELECT a.doctor_id,? FROM doctor_patient_assignments a JOIN users u ON u.id=a.doctor_id WHERE a.patient_id=? AND u.active=1",
+    'SOS event recorded for assigned patient ' + req.user!.name,
+    req.user!.id
   );
   res.json({
-    dispatched: true,
+    recorded: true,
+    dispatched: false,
     contacts: await rows('SELECT name,phone,relationship FROM contacts WHERE user_id=?', req.user!.id),
-    message: 'Demo alert recorded locally.',
+    message: 'The event was recorded and an in-app notice was created for assigned doctors. No SMS, phone call, or emergency service was contacted.',
   });
 });
 

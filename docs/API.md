@@ -12,7 +12,7 @@ Base URL: `http://localhost:4000/api`. JSON requests use `Content-Type: applicat
   - `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_GOOGLE_CLIENT_ID`: Firebase web configuration. These identify the Firebase project and are public client values, not server secrets.
   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`: Legacy SMTP configuration for password-reset and six-digit staff code flows. Render Free blocks SMTP ports; use Firebase email-link sign-in for staff instead.
   - `CLIENT_ORIGIN`: Exact frontend origin (default `http://localhost:5173`) used by CORS with `credentials: true`.
-  - `DATABASE_PATH`: Relative or absolute path to the SQLite database file.
+  - `SUPABASE_DATABASE_URL`: Server-only Postgres connection string. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are used for private record storage; never expose the service key in a `VITE_` variable.
 
 ## Authentication
 
@@ -37,7 +37,9 @@ All `/patient/*` routes require a patient token. Patient-specific data is scoped
 
 | Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/patient/dashboard` | Dashboard, reminders, today's verified meals |
+| GET | `/patient/dashboard` | Dashboard, reminders, today's meal guidance |
+| GET | `/patient/export` | Download profile, logs, schedules, chat, contacts, SOS, notifications, and record metadata as JSON |
+| POST | `/patient/deletion-request` | Record an account deletion request for administrator follow-up; does not immediately erase data |
 | GET | `/patient/diet` | Weekly meals and local food options |
 | POST | `/patient/diet/swap` | `{mealId, foodId}`; marks new recommendation pending review |
 | GET/POST | `/patient/reminders` | List or create reminder `{label, kind, time}` |
@@ -51,11 +53,11 @@ All `/patient/*` routes require a patient token. Patient-specific data is scoped
 | GET/POST/DELETE | `/patient/contacts` | List (from profile), add or remove emergency contacts |
 | GET/PATCH/POST | `/patient/devices` | List, pair/unpair, or sync simulated device readings |
 | GET/PATCH | `/patient/notifications` | List or mark notifications read |
-| POST | `/patient/sos` | Record an SOS event and return saved contacts |
+| POST | `/patient/sos` | Record an SOS event; creates in-app notices for assigned doctors. `dispatched` is always false because no SMS/call/emergency service is contacted. |
 
 ## Doctor endpoints
 
-All `/doctor/*` routes require a doctor token.
+All `/doctor/*` routes require a doctor token and an explicit active doctor–patient assignment. Patient dossiers, dashboard summaries, pending review items, and review actions are limited to assigned patients; an unassigned dossier returns 404.
 
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -75,6 +77,8 @@ All `/admin/*` routes require an admin token.
 | GET | `/admin/stats` | Account, SOS, verification, and activity metrics |
 | GET | `/admin/users?role=ALL&search=` | Search and filter users |
 | PATCH | `/admin/users/:id` | `{active: boolean}` |
+| GET | `/admin/assignments` | List active patients, doctors, and assignments |
+| PUT | `/admin/assignments/:patientId` | Replace assignments with `{doctorIds: string[]}` |
 | GET/PUT | `/admin/config` | Read or update feature settings |
 | POST | `/admin/lookup` | Live-data lookup with local fallback |
 | GET | `/shared/foods?q=` | Curated foods |
@@ -82,4 +86,4 @@ All `/admin/*` routes require an admin token.
 | GET | `/shared/guidelines` | Current saved guidelines |
 | GET | `/health` | Service health check |
 
-Every clinical and nutrition response includes the disclaimer: “General guidance, not a substitute for professional medical advice.” The API is designed to keep business rules server-side for future Flutter clients. SOS and device integrations are simulations in this build.
+Assistant `RULE_MATCHED` means a deterministic local rule matched; it is not a clinician review. Only a doctor queue action sets `VERIFIED`. Every clinical and nutrition response includes the disclaimer: “General guidance, not a substitute for professional medical advice.” SOS and device integrations are simulations in this build.

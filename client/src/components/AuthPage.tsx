@@ -7,7 +7,7 @@ import { firebaseAuthEnabled } from '../auth/firebaseAuth';
 interface AuthPageProps {
   login: (email: string, password?: string, portalRole?: 'DOCTOR' | 'ADMIN') => Promise<void>;
   register: (payload: any) => Promise<void>;
-  loginWithGoogle: (credential: string, portalRole?: 'DOCTOR' | 'ADMIN') => Promise<void>;
+  loginWithGoogle: (credential: string, portalRole?: 'DOCTOR' | 'ADMIN', privacyConsent?: boolean) => Promise<void>;
   requestOtp: (email: string, portalRole: 'DOCTOR' | 'ADMIN') => Promise<void>;
   loginWithOtp: (email: string, code: string, portalRole: 'DOCTOR' | 'ADMIN') => Promise<void>;
   portalRole?: 'DOCTOR' | 'ADMIN';
@@ -46,6 +46,7 @@ export function AuthPage({
   const [name, setName] = useState('');
   const [age, setAge] = useState('45');
   const [conditions, setConditions] = useState('');
+  const [privacyConsent, setPrivacyConsent] = useState(false);
 
   const showDemo = import.meta.env.DEV && import.meta.env.VITE_SHOW_DEMO === 'true';
   const showGoogle = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -162,6 +163,7 @@ export function AuthPage({
         password,
         age: Number(age) || 30,
         conditions: conds,
+        privacyConsent,
       });
     } catch (err: any) {
       setError(err.message || 'Unable to register. Please check your details.');
@@ -174,7 +176,8 @@ export function AuthPage({
     setError('');
     setSubmitting(true);
     try {
-      await loginWithGoogle(credential, portalRole);
+      if (!portalRole && !privacyConsent) { setError('Please accept the privacy notice before continuing.'); return; }
+      await loginWithGoogle(credential, portalRole, privacyConsent);
     } catch (err: any) {
       setError(err.message || 'Google sign-in could not be completed');
     } finally {
@@ -451,6 +454,11 @@ export function AuthPage({
               />
             </label>
 
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+              <input type="checkbox" required checked={privacyConsent} onChange={(e) => setPrivacyConsent(e.target.checked)} style={{ width: 16, minWidth: 16, marginTop: 3 }} />
+              <span>I understand this is a demonstration, not a medical service. Health details and uploaded record metadata are stored by Nutronics on its hosted backend. I will not enter real patient data. I can export my data in Profile or request account deletion.</span>
+            </label>
+
             <button className="button primary" disabled={submitting} style={{ width: '100%' }}>
               {submitting ? 'Creating account…' : 'Create patient account'}{' '}
               <ArrowRight size={16} />
@@ -461,6 +469,7 @@ export function AuthPage({
         {/* Google Sign-in */}
         {showGoogle && tab === 'signin' && (
           <>
+            {!portalRole && <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 12 }}><input type="checkbox" checked={privacyConsent} onChange={e => setPrivacyConsent(e.target.checked)} style={{ width: 16, minWidth: 16, marginTop: 3 }} /><span>I understand this demo stores account and health information on its hosted backend; I will not enter real patient data.</span></label>}
             <div className="auth-divider">or continue with</div>
             <GoogleAuthButton
               onSuccess={handleGoogleSuccess}

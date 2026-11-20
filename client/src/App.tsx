@@ -24,7 +24,7 @@ import {
   Watch,
   X,
 } from "lucide-react";
-import { api } from "./api";
+import { api, restoreSession, setAccessToken } from "./api";
 import { DISCLAIMER } from "./constants";
 import type { User } from "./types";
 import { Card } from "./components/Card";
@@ -122,8 +122,9 @@ export default function App() {
   const loc = useLocation();
 
   useEffect(() => {
-    const user = localStorage.getItem("nutronics_user");
-    if (user) setMe(JSON.parse(user));
+    let active = true;
+    restoreSession().then((user) => { if (active && user) setMe(user); });
+    return () => { active = false; };
   }, []);
 
   const role = me?.role || "PATIENT";
@@ -289,14 +290,14 @@ export default function App() {
     try {
       await api("/auth/logout", { method: "POST" });
     } catch {}
-    localStorage.clear();
+    setAccessToken(null);
+    localStorage.removeItem("nutronics_pending_staff_email");
     setMe(null);
     navigate("/auth");
   };
 
   const finishLogin = (a: any) => {
-    localStorage.setItem("nutronics_token", a.token);
-    localStorage.setItem("nutronics_user", JSON.stringify(a.user));
+    setAccessToken(a.token);
     setMe(a.user);
     navigate(
       a.user.role === "PATIENT"
@@ -330,8 +331,7 @@ export default function App() {
         method: "POST",
         body: JSON.stringify(payload),
       });
-      localStorage.setItem("nutronics_token", a.token);
-      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
+      setAccessToken(a.token);
       setMe(a.user);
       navigate("/patient/home");
     } catch (e) {
@@ -343,6 +343,7 @@ export default function App() {
   const loginWithGoogle = async (
     credential: string,
     portalRole?: "DOCTOR" | "ADMIN",
+    privacyConsent = false,
   ) => {
     try {
       const identityToken = firebaseAuthEnabled
@@ -350,7 +351,7 @@ export default function App() {
         : credential;
       const a = await api("/auth/google", {
         method: "POST",
-        body: JSON.stringify({ credential: identityToken, ...(portalRole ? { portalRole } : {}) }),
+        body: JSON.stringify({ credential: identityToken, ...(portalRole ? { portalRole } : { privacyConsent }) }),
       });
       finishLogin(a);
     } catch (e) {
@@ -628,20 +629,19 @@ export default function App() {
               <AlertTriangle size={26} />
             </div>
             <div className="eyebrow red">URGENT ASSISTANCE</div>
-            <h2>Send an SOS alert?</h2>
+            <h2>Record an SOS event?</h2>
             <p>
-              This will record an emergency alert and show your saved emergency
-              contacts.
+              This records the event and creates an in-app notice for your assigned doctor. It does not call emergency services or send SMS.
             </p>
             <div className="modal-actions">
               <button className="button subtle" onClick={() => setSos(false)}>
                 I’m okay
               </button>
               <button className="button danger" onClick={sosAction}>
-                Send SOS alert
+                Record SOS event
               </button>
             </div>
-            <small>Demo alerts are recorded locally and do not send SMS.</small>
+            <small>For urgent danger, contact your local emergency number directly.</small>
           </div>
         </div>
       )}

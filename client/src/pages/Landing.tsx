@@ -52,8 +52,7 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
           </h1>
           <p className="hero-sub">
             A calmer way to manage the little things that make a big difference.
-            Doctor-reviewed guidance, gentle reminders, and your health story in
-            one place.
+            Health logs, in-app schedules, and your health story in one place.
           </p>
           <div className="hero-actions">
             {showDemo ? (
@@ -132,7 +131,7 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
             </span>
             <div>
               <small>YOUR CARE PLAN</small>
-              <b>Doctor reviewed</b>
+              <b>Daily health log</b>
             </div>
             <Check size={16} className="green-text" />
           </div>
@@ -159,13 +158,13 @@ export function Landing({ login }: { login: (email: string) => Promise<void> }) 
         {[
           {
             icon: ShieldCheck,
-            title: "Guidance you can trust",
-            text: "A doctor-reviewed approach to everyday nutrition.",
+            title: "Rule-based food notes",
+            text: "A local nutrition helper for demonstration, not clinical advice.",
           },
           {
             icon: Clock,
             title: "Small reminders, big help",
-            text: "Medication, meals, and water—right on time.",
+            text: "Keep a schedule in the app; notifications are not delivered yet.",
           },
           {
             icon: HeartPulse,

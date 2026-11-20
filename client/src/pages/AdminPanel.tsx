@@ -24,7 +24,7 @@ export function AdminPanel({
   return (
     <Card
       title="System & AI configuration"
-      subtitle="Control local demo services and review status"
+      subtitle="Validated system settings and recent administrator activity"
       icon={Settings}
     >
       <div className="config-options">
@@ -57,6 +57,18 @@ export function AdminPanel({
         Verified {data?.verified || 0} · Pending {data?.pending || 0} ·
         Rejected {data?.rejected || 0}
       </p>
+      <h3>Recent admin activity</h3>
+      <div className="record-list">
+        {(data?.audit || []).map((event: any) => <div className="record-item" key={event.id}>
+          <div><b>{event.action.replaceAll("_", " ")}</b><small>{event.actor_name || "Former account"} · {event.entity_type}{event.entity_id ? ` ${event.entity_id}` : ""} · {new Date(event.created_at).toLocaleString()}</small></div>
+        </div>)}
+        {!data?.audit?.length && <small>No administrator activity recorded yet.</small>}
+      </div>
+      <h3>Pending account deletion requests</h3>
+      <div className="record-list">
+        {(data?.deletionRequests || []).map((request: any) => <div className="record-item" key={request.id}><div><b>{request.name} · {request.email}</b><small>Requested {new Date(request.created_at).toLocaleString()}. Verify identity and complete the deletion workflow.</small></div></div>)}
+        {!data?.deletionRequests?.length && <small>No pending deletion requests.</small>}
+      </div>
     </Card>
   );
 }

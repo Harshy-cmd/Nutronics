@@ -57,6 +57,8 @@ for (const [id, email, name, role, age, conditions] of accounts)
     age,
     JSON.stringify(conditions),
   );
+for (const patientId of ["patient-1", "patient-2", "patient-3"])
+  await db.prepare("INSERT OR IGNORE INTO doctor_patient_assignments(doctor_id,patient_id) VALUES(?,?)").run("doctor-1", patientId);
 const insertGuideline = db.prepare(
   "INSERT OR REPLACE INTO guidelines(condition,data) VALUES(?,?)",
 );
@@ -99,7 +101,7 @@ for (const [uid] of accounts.slice(0, 3))
   ] as const)
     await addReminder.run(uid, label, kind, time, uid, label);
 const addMeal = db.prepare(
-  "INSERT INTO meals(user_id,day,slot,food_id,status,doctor) SELECT ?,?,?,? ,'VERIFIED','Dr. Priya Menon' WHERE NOT EXISTS (SELECT 1 FROM meals WHERE user_id=? AND day=? AND slot=?)",
+  "INSERT INTO meals(user_id,day,slot,food_id,status,doctor) SELECT ?,?,?,? ,'RULE_MATCHED',NULL WHERE NOT EXISTS (SELECT 1 FROM meals WHERE user_id=? AND day=? AND slot=?)",
 );
 for (let p = 0; p < 3; p++)
   for (let day = 0; day < 7; day++)

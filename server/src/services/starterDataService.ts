@@ -12,7 +12,7 @@ export async function ensurePatientStarterData(userId: string) {
     for (let day = 0; day < 7; day++) {
       for (const [j, slot] of ['Breakfast', 'Lunch', 'Dinner'].entries()) {
         const food = pool[(day * 3 + j) % pool.length];
-        if (food) await run("INSERT INTO meals(user_id,day,slot,food_id,status,doctor) VALUES(?,?,?,?,'VERIFIED','Dr. Priya Menon')", userId, day, slot, food.id);
+        if (food) await run("INSERT INTO meals(user_id,day,slot,food_id,status,doctor) VALUES(?,?,?,?,'RULE_MATCHED',NULL)", userId, day, slot, food.id);
       }
     }
   }
