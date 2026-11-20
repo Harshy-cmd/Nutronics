@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Settings, Heart, Plus, Trash2, X, Check } from "lucide-react";
 import { api } from "../api";
+import { apiBlob } from "../api";
 import { Card } from "../components/Card";
 
 export function Profile({
@@ -57,8 +58,8 @@ export function Profile({
   };
   const exportCsv = async () => {
     try {
-      const result = await api("/patient/export.csv");
-      const url = URL.createObjectURL(new Blob([String(result)], { type: "text/csv" }));
+      const blob = await apiBlob("/patient/export.csv");
+      const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a"); anchor.href = url; anchor.download = "nutronics-data-export.csv"; anchor.click(); URL.revokeObjectURL(url);
       notify("CSV export downloaded");
     } catch (e) { notify((e as Error).message); }
