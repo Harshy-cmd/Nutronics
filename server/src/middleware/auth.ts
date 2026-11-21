@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-export function auth(req: Request, res: Response, next: NextFunction) {
+export async function auth(req: Request, res: Response, next: NextFunction) {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -37,7 +37,7 @@ export function auth(req: Request, res: Response, next: NextFunction) {
       return res.status(401).json({ error: "Session expired. Please sign in again." });
     }
 
-    const user = db
+    const user = await db
       .prepare("SELECT id, role, name, active FROM users WHERE id=?")
       .get(payload.id) as any;
 

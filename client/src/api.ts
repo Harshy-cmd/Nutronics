@@ -1,6 +1,26 @@
-const API = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+const configuredApi = import.meta.env.VITE_API_URL?.trim();
+const API = configuredApi || (import.meta.env.DEV ? 'http://localhost:4000/api' : '');
 
 let refreshPromise: Promise<string> | null = null;
+let accessToken: string | null = null;
+
+export function setAccessToken(token: string | null) {
+  accessToken = token;
+}
+
+export function getAccessToken() { return accessToken; }
+
+export async function restoreSession(): Promise<any | null> {
+  try {
+    const response = await fetch(`${API}/auth/refresh`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' } });
+    if (!response.ok) return null;
+    const session = await response.json();
+    setAccessToken(session.token);
+    return session.user || null;
+  } catch {
+    return null;
+  }
+}
 
 async function getRefreshedToken(): Promise<string> {
   if (!refreshPromise) {
@@ -17,14 +37,10 @@ async function getRefreshedToken(): Promise<string> {
         }
 
         const refreshed = await refreshResponse.json();
-        localStorage.setItem('nutronics_token', refreshed.token);
-        if (refreshed.user) {
-          localStorage.setItem('nutronics_user', JSON.stringify(refreshed.user));
-        }
+        setAccessToken(refreshed.token);
         return refreshed.token as string;
       } catch (err) {
-        localStorage.removeItem('nutronics_token');
-        localStorage.removeItem('nutronics_user');
+        setAccessToken(null);
         window.dispatchEvent(new Event('nutronics_logout'));
         throw new Error('Session expired. Please sign in again.');
       } finally {
@@ -40,7 +56,12 @@ export async function api<T = any>(
   options: RequestInit = {},
   isRetry = false
 ): Promise<T> {
-  const token = localStorage.getItem('nutronics_token');
+  if (!API) {
+    throw new Error(
+      'The Nutronics API is not configured for this deployment. Set VITE_API_URL to the deployed API base URL and redeploy the client.'
+    );
+  }
+  const token = accessToken;
   const isAuthCall = path.startsWith('/auth/');
 
   const fetchOptions: RequestInit = {
@@ -53,8 +74,18 @@ export async function api<T = any>(
     },
   };
 
-  const response = await fetch(`${API}${path}`, fetchOptions);
-  const data = await response.json().catch(() => ({}));
+  let response: Response;
+  try {
+    response = await fetch(`${API}${path}`, fetchOptions);
+  } catch {
+    throw new Error(
+      'Can’t reach the Nutronics API. Check that the backend is deployed and VITE_API_URL points to it.'
+    );
+  }
+  const contentType = response.headers.get('content-type') || '';
+  const data: any = contentType.includes('application/json')
+    ? await response.json().catch(() => ({}))
+    : await response.text().catch(() => '');
 
   // Handle 401 with single-flight refresh
   if (
@@ -65,11 +96,8 @@ export async function api<T = any>(
     !path.startsWith('/auth/refresh')
   ) {
     // If another concurrent request already refreshed the token in localStorage, use it directly
-    const currentStoredToken = localStorage.getItem('nutronics_token');
     const newToken =
-      currentStoredToken && currentStoredToken !== token
-        ? currentStoredToken
-        : await getRefreshedToken();
+      accessToken && accessToken !== token ? accessToken : await getRefreshedToken();
 
     // Retry once with the newly issued token
     return api<T>(
@@ -86,8 +114,32 @@ export async function api<T = any>(
   }
 
   if (!response.ok) {
-    throw new Error(data.error || 'Something went wrong');
+    throw new Error((typeof data === 'object' && data?.error) || (typeof data === 'string' && data) || 'Something went wrong');
   }
 
   return data as T;
+}
+
+export async function apiBlob(path: string, isRetry = false): Promise<Blob> {
+  if (!API) throw new Error('The Nutronics API is not configured for this deployment.');
+  let response: Response;
+  try {
+    response = await fetch(`${API}${path}`, {
+      credentials: 'same-origin',
+      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+    });
+  } catch {
+    throw new Error('Can’t reach the Nutronics API. Check that the backend is deployed.');
+  }
+  if (response.status === 401 && !isRetry) {
+    await getRefreshedToken();
+    return apiBlob(path, true);
+  }
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '');
+    let message = errorText;
+    try { message = JSON.parse(errorText).error || errorText; } catch {}
+    throw new Error(message || `Download failed (${response.status})`);
+  }
+  return response.blob();
 }

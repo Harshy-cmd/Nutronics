@@ -1,7 +1,7 @@
 import { db } from "../db/schema.js";
 const timeout = (ms: number) => AbortSignal.timeout(ms);
 async function cachedFetch(key: string, url: string, fallback: unknown) {
-  const row = db
+  const row = await db
     .prepare("SELECT value,expires_at FROM cache WHERE key=?")
     .get(key) as any;
   if (row && row.expires_at > Date.now()) return JSON.parse(row.value);
@@ -9,7 +9,7 @@ async function cachedFetch(key: string, url: string, fallback: unknown) {
     const response = await fetch(url, { signal: timeout(3000) });
     if (!response.ok) throw new Error("External source unavailable");
     const value = await response.json();
-    db.prepare(
+    await db.prepare(
       "INSERT OR REPLACE INTO cache(key,value,expires_at) VALUES(?,?,?)",
     ).run(key, JSON.stringify(value), Date.now() + 3600000);
     return value;
