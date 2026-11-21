@@ -52,6 +52,7 @@ export function Reminders({
 
   return (
     <>
+      <p className="disclaimer">These are in-app schedules only. Nutronics does not send reminder notifications while the app is closed.</p>
       <div className="toolbar">
         <div className="filter-pills">
           {["ALL", "Medicine", "Water", "Meal"].map((x) => (

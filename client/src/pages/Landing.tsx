@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Activity,
@@ -11,7 +12,18 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export function Landing({ login }: { login: (email: string) => void }) {
+export function Landing({ login }: { login: (email: string) => Promise<void> }) {
+  const showDemo = import.meta.env.DEV && import.meta.env.VITE_SHOW_DEMO === "true";
+  const [loginError, setLoginError] = useState("");
+  const startDemo = async (email: string) => {
+    setLoginError("");
+    try {
+      await login(email);
+    } catch (error) {
+      setLoginError((error as Error).message || "Could not sign in. Try again.");
+    }
+  };
+
   return (
     <div className="landing">
       <header className="landing-nav">
@@ -40,23 +52,44 @@ export function Landing({ login }: { login: (email: string) => void }) {
           </h1>
           <p className="hero-sub">
             A calmer way to manage the little things that make a big difference.
-            Doctor-reviewed guidance, gentle reminders, and your health story in
-            one place.
+            Health logs, in-app schedules, and your health story in one place.
           </p>
           <div className="hero-actions">
-            <button
-              className="button primary"
-              onClick={() => login("patient@nutronics.org")}
-            >
-              Explore as a patient <ArrowRight size={17} />
-            </button>
-            <button
-              className="text-button"
-              onClick={() => login("doctor@nutronics.org")}
-            >
-              Doctor sign in <ChevronRight size={16} />
-            </button>
+            {showDemo ? (
+              <>
+                <button
+                  className="button primary"
+                  onClick={() => void startDemo("patient@nutronics.org")}
+                >
+                  Explore as a patient <ArrowRight size={17} />
+                </button>
+                <button
+                  className="text-button"
+                  onClick={() => void startDemo("doctor@nutronics.org")}
+                >
+                  Doctor sign in <ChevronRight size={16} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link className="button primary" to="/auth/register">
+                  Create your account <ArrowRight size={17} />
+                </Link>
+                <Link className="text-button" to="/auth">
+                  Sign in <ChevronRight size={16} />
+                </Link>
+              </>
+            )}
           </div>
+          <div className="portal-entry-links">
+            <Link to="/doctor/login">Doctor portal sign in <ChevronRight size={15} /></Link>
+            <Link to="/admin/login">Admin portal sign in <ChevronRight size={15} /></Link>
+          </div>
+          {showDemo && loginError && (
+            <div className="auth-error" role="alert">
+              {loginError}
+            </div>
+          )}
           <div className="trust-row">
             <div className="trust-avatars">
               <span>A</span>
@@ -98,7 +131,7 @@ export function Landing({ login }: { login: (email: string) => void }) {
             </span>
             <div>
               <small>YOUR CARE PLAN</small>
-              <b>Doctor reviewed</b>
+              <b>Daily health log</b>
             </div>
             <Check size={16} className="green-text" />
           </div>
@@ -125,13 +158,13 @@ export function Landing({ login }: { login: (email: string) => void }) {
         {[
           {
             icon: ShieldCheck,
-            title: "Guidance you can trust",
-            text: "A doctor-reviewed approach to everyday nutrition.",
+            title: "Rule-based food notes",
+            text: "A local nutrition helper for demonstration, not clinical advice.",
           },
           {
             icon: Clock,
             title: "Small reminders, big help",
-            text: "Medication, meals, and water—right on time.",
+            text: "Keep a schedule in the app; notifications are not delivered yet.",
           },
           {
             icon: HeartPulse,
@@ -150,20 +183,22 @@ export function Landing({ login }: { login: (email: string) => void }) {
           </div>
         ))}
       </section>
-      <div className="demo-banner">
-        <span>
-          <Sparkles size={17} /> Try the local demo with one click
-        </span>
-        <button onClick={() => login("patient@nutronics.org")}>
-          Patient <ArrowRight size={15} />
-        </button>
-        <button onClick={() => login("doctor@nutronics.org")}>
-          Doctor <ArrowRight size={15} />
-        </button>
-        <button onClick={() => login("admin@nutronics.org")}>
-          Admin <ArrowRight size={15} />
-        </button>
-      </div>
+      {showDemo && (
+        <div className="demo-banner">
+          <span>
+            <Sparkles size={17} /> Try the local demo with one click
+          </span>
+          <button onClick={() => void startDemo("patient@nutronics.org")}>
+            Patient <ArrowRight size={15} />
+          </button>
+          <button onClick={() => void startDemo("doctor@nutronics.org")}>
+            Doctor <ArrowRight size={15} />
+          </button>
+          <button onClick={() => void startDemo("admin@nutronics.org")}>
+            Admin <ArrowRight size={15} />
+          </button>
+        </div>
+      )}
       <footer className="landing-footer">
         © 2026 Nutronics <span>·</span> Thoughtful digital health for everyday
         life

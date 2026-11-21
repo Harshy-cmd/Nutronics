@@ -14,6 +14,17 @@
 .stat-card-link{text-decoration:none;color:inherit;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .stat-card-link:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(22,125,115,.08);border-color:#c9ded6}
 .stat-card-link:hover .stat-arrow{transform:translateX(3px);color:var(--teal)}
+.stat-card-button{font:inherit;text-align:left;width:100%;color:inherit}
+.stat-card-button:focus-visible,.icon-button:focus-visible,.sos-button:focus-visible,.button:focus-visible{outline:3px solid #72b8a6;outline-offset:2px}
+.sos-contacts{display:grid;gap:8px;margin:14px 0;text-align:left}
+.sos-contacts>b{font-size:11px;color:#45645b}
+.sos-contacts a{border:1px solid var(--palette-line);border-radius:9px;padding:10px 12px;color:var(--deep-teal);font-size:12px;font-weight:700}
+.sos-contacts a:hover{background:var(--ice)}
+.guideline-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.guideline-form textarea{width:100%;border:1px solid var(--palette-line);border-radius:9px;padding:10px 11px;resize:vertical;color:var(--teal-black);font:inherit;font-size:12px}
+.guideline-form textarea:focus{outline:none;border-color:var(--classic-teal);box-shadow:0 0 0 3px #16857920}
+.guideline-list .card{margin:0}
+@media(max-width:760px){.guideline-list{grid-template-columns:1fr}.stat-card-button{min-width:0}}
 .meal-card-link{text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
 .meal-card-link:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.05);border-color:#c9ded6}
 .empty-state-card{padding:28px 16px;text-align:center;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
@@ -26,3 +37,42 @@
 .action-icon-btn:hover{background:#fdf2f0;color:#bd4436}
 
 
+.portal-entry-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px}.portal-entry-links a{display:inline-flex;align-items:center;gap:4px;color:#467b70;font-size:13px;font-weight:700}.portal-entry-links a:hover{color:#0d6158}.auth-notice{margin:14px 0;padding:10px 12px;border:1px solid #cce9dc;border-radius:9px;background:#f2faf5;color:#27664e;font-size:13px}
+
+/* Nutronics healthcare palette: Mint Cream, Slate on Mint, Teal-Black on Ice, Classic Teal. */
+:root{
+  --mint-cream:#f5faf7;
+  --slate-on-mint:#5c756f;
+  --teal-black:#173c3a;
+  --ice:#eaf5f2;
+  --classic-teal:#168579;
+  --deep-teal:#0f625c;
+  --palette-line:#dceae5;
+  --ink:var(--teal-black);
+  --muted:var(--slate-on-mint);
+  --teal:var(--classic-teal);
+  --deep:var(--deep-teal);
+  --mint:var(--ice);
+  --line:var(--palette-line);
+}
+body,.app-shell{background:var(--mint-cream);color:var(--teal-black)}
+.sidebar,.topbar,.card,.stat-card,.today-pill,.meal-detail,.record-item,.device-item,.reminder-item,.quick-link,.auth-card{background:#fff;border-color:var(--palette-line)}
+.brand,.brand b,.page-heading h1,.card-head h2,.stat-card b,.meal-info h3,.table b{color:var(--teal-black)}
+.brand-mark,.button.primary,.chat-input button{background:var(--classic-teal)}
+.button.primary:hover{background:var(--deep-teal)}
+.nav-link.active,.nav-link:hover,.quick-link:hover,.tabs button.selected,.filter-pills button.selected{background:var(--ice);color:var(--deep-teal)}
+.card-icon,.icon-button,.care-card,.avatar,.auth-tabs,.auth-card .card-icon,.meal-card,.schedule-item .time-tag{background:var(--ice);color:var(--deep-teal)}
+.stat-icon.peach,.stat-icon.blue,.mini-icon.mint,.mini-icon.green,.mini-icon.pale{background:var(--ice);color:var(--classic-teal)}
+.button.outline{border-color:#c9ded6;color:var(--deep-teal)}
+.inline-link,.portal-entry-links a,.quick-link,.size-control select{color:var(--classic-teal)}
+.content,.page-heading p,.card-head p,.crumb,.care-card p,.user-mini small,.disclaimer,.record-item small,.device-item small,.reminder-text small{color:var(--slate-on-mint)}
+.form-grid input,.form-grid select,.toolbar input,.chat-input input,.config-row input,.auth-card input,.auth-card select{border-color:var(--palette-line);color:var(--teal-black)}
+.form-grid input:focus,.form-grid select:focus,.chat-input input:focus,.toolbar input:focus,.auth-card input:focus{border-color:var(--classic-teal);box-shadow:0 0 0 3px #16857920}
+.progress-ring .ring-value,.chart-col span{stroke:var(--classic-teal);background:linear-gradient(#76b9a9,var(--classic-teal))}
+.schedule-item.done .check-circle,.badge.verified{background:#e5f3ed;color:var(--deep-teal)}
+.landing,.landing.auth-view{background:var(--mint-cream)}
+.landing-nav,.feature-strip,.landing-footer{border-color:var(--palette-line)}
+.landing .hero-copy h1,.landing .feature-intro h2,.auth-card h1{color:var(--teal-black)}
+.landing .hero-sub,.landing .feature-intro p,.auth-card>p{color:var(--slate-on-mint)}
+.auth-tabs button.active{background:#fff;color:var(--deep-teal);box-shadow:0 2px 8px #173c3a12}
+::selection{background:#bce2d3;color:var(--teal-black)}

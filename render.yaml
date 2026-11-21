@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: nutronics-api
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci --include=dev && npm run build --workspace=server
+    startCommand: npm run start --workspace=server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.13.1
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SUPABASE_DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        value: https://nbcljkbdzptsuuzqbjgk.supabase.co
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: UPLOADS_PATH
+        value: /tmp/nutronics-uploads
+      - key: CLIENT_ORIGIN
+        value: https://nutronics.vercel.app

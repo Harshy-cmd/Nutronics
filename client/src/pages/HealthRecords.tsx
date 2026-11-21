@@ -1,5 +1,5 @@
 import { FileText, Plus, Download, Trash2 } from "lucide-react";
-import { api } from "../api";
+import { api, getAccessToken } from "../api";
 import { Card } from "../components/Card";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
@@ -25,7 +25,7 @@ export function HealthRecords({
 
   const handleDownload = async (r: any) => {
     try {
-      const token = localStorage.getItem("nutronics_token");
+      const token = getAccessToken();
       const res = await fetch(`${API}/patient/records/${r.id}/download`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });

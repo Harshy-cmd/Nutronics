@@ -24,7 +24,7 @@ import {
   Watch,
   X,
 } from "lucide-react";
-import { api } from "./api";
+import { api, restoreSession, setAccessToken } from "./api";
 import { DISCLAIMER } from "./constants";
 import type { User } from "./types";
 import { Card } from "./components/Card";
@@ -47,6 +47,12 @@ import { DoctorGuidelines } from "./pages/DoctorGuidelines";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { AdminUsers } from "./pages/AdminUsers";
 import { AdminPanel } from "./pages/AdminPanel";
+import {
+  completeFirebaseEmailLink,
+  exchangeGoogleCredentialForFirebaseToken,
+  firebaseAuthEnabled,
+  sendFirebaseEmailLink,
+} from "./auth/firebaseAuth";
 
 function PageRouter({
   page,
@@ -76,10 +82,10 @@ function PageRouter({
     return <ConnectedDevices data={data} refresh={refresh} notify={notify} />;
   if (page === "profile")
     return <Profile data={data} refresh={refresh} notify={notify} />;
-  if (page === "patient-detail") return <DoctorPatientDetail data={data} />;
+  if (page === "patient-detail") return <DoctorPatientDetail data={data} notify={notify} />;
   if (page === "verification")
     return <DoctorQueue data={data} refresh={refresh} notify={notify} />;
-  if (page === "guidelines") return <DoctorGuidelines data={data} />;
+  if (page === "guidelines") return <DoctorGuidelines data={data} refresh={refresh} notify={notify} />;
   if (page === "dashboard" && role === "DOCTOR")
     return <DoctorDashboard data={data} />;
   if (page === "dashboard" && role === "ADMIN")
@@ -105,6 +111,9 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState("");
   const [sos, setSos] = useState(false);
+  const [sosContacts, setSosContacts] = useState<any[]>([]);
+  const [sosContactsLoading, setSosContactsLoading] = useState(false);
+  const [sosSubmitting, setSosSubmitting] = useState(false);
   const [large, setLarge] = useState(
     localStorage.getItem("textSize") || "16px",
   );
@@ -116,8 +125,9 @@ export default function App() {
   const loc = useLocation();
 
   useEffect(() => {
-    const user = localStorage.getItem("nutronics_user");
-    if (user) setMe(JSON.parse(user));
+    let active = true;
+    restoreSession().then((user) => { if (active && user) setMe(user); });
+    return () => { active = false; };
   }, []);
 
   const role = me?.role || "PATIENT";
@@ -283,27 +293,35 @@ export default function App() {
     try {
       await api("/auth/logout", { method: "POST" });
     } catch {}
-    localStorage.clear();
+    setAccessToken(null);
+    localStorage.removeItem("nutronics_pending_staff_email");
     setMe(null);
     navigate("/auth");
   };
 
-  const login = async (email: string, password = "password123") => {
+  const finishLogin = (a: any) => {
+    setAccessToken(a.token);
+    setMe(a.user);
+    navigate(
+      a.user.role === "PATIENT"
+        ? "/patient/home"
+        : a.user.role === "DOCTOR"
+          ? "/doctor/dashboard"
+          : "/admin/dashboard",
+    );
+  };
+
+  const login = async (
+    email: string,
+    password = "password123",
+    portalRole?: "DOCTOR" | "ADMIN",
+  ) => {
     try {
       const a = await api("/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, ...(portalRole ? { portalRole } : {}) }),
       });
-      localStorage.setItem("nutronics_token", a.token);
-      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
-      setMe(a.user);
-      navigate(
-        a.user.role === "PATIENT"
-          ? "/patient/home"
-          : a.user.role === "DOCTOR"
-            ? "/doctor/dashboard"
-            : "/admin/dashboard",
-      );
+      finishLogin(a);
     } catch (e) {
       msg((e as Error).message);
       throw e;
@@ -316,8 +334,7 @@ export default function App() {
         method: "POST",
         body: JSON.stringify(payload),
       });
-      localStorage.setItem("nutronics_token", a.token);
-      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
+      setAccessToken(a.token);
       setMe(a.user);
       navigate("/patient/home");
     } catch (e) {
@@ -326,22 +343,59 @@ export default function App() {
     }
   };
 
-  const loginWithGoogle = async (credential: string) => {
+  const loginWithGoogle = async (
+    credential: string,
+    portalRole?: "DOCTOR" | "ADMIN",
+    privacyConsent = false,
+  ) => {
     try {
+      const identityToken = firebaseAuthEnabled
+        ? await exchangeGoogleCredentialForFirebaseToken(credential)
+        : credential;
       const a = await api("/auth/google", {
         method: "POST",
-        body: JSON.stringify({ credential }),
+        body: JSON.stringify({ credential: identityToken, ...(portalRole ? { portalRole } : { privacyConsent }) }),
       });
-      localStorage.setItem("nutronics_token", a.token);
-      localStorage.setItem("nutronics_user", JSON.stringify(a.user));
-      setMe(a.user);
-      navigate(
-        a.user.role === "PATIENT"
-          ? "/patient/home"
-          : a.user.role === "DOCTOR"
-            ? "/doctor/dashboard"
-            : "/admin/dashboard",
-      );
+      finishLogin(a);
+    } catch (e) {
+      msg((e as Error).message);
+      throw e;
+    }
+  };
+
+  const requestStaffOtp = async (email: string, portalRole: "DOCTOR" | "ADMIN") => {
+    if (firebaseAuthEnabled) {
+      localStorage.setItem("nutronics_pending_staff_email", email.toLowerCase());
+      await sendFirebaseEmailLink(email, window.location.pathname);
+      return;
+    }
+    await api("/auth/otp/request", {
+      method: "POST",
+      body: JSON.stringify({ email, portalRole }),
+    });
+  };
+
+  const loginWithStaffOtp = async (
+    email: string,
+    code: string,
+    portalRole: "DOCTOR" | "ADMIN",
+  ) => {
+    try {
+      if (firebaseAuthEnabled) {
+        const firebaseToken = await completeFirebaseEmailLink(email, code);
+        const a = await api("/auth/google", {
+          method: "POST",
+          body: JSON.stringify({ credential: firebaseToken, portalRole }),
+        });
+        localStorage.removeItem("nutronics_pending_staff_email");
+        finishLogin(a);
+        return;
+      }
+      const a = await api("/auth/otp/verify", {
+        method: "POST",
+        body: JSON.stringify({ email, code, portalRole }),
+      });
+      finishLogin(a);
     } catch (e) {
       msg((e as Error).message);
       throw e;
@@ -352,12 +406,20 @@ export default function App() {
     return <ForgotPasswordPage disclaimer={DISCLAIMER} />;
   if (!me && loc.pathname === "/auth/reset-password")
     return <ResetPasswordPage disclaimer={DISCLAIMER} />;
-  if (!me && (loc.pathname === "/auth" || loc.pathname === "/auth/register"))
+  const portalRole = loc.pathname === "/doctor/login"
+    ? "DOCTOR"
+    : loc.pathname === "/admin/login"
+      ? "ADMIN"
+      : undefined;
+  if (!me && (loc.pathname === "/auth" || loc.pathname === "/auth/register" || portalRole))
     return (
       <AuthPage
         login={login}
         register={register}
         loginWithGoogle={loginWithGoogle}
+        requestOtp={requestStaffOtp}
+        loginWithOtp={loginWithStaffOtp}
+        portalRole={portalRole}
         initialTab={loc.pathname === "/auth/register" ? "register" : "signin"}
         disclaimer={DISCLAIMER}
       />
@@ -367,12 +429,29 @@ export default function App() {
   if (!me) return <Landing login={login} />;
 
   const sosAction = async () => {
-    setSos(false);
+    setSosSubmitting(true);
     try {
       const r = await api("/patient/sos", { method: "POST", body: "{}" });
-      msg(`Alert logged. ${r.contacts.length} emergency contact(s) listed.`);
+      setSos(false);
+      msg(r.message || "SOS event recorded. No emergency contact was notified.");
     } catch (e) {
       msg((e as Error).message);
+    } finally {
+      setSosSubmitting(false);
+    }
+  };
+
+  const openSos = async () => {
+    setSos(true);
+    setSosContacts([]);
+    setSosContactsLoading(true);
+    try {
+      const result = await api("/patient/contacts");
+      setSosContacts(result.contacts || []);
+    } catch (e) {
+      msg((e as Error).message);
+    } finally {
+      setSosContactsLoading(false);
     }
   };
 
@@ -492,13 +571,13 @@ export default function App() {
             <button
               className="icon-button notifications"
               aria-label="Notifications"
-              onClick={() => msg("You’re all caught up")}
+              title={role === "ADMIN" ? "Review admin activity" : "Notifications"}
+              onClick={() => role === "ADMIN" ? navigate("/admin/config") : msg("You’re all caught up")}
             >
               <Bell size={19} />
-              <i />
             </button>
             {role === "PATIENT" && (
-              <button className="sos-button" onClick={() => setSos(true)}>
+              <button className="sos-button" onClick={openSos} aria-label="SOS Emergency" title="SOS Emergency">
                 <AlertTriangle size={16} /> SOS Emergency
               </button>
             )}
@@ -558,7 +637,7 @@ export default function App() {
       )}
       {sos && (
         <div className="modal-back">
-          <div className="modal sos-modal">
+          <div className="modal sos-modal" role="dialog" aria-modal="true" aria-labelledby="sos-title" aria-describedby="sos-description">
             <button
               className="close"
               onClick={() => setSos(false)}
@@ -570,20 +649,29 @@ export default function App() {
               <AlertTriangle size={26} />
             </div>
             <div className="eyebrow red">URGENT ASSISTANCE</div>
-            <h2>Send an SOS alert?</h2>
-            <p>
-              This will record an emergency alert and show your saved emergency
-              contacts.
-            </p>
+            <h2 id="sos-title">Record an SOS event?</h2>
+            <p id="sos-description">This records the event and creates an in-app notice for your assigned doctor. It does not call emergency services or send SMS.</p>
+            {sosContactsLoading ? <small>Loading saved contacts…</small> : sosContacts.length > 0 ? (
+              <div className="sos-contacts">
+                <b>Text a saved contact from this phone</b>
+                {sosContacts.map((contact: any) => (
+                  <a key={contact.id} href={`sms:${contact.phone}?body=${encodeURIComponent("I need help. Please contact me. Sent from Nutronics.")}`}>
+                    Text {contact.name} · {contact.phone}
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <small>No emergency contacts are saved. Add one in Profile &amp; settings.</small>
+            )}
             <div className="modal-actions">
-              <button className="button subtle" onClick={() => setSos(false)}>
+              <button className="button subtle" disabled={sosSubmitting} onClick={() => setSos(false)}>
                 I’m okay
               </button>
-              <button className="button danger" onClick={sosAction}>
-                Send SOS alert
+              <button className="button danger" disabled={sosSubmitting} onClick={sosAction}>
+                {sosSubmitting ? "Recording…" : "Record SOS event"}
               </button>
             </div>
-            <small>Demo alerts are recorded locally and do not send SMS.</small>
+            <small>For urgent danger, contact your local emergency number directly.</small>
           </div>
         </div>
       )}
