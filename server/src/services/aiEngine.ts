@@ -3,18 +3,13 @@ import { db } from "../db/schema.js";
 import { foods } from "./dataService.js";
 export const DISCLAIMER =
   "General guidance, not a substitute for professional medical advice.";
-export function answerFor(userId: string, question: string) {
-  const user = db
+export async function answerFor(userId: string, question: string) {
+  const user = await db
     .prepare("SELECT conditions FROM users WHERE id=?")
     .get(userId) as any;
   const conditions = JSON.parse(user?.conditions || "[]") as string[];
-  const guidelines = conditions
-    .map(
-      (c) =>
-        db
-          .prepare("SELECT data FROM guidelines WHERE condition=?")
-          .get(c) as any,
-    )
+  const guidelineRows = await Promise.all(conditions.map((c) => db.prepare("SELECT data FROM guidelines WHERE condition=?").get(c)));
+  const guidelines = guidelineRows
     .filter(Boolean)
     .map((r) => JSON.parse(r.data));
   const low = question.toLowerCase();
@@ -23,13 +18,13 @@ export function answerFor(userId: string, question: string) {
     ? conditions.every((c) => food.safeForConditions.includes(c) || c === "CKD")
     : false;
   let answer: string;
-  let status: "VERIFIED" | "PENDING";
+  let status: "RULE_MATCHED" | "PENDING";
   let alternatives: any[] = [];
   if (food) {
     answer = safe
       ? `${food.name} may fit your general condition-aware food guidance in a suitable portion. Its serving has ${food.calories} kcal, ${food.carbsG} g carbohydrates, ${food.sodiumMg} mg sodium, and ${food.fiberG} g fiber. Follow your personal meal plan.`
       : `${food.name} needs a portion-specific review for your active conditions. Consider discussing it with your clinician.`;
-    status = safe ? "VERIFIED" : "PENDING";
+    status = safe ? "RULE_MATCHED" : "PENDING";
     alternatives = foods
       .filter(
         (f) =>
@@ -41,14 +36,14 @@ export function answerFor(userId: string, question: string) {
   } else if (/when.*take|medicine|metformin/.test(low)) {
     answer =
       "Take medicines exactly as prescribed on your label. Food timing differs by medicine and formulation; check with your pharmacist or prescribing clinician before changing timing.";
-    status = "VERIFIED";
+    status = "RULE_MATCHED";
   } else if (/swap|alternative|breakfast/.test(low)) {
     alternatives = foods
       .filter((f) => conditions.every((c) => f.safeForConditions.includes(c)))
       .sort((a, b) => a.sodiumMg - b.sodiumMg)
       .slice(0, 4);
     answer = `Here are locally available options that match the general rules for ${conditions.join(", ") || "your profile"}. Confirm portions against your care plan.`;
-    status = "VERIFIED";
+    status = "RULE_MATCHED";
   } else {
     answer =
       "I can help check a food, suggest a lower-sodium or lower-sugar swap, or explain medicine and food timing. For symptoms, severe or sudden symptoms need urgent clinical care.";

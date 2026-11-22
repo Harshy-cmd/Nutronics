@@ -20,7 +20,7 @@ export function DoctorDashboard({ data }: { data: any }) {
         <Stat
           label="Awaiting your review"
           value={data?.queue || 0}
-          note="AI answers to review"
+          note="Rule-based assistant answers"
           icon={ShieldCheck}
           tint="peach"
           to="/doctor/verification"
